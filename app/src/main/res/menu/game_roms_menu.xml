@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/game_roms_add_game"
+        android:icon="@drawable/ic_reload"
+        android:title="@string/add_game_roms"
+        app:showAsAction="" />
+    <item android:id="@+id/game_roms_set"
+        android:icon="@drawable/ic_game_settings"
+        android:title="@string/game_set" />
+</menu>

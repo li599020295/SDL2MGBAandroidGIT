@@ -1,0 +1,36 @@
+<resources>
+    <string name="app_name">Game</string>
+    <string name="app_ads_main">ca-app-pub-3940256099942544~3347511713</string>
+    <string name="slote_save_desc">Save game data to slot:%d</string>
+    <string name="screen_capture">Screen capture save to:%s</string>
+    <string name="set_game_cover">Set the game cover</string>
+    <string name="close">Close</string>
+    <string name="delete">Delete</string>
+    <string name="cancel">Cancel</string>
+    <string name="ok">Ok</string>
+    <string name="screen_capture_delet">Screen capture deleted</string>
+    <string name="add_game_roms">Search Rom File</string>
+    <string name="game_set">Settings</string>
+    <string name="search_folder">Search folder:</string>
+    <string name="find_roms">Found %d ROMs</string>
+    <string name="first_game_file_scanle">Scan game files</string>
+    <string name="first_game_file_sacnle_desc">\t Welcome to use GBA emulator, do you want to scan game files from memory card or SDcard ?\n \t Need file read and write permissions, we only use it to scan game files.</string>
+    <string name="progres_num">%</string>
+    <string name="notice">Notice</string>
+    <string name="tips_exit_game">Do you want to quit the game?</string>
+    <string name="tips_exit_game_button1">Exit and save</string>
+    <string name="tips_exit_game_button2">Only Exit</string>
+    <string name="file_read_write_permiss">File read and write permissions</string>
+    <string name="file_read_write_permiss_desc">
+        Dear users:
+        \n\t Welcome to use GBA emulator. The emulator needs file read and write permissions to scan game ROM files.
+        \n\t Click the "Agree" button and the simulator will apply for file read and write permissions.
+        \n\t Click the Cancel button, the emulator will not scan the game ROM file, you can open the scan game ROM file function again through the menu.</string>
+    <string name="agree">Agree</string>
+    <string name="general_set">General Setting</string>
+    <string name="game_state">Game state</string>
+    <string name="cheat_code">Cheat code</string>
+    <string name="cheat_code_status">Cheat code status</string>
+    <string name="enable">Enable</string>
+    <string name="not_enabled">Not Enabled</string>
+</resources>
