@@ -16,6 +16,7 @@ import android.view.inputmethod.BaseInputConnection;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputConnection;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -201,6 +202,9 @@ public class SDLActivity extends Activity implements View.OnSystemUiVisibilityCh
         Log.v(TAG, "Model: " + Build.MODEL);
         Log.v(TAG, "onCreate()");
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        //全屏
+        getWindow().setFlags(WindowManager.LayoutParams. FLAG_FULLSCREEN , WindowManager.LayoutParams. FLAG_FULLSCREEN);
 
         Intent intent = getIntent();
         gamePath = intent.getStringExtra("path");
@@ -263,7 +267,7 @@ public class SDLActivity extends Activity implements View.OnSystemUiVisibilityCh
 
         // Set up the surface
         mSurface = new SDLSurface(getApplication());
-        mLayout = new RelativeLayout(this);
+        mLayout = new FrameLayout(this);
         mLayout.addView(mSurface);
 
         //加载游戏按键布局
@@ -439,10 +443,8 @@ public class SDLActivity extends Activity implements View.OnSystemUiVisibilityCh
                 SDLActivity.mSingleton.tipsDialog.dismiss();
             }
         }
-        if (!SDLActivity.mBrokenLibraries) {
-            SDLActivity.nativeSendQuit();
-            SDLActivity.nativeQuit();
-        }
+        SDLActivity.nativeSendQuit();
+        SDLActivity.nativeQuit();
         android.os.Process.killProcess(android.os.Process.myPid());
     }
 
