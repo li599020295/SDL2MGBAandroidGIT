@@ -14,16 +14,16 @@ import android.widget.ToggleButton;
 public class GamePadRelativeLayout extends RelativeLayout {
     //按钮设置
     //so玩家1对应按键位置
-    public final static int PAD1_UP = 1002;
-    public final static int PAD1_DOWN = 1003;
-    public final static int PAD1_LEFT = 1000;
-    public final static int PAD1_RIGHT = 1001;
-    private static final int PAD1_START = 1000+8;
-    private static final int PAD1_SELECT = 1000+9;
+    public final static int PAD1_UP = 1000;
+    public final static int PAD1_DOWN = 1000+1;
+    public final static int PAD1_LEFT = 1000+2;
+    public final static int PAD1_RIGHT = 1001+3;
+    private static final int PAD1_START = 1000+4;
+    private static final int PAD1_SELECT = 1000+5;
     private static final int PAD1_L = 1000+6;
     private static final int PAD1_R = 1000+7;
-    private static final int PAD1_A = 1000+4;
-    private static final int PAD1_B = 1000+5;
+    private static final int PAD1_A = 1000+8;
+    private static final int PAD1_B = 1000+9;
     private static final int PAD1_SPEED = 1000+10;
     private static final int PAD1_CAPTURE = 1000+11;
     private Context context;

@@ -123,6 +123,8 @@ void mSDLResumeScreensaver(struct mSDLEvents*);
 void mSDLSetScreensaverSuspendable(struct mSDLEvents*, bool suspendable);
 #endif
 
+void  onKeyDown(struct mCoreThread* context,int key);
+void onKeyUp(struct mCoreThread* context,int key);
 CXX_GUARD_END
 
 #endif

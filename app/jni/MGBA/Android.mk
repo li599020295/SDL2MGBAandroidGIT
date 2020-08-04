@@ -70,6 +70,6 @@ LOCAL_CPPFLAGS += -Wno-write-strings -Wno-overflow -std=c++11
 LOCAL_CFLAGS += -DSDL -DMGBA_STANDALONE -DHAVE_XLOCALE -DM_CORE_GBA -DM_CORE_GB -DUSE_PTHREADS -DCOLOR_16_BIT -DCOLOR_5_6_5
 
 #优化注意03会导致程序不可调试
-#LOCAL_CFLAGS += -DNDEBUG -ffast-math -O3 -funroll-loops
+#LOCAL_CFLAGS += -DNDEBUG -O3 -fno-exceptions -fno-rtti
 
 include $(BUILD_SHARED_LIBRARY)
