@@ -798,7 +798,7 @@ public class SDLActivity extends Activity implements View.OnSystemUiVisibilityCh
     public static native void nativePermissionResult(int requestCode, boolean result);
     //模拟器C实现代码
 //    //按键控制
-//    public static native void onDataKey(int key,boolean down);
+    public static native void onDataKey(int key,boolean down);
 //    //读取和加载一个记录(true保存,false加载)
 //    public static native void onSlotNum(int num,boolean saveAndLoad);
 //    //游戏退出

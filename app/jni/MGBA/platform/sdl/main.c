@@ -39,7 +39,7 @@
 #include <signal.h>
 
 #define PORT "sdl"
-
+struct mCoreThread global_thread = {0};
 static bool mSDLInit(struct mSDLRenderer* renderer);
 static void mSDLDeinit(struct mSDLRenderer* renderer);
 
@@ -49,6 +49,19 @@ static struct VFile* _state = NULL;
 
 static void _loadState(struct mCoreThread* thread) {
 	mCoreLoadStateNamed(thread->core, _state, SAVESTATE_RTC);
+}
+
+//由java回调保存响应按键
+void SDL_onDataKey(int key, bool down){
+    if (!( ~(KMOD_NUM | KMOD_CAPS))) {
+        key = mInputMapKey(&global_thread.core->inputMap, SDL_BINDING_KEY,key);
+    }
+	if(down){
+        onKeyDown(&global_thread,key);
+	}else{
+		onKeyUp(&global_thread,key);
+	}
+
 }
 
 int main(int argc, char** argv) {
@@ -251,6 +264,7 @@ int mSDLRun(struct mSDLRenderer* renderer, struct mArguments* args) {
 
 	bool didFail = !mCoreThreadStart(&thread);
 	if (!didFail) {
+        global_thread = thread;
 #if SDL_VERSION_ATLEAST(2, 0, 0)
 		renderer->core->desiredVideoDimensions(renderer->core, &renderer->width, &renderer->height);
 		unsigned width = renderer->width * renderer->ratio;

@@ -139,16 +139,16 @@ void mSDLInitBindingsGBA(struct mInputMap* inputMap) {
 //	mInputBindKey(inputMap, SDL_BINDING_KEY, SDLK_DOWN, GBA_KEY_DOWN);
 //	mInputBindKey(inputMap, SDL_BINDING_KEY, SDLK_LEFT, GBA_KEY_LEFT);
 //	mInputBindKey(inputMap, SDL_BINDING_KEY, SDLK_RIGHT, GBA_KEY_RIGHT);
-    mInputBindKey(inputMap, SDL_BINDING_KEY, 1008, GBA_KEY_A);
-    mInputBindKey(inputMap, SDL_BINDING_KEY, 1009, GBA_KEY_B);
-    mInputBindKey(inputMap, SDL_BINDING_KEY, 1006, GBA_KEY_L);
-    mInputBindKey(inputMap, SDL_BINDING_KEY, 1007, GBA_KEY_R);
-    mInputBindKey(inputMap, SDL_BINDING_KEY, 1004, GBA_KEY_START);
-    mInputBindKey(inputMap, SDL_BINDING_KEY, 1005, GBA_KEY_SELECT);
-    mInputBindKey(inputMap, SDL_BINDING_KEY, 1000, GBA_KEY_UP);
-    mInputBindKey(inputMap, SDL_BINDING_KEY, 1001, GBA_KEY_DOWN);
-    mInputBindKey(inputMap, SDL_BINDING_KEY, 1002, GBA_KEY_LEFT);
-    mInputBindKey(inputMap, SDL_BINDING_KEY, 1003, GBA_KEY_RIGHT);
+    mInputBindKey(inputMap, SDL_BINDING_KEY, (1008), GBA_KEY_A);
+    mInputBindKey(inputMap, SDL_BINDING_KEY, (1009), GBA_KEY_B);
+    mInputBindKey(inputMap, SDL_BINDING_KEY, (1006), GBA_KEY_L);
+    mInputBindKey(inputMap, SDL_BINDING_KEY, (1007), GBA_KEY_R);
+    mInputBindKey(inputMap, SDL_BINDING_KEY, (1004), GBA_KEY_START);
+    mInputBindKey(inputMap, SDL_BINDING_KEY, (1005), GBA_KEY_SELECT);
+    mInputBindKey(inputMap, SDL_BINDING_KEY, (1000), GBA_KEY_UP);
+    mInputBindKey(inputMap, SDL_BINDING_KEY, (1001), GBA_KEY_DOWN);
+    mInputBindKey(inputMap, SDL_BINDING_KEY, (1002), GBA_KEY_LEFT);
+    mInputBindKey(inputMap, SDL_BINDING_KEY, (1003), GBA_KEY_RIGHT);
 #endif
 
 	struct mInputAxis description = { GBA_KEY_RIGHT, GBA_KEY_LEFT, 0x4000, -0x4000 };
@@ -456,11 +456,17 @@ static void _pauseAfterFrame(struct mCoreThread* context) {
 }
 //按钮按下操作
 void  onKeyDown(struct mCoreThread* context,int key){
-	context->core->addKeys(context->core, 1 << key);
+    mCoreThreadInterrupt(context);
+	context->core->addKeys(context->core,  key);
+    mCoreThreadContinue(context);
+    return;
 }
 //按钮弹起操作
 void onKeyUp(struct mCoreThread* context,int key){
-	context->core->clearKeys(context->core, 1 << key);
+    mCoreThreadInterrupt(context);
+	context->core->clearKeys(context->core, key);
+    mCoreThreadContinue(context);
+    return;
 }
 
 static void _mSDLHandleKeypress(struct mCoreThread* context, struct mSDLPlayer* sdlContext, const struct SDL_KeyboardEvent* event) {

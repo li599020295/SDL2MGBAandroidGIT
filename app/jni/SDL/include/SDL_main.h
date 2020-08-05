@@ -114,13 +114,14 @@
 extern "C" {
 #endif
 
+#include "stdbool.h"
 /**
  *  The prototype for the application's main() function
  */
 typedef int (*SDL_main_func)(int argc, char *argv[]);
 extern SDLMAIN_DECLSPEC int SDL_main(int argc, char *argv[]);
-
-
+//手机调用C++自己实现的
+extern SDLMAIN_DECLSPEC void SDL_onDataKey(int key, bool isDown);
 /**
  *  This is called by the real SDL main function to let the rest of the
  *  library know that initialization was done properly.

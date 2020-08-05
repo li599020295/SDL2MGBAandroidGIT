@@ -102,11 +102,11 @@ public class GamePadRelativeLayout extends RelativeLayout {
                 public boolean onTouch(View view, MotionEvent event) {
                     switch (event.getAction()) {
                         case MotionEvent.ACTION_DOWN:
-                            //SDLActivity.onDataKey(PAD1_R,true);
+                            SDLActivity.onDataKey(PAD1_R,true);
                             break;
                         case MotionEvent.ACTION_UP:
                         case MotionEvent.ACTION_CANCEL:
-                            //SDLActivity.onDataKey(PAD1_R,false);
+                            SDLActivity.onDataKey(PAD1_R,false);
                             break;
                         case MotionEvent.ACTION_MOVE:
                             break;
@@ -119,11 +119,11 @@ public class GamePadRelativeLayout extends RelativeLayout {
                 public boolean onTouch(View view, MotionEvent event) {
                     switch (event.getAction()) {
                         case MotionEvent.ACTION_DOWN:
-                            //SDLActivity.onDataKey(PAD1_L,true);
+                            SDLActivity.onDataKey(PAD1_L,true);
                             break;
                         case MotionEvent.ACTION_UP:
                         case MotionEvent.ACTION_CANCEL:
-                            //SDLActivity.onDataKey(PAD1_L,false);
+                            SDLActivity.onDataKey(PAD1_L,false);
                             break;
                         case MotionEvent.ACTION_MOVE:
                             break;
@@ -136,11 +136,11 @@ public class GamePadRelativeLayout extends RelativeLayout {
                 public boolean onTouch(View view, MotionEvent event) {
                     switch (event.getAction()) {
                         case MotionEvent.ACTION_DOWN:
-                           // SDLActivity.onDataKey(PAD1_START,true);
+                            SDLActivity.onDataKey(PAD1_START,true);
                             break;
                         case MotionEvent.ACTION_UP:
                         case MotionEvent.ACTION_CANCEL:
-                          //  SDLActivity.onDataKey(PAD1_START,false);
+                            SDLActivity.onDataKey(PAD1_START,false);
                             break;
                         case MotionEvent.ACTION_MOVE:
                             break;
@@ -154,11 +154,11 @@ public class GamePadRelativeLayout extends RelativeLayout {
                 public boolean onTouch(View view, MotionEvent event) {
                     switch (event.getAction()) {
                         case MotionEvent.ACTION_DOWN:
-                           // SDLActivity.onDataKey(PAD1_SELECT,true);
+                            SDLActivity.onDataKey(PAD1_SELECT,true);
                             break;
                         case MotionEvent.ACTION_UP:
                         case MotionEvent.ACTION_CANCEL:
-                          //  SDLActivity.onDataKey(PAD1_SELECT,false);
+                            SDLActivity.onDataKey(PAD1_SELECT,false);
                             break;
                         case MotionEvent.ACTION_MOVE:
                             break;
@@ -172,11 +172,11 @@ public class GamePadRelativeLayout extends RelativeLayout {
                 public boolean onTouch(View view, MotionEvent event) {
                     switch (event.getAction()) {
                         case MotionEvent.ACTION_DOWN:
-                          //  SDLActivity.onDataKey(PAD1_A,true);
+                            SDLActivity.onDataKey(PAD1_A,true);
                             break;
                         case MotionEvent.ACTION_UP:
                         case MotionEvent.ACTION_CANCEL:
-                           // SDLActivity.onDataKey(PAD1_A,false);
+                            SDLActivity.onDataKey(PAD1_A,false);
                             break;
                         case MotionEvent.ACTION_MOVE:
                             break;
@@ -189,11 +189,11 @@ public class GamePadRelativeLayout extends RelativeLayout {
                 public boolean onTouch(View view, MotionEvent event) {
                     switch (event.getAction()) {
                         case MotionEvent.ACTION_DOWN:
-                        //    SDLActivity.onDataKey(PAD1_B,true);
+                            SDLActivity.onDataKey(PAD1_B,true);
                             break;
                         case MotionEvent.ACTION_UP:
                         case MotionEvent.ACTION_CANCEL:
-                       //     SDLActivity.onDataKey(PAD1_B,false);
+                           SDLActivity.onDataKey(PAD1_B,false);
                             break;
                         case MotionEvent.ACTION_MOVE:
                             break;
@@ -207,10 +207,10 @@ public class GamePadRelativeLayout extends RelativeLayout {
                 public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                     if(b){
                         gamepad_togbtn_speed.setBackgroundResource(R.mipmap.speed_press);
-                      //  SDLActivity.onDataKey(PAD1_SPEED,true);
+                        SDLActivity.onDataKey(PAD1_SPEED,true);
                     }else{
                         gamepad_togbtn_speed.setBackgroundResource(R.mipmap.speed_normal);
-                      //  SDLActivity.onDataKey(PAD1_SPEED,false);
+                        SDLActivity.onDataKey(PAD1_SPEED,false);
                     }
                 }
             });
@@ -219,7 +219,7 @@ public class GamePadRelativeLayout extends RelativeLayout {
                 @Override
                 public boolean onTouch(View view, MotionEvent event) {
                     if(event.getAction() == MotionEvent.ACTION_UP){
-                      //  SDLActivity.onSlotNum(0,true);
+                        //SDLActivity.onSlotNum(0,true);
                         Toast.makeText(context, String.format(context.getString(R.string.slote_save_desc),1),Toast.LENGTH_SHORT).show();
                     }
                     return true;
@@ -231,11 +231,11 @@ public class GamePadRelativeLayout extends RelativeLayout {
                 public boolean onTouch(View view, MotionEvent motionEvent) {
                     switch (motionEvent.getAction()) {
                         case MotionEvent.ACTION_DOWN:
-                         //   SDLActivity.onDataKey(PAD1_CAPTURE,true);
+                            SDLActivity.onDataKey(PAD1_CAPTURE,true);
                             break;
                         case MotionEvent.ACTION_UP:
                         case MotionEvent.ACTION_CANCEL:
-                          //  SDLActivity.onDataKey(PAD1_CAPTURE,false);
+                            SDLActivity.onDataKey(PAD1_CAPTURE,false);
                             break;
                         case MotionEvent.ACTION_MOVE:
                             break;
@@ -249,39 +249,39 @@ public class GamePadRelativeLayout extends RelativeLayout {
 
         switch (orition) {
             case GamePadView.FRONT:
-              //  SDLActivity.onDataKey(PAD1_UP,isdown);
+                SDLActivity.onDataKey(PAD1_UP,isdown);
                 gamePadView.setPreUseKey(GamePadView.FRONT);
                 break;
             case GamePadView.FRONT_RIGHT:
-              //  SDLActivity.onDataKey(PAD1_UP,isdown);
-              //  SDLActivity.onDataKey(PAD1_RIGHT,isdown);
+                SDLActivity.onDataKey(PAD1_UP,isdown);
+                SDLActivity.onDataKey(PAD1_RIGHT,isdown);
                 gamePadView.setPreUseKey(GamePadView.FRONT_RIGHT);
                 break;
             case GamePadView.RIGHT:
-              //  SDLActivity.onDataKey(PAD1_RIGHT,isdown);
+                SDLActivity.onDataKey(PAD1_RIGHT,isdown);
                 gamePadView.setPreUseKey(GamePadView.RIGHT);
                 break;
             case GamePadView.RIGHT_BOTTOM:
-             //   SDLActivity.onDataKey(PAD1_RIGHT,isdown);
-             //   SDLActivity.onDataKey(PAD1_DOWN,isdown);
+                SDLActivity.onDataKey(PAD1_RIGHT,isdown);
+                SDLActivity.onDataKey(PAD1_DOWN,isdown);
                 gamePadView.setPreUseKey(GamePadView.RIGHT_BOTTOM);
                 break;
             case GamePadView.BOTTOM:
-              //  SDLActivity.onDataKey(PAD1_DOWN,isdown);
+                SDLActivity.onDataKey(PAD1_DOWN,isdown);
                 gamePadView.setPreUseKey(GamePadView.BOTTOM);
                 break;
             case GamePadView.BOTTOM_LEFT:
-              //  SDLActivity.onDataKey(PAD1_DOWN,isdown);
-             //   SDLActivity.onDataKey(PAD1_LEFT,isdown);
+                SDLActivity.onDataKey(PAD1_DOWN,isdown);
+                SDLActivity.onDataKey(PAD1_LEFT,isdown);
                 gamePadView.setPreUseKey(GamePadView.BOTTOM_LEFT);
                 break;
             case GamePadView.LEFT:
-               // SDLActivity.onDataKey(PAD1_LEFT,isdown);
+                SDLActivity.onDataKey(PAD1_LEFT,isdown);
                 gamePadView.setPreUseKey(GamePadView.LEFT);
                 break;
             case GamePadView.LEFT_FRONT:
-              //  SDLActivity.onDataKey(PAD1_LEFT,isdown);
-              //  SDLActivity.onDataKey(PAD1_UP,isdown);
+                SDLActivity.onDataKey(PAD1_LEFT,isdown);
+                SDLActivity.onDataKey(PAD1_UP,isdown);
                 gamePadView.setPreUseKey(GamePadView.LEFT_FRONT);
                 break;
         }

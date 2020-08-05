@@ -160,6 +160,11 @@ JNIEXPORT void JNICALL SDL_JAVA_INTERFACE(nativePermissionResult)(
         JNIEnv* env, jclass cls,
         jint requestCode, jboolean result);
 
+//内部自己调用
+JNIEXPORT void JNICALL SDL_JAVA_INTERFACE(onDataKey)(
+        JNIEnv *env, jclass cls,
+        jint key, jboolean isDown);
+
 static JNINativeMethod SDLActivity_tab[] = {
     { "nativeSetupJNI",             "()I", SDL_JAVA_INTERFACE(nativeSetupJNI) },
     { "nativeRunMain",              "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/Object;)I", SDL_JAVA_INTERFACE(nativeRunMain) },
@@ -187,7 +192,8 @@ static JNINativeMethod SDLActivity_tab[] = {
     { "nativeSetenv",               "(Ljava/lang/String;Ljava/lang/String;)V", SDL_JAVA_INTERFACE(nativeSetenv) },
     { "onNativeOrientationChanged", "(I)V", SDL_JAVA_INTERFACE(onNativeOrientationChanged) },
     { "nativeAddTouch",             "(ILjava/lang/String;)V", SDL_JAVA_INTERFACE(nativeAddTouch) },
-    { "nativePermissionResult",     "(IZ)V", SDL_JAVA_INTERFACE(nativePermissionResult) }
+    { "nativePermissionResult",     "(IZ)V", SDL_JAVA_INTERFACE(nativePermissionResult) },
+    { "onDataKey",     "(IZ)V", SDL_JAVA_INTERFACE(onDataKey) }
 };
 
 /* Java class SDLInputConnection */
@@ -353,6 +359,10 @@ static SDL_bool bHasEnvironmentVariables;
 
 static SDL_atomic_t bPermissionRequestPending;
 static SDL_bool bPermissionRequestResult;
+
+//按钮响应自己实现
+typedef void (*SDL_onDataKey_func)(int key, bool  down);
+static SDL_onDataKey_func SDL_onDataKeyCall = NULL;
 
 /*******************************************************************************
                  Functions called by JNI
@@ -722,6 +732,7 @@ JNIEXPORT int JNICALL SDL_JAVA_INTERFACE(nativeRunMain)(JNIEnv *env, jclass cls,
 
         function_name = (*env)->GetStringUTFChars(env, function, NULL);
         SDL_main = (SDL_main_func)dlsym(library_handle, function_name);
+        SDL_onDataKeyCall = (SDL_onDataKey_func)dlsym(library_handle, "SDL_onDataKey");
         if (SDL_main) {
             int i;
             int argc;
@@ -1296,6 +1307,17 @@ JNIEXPORT void JNICALL SDL_JAVA_INTERFACE(nativeSetenv)(
     (*env)->ReleaseStringUTFChars(env, name, utfname);
     (*env)->ReleaseStringUTFChars(env, value, utfvalue);
 
+}
+
+JNIEXPORT void JNICALL SDL_JAVA_INTERFACE(onDataKey)(
+        JNIEnv* env, jclass cls,
+        jint key, jboolean isDown)
+{
+    if(SDL_onDataKeyCall == NULL){
+        return;
+    }
+    SDL_onDataKeyCall(key,isDown);
+    // sdlUpdateKey(key,dowm);
 }
 
 /*******************************************************************************
