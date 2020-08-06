@@ -37,6 +37,7 @@
 
 #include <errno.h>
 #include <signal.h>
+#include <jni.h>
 
 #define PORT "sdl"
 struct mCoreThread global_thread = {0};
@@ -51,10 +52,15 @@ static struct VFile* _state = NULL;
 static void _loadState(struct mCoreThread* thread) {
 	mCoreLoadStateNamed(thread->core, _state, SAVESTATE_RTC);
 }
+JNIEnv *_env = NULL;
+//存储JNIEnv
+void SDL_onSetJNIEnv(JNIEnv *env){
+	_env = env;
+}
 
 //由java回调保存响应按键
 void SDL_onDataKey(int key, bool down){
-    bool isSpecial =  onKeySpecial(&global_thread,key,down);
+    bool isSpecial =  onKeySpecial(_env,&global_thread,key,down);
     if(isSpecial){
         return;
     }

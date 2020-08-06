@@ -185,7 +185,7 @@ bool mCoreLoadState(struct mCore* core, int slot, int flags);
 struct VFile* mCoreGetState(struct mCore* core, int slot, bool write);
 void mCoreDeleteState(struct mCore* core, int slot);
 
-void mCoreTakeScreenshot(struct mCore* core);
+char* mCoreTakeScreenshot(struct mCore* core);
 #endif
 
 struct mCore* mCoreFindVF(struct VFile* vf);

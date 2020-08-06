@@ -363,7 +363,9 @@ static SDL_bool bPermissionRequestResult;
 //按钮响应自己实现
 typedef void (*SDL_onDataKey_func)(int key, bool  down);
 static SDL_onDataKey_func SDL_onDataKeyCall = NULL;
-
+//设置JNIEnv
+typedef void (*SDL_onSetJNIEnv_func)(JNIEnv *env);
+static SDL_onSetJNIEnv_func SDL_onSetJNIEnvCall = NULL;
 /*******************************************************************************
                  Functions called by JNI
 *******************************************************************************/
@@ -733,6 +735,7 @@ JNIEXPORT int JNICALL SDL_JAVA_INTERFACE(nativeRunMain)(JNIEnv *env, jclass cls,
         function_name = (*env)->GetStringUTFChars(env, function, NULL);
         SDL_main = (SDL_main_func)dlsym(library_handle, function_name);
         SDL_onDataKeyCall = (SDL_onDataKey_func)dlsym(library_handle, "SDL_onDataKey");
+        SDL_onSetJNIEnvCall = (SDL_onSetJNIEnv_func)dlsym(library_handle, "SDL_onSetJNIEnv");
         if (SDL_main) {
             int i;
             int argc;
@@ -767,6 +770,10 @@ JNIEXPORT int JNICALL SDL_JAVA_INTERFACE(nativeRunMain)(JNIEnv *env, jclass cls,
             }
             argv[argc] = NULL;
 
+            //设置env
+            if(SDL_onSetJNIEnvCall != NULL){
+                SDL_onSetJNIEnvCall(env);
+            }
 
             /* Run the application. */
             status = SDL_main(argc, argv);
@@ -1315,6 +1322,9 @@ JNIEXPORT void JNICALL SDL_JAVA_INTERFACE(onDataKey)(
 {
     if(SDL_onDataKeyCall == NULL){
         return;
+    }
+    if(SDL_onSetJNIEnvCall != NULL){
+        SDL_onSetJNIEnvCall(env);
     }
     SDL_onDataKeyCall(key,isDown);
     // sdlUpdateKey(key,dowm);

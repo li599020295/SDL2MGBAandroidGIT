@@ -27,7 +27,8 @@ public class GamePadRelativeLayout extends RelativeLayout {
     private static final int PAD1_A = (int)'x';
     private static final int PAD1_B = (int)'z';
     private static final int PAD1_SPEED = (int)'\t';
-    private static final int PAD1_CAPTURE = (int)'\t';
+    //截图
+    private static final int PAD1_CAPTURE =(69|SDLK_SCANCODE_MASK);
 
 
     private Context context;

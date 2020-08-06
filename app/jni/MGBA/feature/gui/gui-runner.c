@@ -475,7 +475,11 @@ void mGUIRun(struct mGUIRunner* runner, const char* path) {
 				runner->incrementScreenMode(runner);
 			}
 			if (guiKeys & (1 << mGUI_INPUT_SCREENSHOT)) {
-				mCoreTakeScreenshot(runner->core);
+				char*screenshotPath = mCoreTakeScreenshot(runner->core);
+				if(screenshotPath!=NULL){
+					free(screenshotPath);
+					screenshotPath = NULL;
+				}
 			}
 			if (runner->setFrameLimiter) {
 				if (guiKeys & (1 << mGUI_INPUT_FAST_FORWARD_TOGGLE)) {
@@ -566,7 +570,11 @@ void mGUIRun(struct mGUIRunner* runner, const char* path) {
 				mCoreLoadState(runner->core, ((int) item->data) >> 16, SAVESTATE_SCREENSHOT | SAVESTATE_RTC);
 				break;
 			case RUNNER_SCREENSHOT:
-				mCoreTakeScreenshot(runner->core);
+				char*screenshotPath = mCoreTakeScreenshot(runner->core);
+				if(screenshotPath!=NULL){
+					free(screenshotPath);
+					screenshotPath = NULL;
+				}
 				break;
 			case RUNNER_CONFIG:
 				mGUIShowConfig(runner, runner->configExtra, runner->nConfigExtra);
