@@ -40,6 +40,7 @@
 
 #define PORT "sdl"
 struct mCoreThread global_thread = {0};
+struct mSDLRenderer* global_renderer = NULL;
 static bool mSDLInit(struct mSDLRenderer* renderer);
 static void mSDLDeinit(struct mSDLRenderer* renderer);
 
@@ -53,9 +54,11 @@ static void _loadState(struct mCoreThread* thread) {
 
 //由java回调保存响应按键
 void SDL_onDataKey(int key, bool down){
-    if (!( ~(KMOD_NUM | KMOD_CAPS))) {
-        key = mInputMapKey(&global_thread.core->inputMap, SDL_BINDING_KEY,key);
+    bool isSpecial =  onKeySpecial(&global_thread,key,down);
+    if(isSpecial){
+        return;
     }
+    key = mInputMapKey(global_renderer->player.bindings, SDL_BINDING_KEY, key);
 	if(down){
         onKeyDown(&global_thread,key);
 	}else{
@@ -104,7 +107,7 @@ int main(int argc, char** argv) {
 		freeArguments(&args);
 		return 1;
 	}
-
+    global_renderer = &renderer;
 	if (!renderer.core->init(renderer.core)) {
 		freeArguments(&args);
 		return 1;

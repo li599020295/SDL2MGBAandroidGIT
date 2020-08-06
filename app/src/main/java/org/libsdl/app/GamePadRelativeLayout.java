@@ -12,20 +12,24 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 
 public class GamePadRelativeLayout extends RelativeLayout {
+    public final static int SDLK_SCANCODE_MASK = (1<<30);
+    //#define SDL_SCANCODE_TO_KEYCODE(X)  (X | SDLK_SCANCODE_MASK)
     //按钮设置
     //so玩家1对应按键位置
-    public final static int PAD1_UP = 1000;
-    public final static int PAD1_DOWN = 1000+1;
-    public final static int PAD1_LEFT = 1000+2;
-    public final static int PAD1_RIGHT = 1001+3;
-    private static final int PAD1_START = 1000+4;
-    private static final int PAD1_SELECT = 1000+5;
-    private static final int PAD1_L = 1000+6;
-    private static final int PAD1_R = 1000+7;
-    private static final int PAD1_A = 1000+8;
-    private static final int PAD1_B = 1000+9;
-    private static final int PAD1_SPEED = 1000+10;
-    private static final int PAD1_CAPTURE = 1000+11;
+    public final static int PAD1_UP = (82| SDLK_SCANCODE_MASK);
+    public final static int PAD1_DOWN = (81| SDLK_SCANCODE_MASK);
+    public final static int PAD1_LEFT = (80| SDLK_SCANCODE_MASK);
+    public final static int PAD1_RIGHT = (79| SDLK_SCANCODE_MASK);
+    private static final int PAD1_START = (int)'\r';
+    private static final int PAD1_SELECT = (int)'\b';
+    private static final int PAD1_L = (int) 'a';
+    private static final int PAD1_R = (int)'s';
+    private static final int PAD1_A = (int)'x';
+    private static final int PAD1_B = (int)'z';
+    private static final int PAD1_SPEED = (int)'\t';
+    private static final int PAD1_CAPTURE = (int)'\t';
+
+
     private Context context;
     private GamePadView gamePadView = null;
     public GamePadRelativeLayout(Context context) {
