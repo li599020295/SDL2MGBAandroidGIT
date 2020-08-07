@@ -27,6 +27,8 @@ public class GamePadRelativeLayout extends RelativeLayout {
     private static final int PAD1_A = (int)'x';
     private static final int PAD1_B = (int)'z';
     private static final int PAD1_SPEED = (int)'\t';
+    //倒退
+    private static final int PAD1_REWIND = (int)'`';
     //截图
     private static final int PAD1_CAPTURE =(69|SDLK_SCANCODE_MASK);
 
