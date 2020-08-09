@@ -11,6 +11,12 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import java.io.File;
+
+import lilinhong.dialog.LoadSlotDialog;
+import lilinhong.dialog.SaveSlotDialog;
+import lilinhong.utils.Utils;
+
 public class GamePadRelativeLayout extends RelativeLayout {
     public final static int SDLK_SCANCODE_MASK = (1<<30);
     //#define SDL_SCANCODE_TO_KEYCODE(X)  (X | SDLK_SCANCODE_MASK)
@@ -94,6 +100,37 @@ public class GamePadRelativeLayout extends RelativeLayout {
             Button gamepad_btn_l = gamepadRelativeLayout.findViewById(R.id.gamepad_btn_l);
             Button gamepad_btn_r = gamepadRelativeLayout.findViewById(R.id.gamepad_btn_r);
             Button gamepad_btn_menu = gamepadRelativeLayout.findViewById(R.id.gamepad_btn_menu);
+            Button gamepad_btn_read = gamepadRelativeLayout.findViewById(R.id.gamepad_btn_read);
+            gamepad_btn_read.setOnTouchListener(new OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    if(event.getAction() == MotionEvent.ACTION_UP){
+                        String slotPath = Utils.getSlotPath(SDLActivity.getmSingleton().getGamePath(),0);
+                        if(!new File(slotPath).exists()){
+                            Toast.makeText(context,context.getString(R.string.load_slot_file_not_find),Toast.LENGTH_SHORT).show();
+                            return true;
+                        }
+                        LoadSlotDialog loadSlotDialog = new LoadSlotDialog(SDLActivity.getmSingleton(),slotPath);
+                        loadSlotDialog.show();
+
+                    }
+                    return true;
+                }
+            });
+
+            final ToggleButton gamepad_togbtn_rewind = (ToggleButton)gamepadRelativeLayout.findViewById(R.id.gamepad_togbtn_rewind);
+            gamepad_togbtn_rewind.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                    if(b){
+                        gamepad_togbtn_rewind.setBackgroundResource(R.mipmap.speed_press);
+                        SDLActivity.onDataKey(PAD1_REWIND,true);
+                    }else{
+                        gamepad_togbtn_rewind.setBackgroundResource(R.mipmap.speed_normal);
+                        SDLActivity.onDataKey(PAD1_REWIND,false);
+                    }
+                }
+            });
             //暂时用于打开其他试用功能
             gamepad_btn_menu.setOnTouchListener(new OnTouchListener() {
                 @Override
@@ -104,6 +141,7 @@ public class GamePadRelativeLayout extends RelativeLayout {
                     return false;
                 }
             });
+
             gamepad_btn_r.setOnTouchListener(new OnTouchListener() {
                 @Override
                 public boolean onTouch(View view, MotionEvent event) {
@@ -121,6 +159,7 @@ public class GamePadRelativeLayout extends RelativeLayout {
                     return true;
                 }
             });
+
             gamepad_btn_l.setOnTouchListener(new OnTouchListener() {
                 @Override
                 public boolean onTouch(View view, MotionEvent event) {
@@ -138,6 +177,7 @@ public class GamePadRelativeLayout extends RelativeLayout {
                     return true;
                 }
             });
+
             gamepad_btn_start.setOnTouchListener(new OnTouchListener() {
                 @Override
                 public boolean onTouch(View view, MotionEvent event) {
@@ -191,6 +231,7 @@ public class GamePadRelativeLayout extends RelativeLayout {
                     return true;
                 }
             });
+
             gamepad_btn_b.setOnTouchListener(new OnTouchListener() {
                 @Override
                 public boolean onTouch(View view, MotionEvent event) {
@@ -221,13 +262,14 @@ public class GamePadRelativeLayout extends RelativeLayout {
                     }
                 }
             });
+
             Button gamepad_btn_save = (Button)gamepadRelativeLayout.findViewById(R.id.gamepad_btn_save);
             gamepad_btn_save.setOnTouchListener(new OnTouchListener() {
                 @Override
                 public boolean onTouch(View view, MotionEvent event) {
                     if(event.getAction() == MotionEvent.ACTION_UP){
-                        //SDLActivity.onSlotNum(0,true);
-                        Toast.makeText(context, String.format(context.getString(R.string.slote_save_desc),1),Toast.LENGTH_SHORT).show();
+                        SaveSlotDialog saveSlotDialog = new SaveSlotDialog(SDLActivity.getmSingleton());
+                        saveSlotDialog.show();
                     }
                     return true;
                 }

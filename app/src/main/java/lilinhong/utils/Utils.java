@@ -1,18 +1,60 @@
 package lilinhong.utils;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.util.Log;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.security.MessageDigest;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import lilinhong.dialog.TipsDialog;
 import lilinhong.model.GameRom;
 
 public class Utils {
+    //日月年美国获取时间方法
+    public static String getFileLastModifiedTime(File file) {
+        Calendar cal = Calendar.getInstance();
+        long time = file.lastModified();
+        cal.setTimeInMillis(time);
+        int day = cal.get(Calendar.DAY_OF_MONTH);
+        int month = cal.get(Calendar.MONTH)+1;
+        int year = cal.get(Calendar.YEAR);
+        int hour = cal.get(Calendar.HOUR_OF_DAY);
+        int minute = cal.get(Calendar.MINUTE);
+        int second = cal.get(Calendar.SECOND);
+        // 输出：修改时间[2] 2009-08-17 10:32:38///09 day 11 month in 2020
+        return day +" day "+ month + " month in "+year+", "+hour+":"+minute+":"+second;
+    }
+    /**
+     * 加载本地图片
+     * @param url
+     * @return
+     */
+    public static Bitmap getLoacalBitmap(String url) {
+        try {
+            FileInputStream fis = new FileInputStream(url);
+            return BitmapFactory.decodeStream(fis);  ///把流转化为Bitmap图片
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    public static String getSlotPath(String gamePath,int slot){
+        if(gamePath == null &&gamePath.equals("")){
+            return null;
+        }
+        String slotPath = gamePath.substring(0,gamePath.lastIndexOf(".")+1)+"ss"+String.valueOf(slot+1);
+        return slotPath;
+    }
+    //添加文件列表
     public static void addGameFileList(List<File> fileList) {
         if(fileList == null || fileList.size() == 0){
             return;

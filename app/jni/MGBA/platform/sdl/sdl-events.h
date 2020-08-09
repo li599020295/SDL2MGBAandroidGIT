@@ -126,6 +126,7 @@ void mSDLSetScreensaverSuspendable(struct mSDLEvents*, bool suspendable);
 void  onKeyDown(struct mCoreThread* context,int key);
 void onKeyUp(struct mCoreThread* context,int key);
 bool onKeySpecial(JNIEnv *env,struct mCoreThread* context,int key,bool isDown);
+void onSlotKey(struct mCoreThread* context,int key ,bool isSave);
 CXX_GUARD_END
 
 #endif

@@ -41,6 +41,7 @@ import lilinhong.utils.Utils;
  */
 public class SDLActivity extends Activity implements View.OnSystemUiVisibilityChangeListener {
     public TipsDialog tipsDialog = null;
+    //文件路径
     private String gamePath = "";
     private static final String TAG = "SDL";
 
@@ -111,7 +112,7 @@ public class SDLActivity extends Activity implements View.OnSystemUiVisibilityCh
 
         return mMotionListener;
     }
-    //下次进入监听
+    //获取实例
     public static SDLActivity getmSingleton(){
         return mSingleton;
     }
@@ -800,7 +801,7 @@ public class SDLActivity extends Activity implements View.OnSystemUiVisibilityCh
 //    //按键控制
     public static native void onDataKey(int key,boolean down);
 //    //读取和加载一个记录(true保存,false加载)
-//    public static native void onSlotNum(int num,boolean saveAndLoad);
+    public static native void onSlotNum(int num,boolean saveAndLoad);
 //    //游戏退出
 //    public static native void onGameExit(boolean save);
     /**
@@ -1651,7 +1652,7 @@ public class SDLActivity extends Activity implements View.OnSystemUiVisibilityCh
     //注意这是C++回调java不能修改他的方法
     public static void gameLoadFinish(){
         //游戏加载完成恢复上次记录
-        //onSlotNum(0,false);
+        onSlotNum(0,false);
     }
     //屏幕截图回调path是图片路径
     public static void gameScreenCapture(String path){
@@ -1664,6 +1665,9 @@ public class SDLActivity extends Activity implements View.OnSystemUiVisibilityCh
                 dialog.setImage(_path);
             }
         });
+    }
+    public String getGamePath(){
+        return gamePath;
     }
 }
 
@@ -1905,7 +1909,7 @@ class SDLSurface extends SurfaceView implements SurfaceHolder.Callback,
                     SDLActivity.mSingleton.tipsDialog.setOnButton1Listener(SDLActivity.mSingleton.getString(R.string.tips_exit_game_button1), new OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            //SDLActivity.onSlotNum(0,true);
+                            SDLActivity.onSlotNum(0,true);
                             SDLActivity.mSingleton.finish();
                         }
                     });

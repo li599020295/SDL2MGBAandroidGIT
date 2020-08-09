@@ -57,7 +57,10 @@ JNIEnv *_env = NULL;
 void SDL_onSetJNIEnv(JNIEnv *env){
 	_env = env;
 }
-
+//保存读取数据
+void SDL_onSlotNum(int key, bool isSave){
+	onSlotKey(&global_thread,key,isSave);
+}
 //由java回调保存响应按键
 void SDL_onDataKey(int key, bool down){
     bool isSpecial =  onKeySpecial(_env,&global_thread,key,down);

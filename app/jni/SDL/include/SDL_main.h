@@ -125,6 +125,9 @@ extern SDLMAIN_DECLSPEC int SDL_main(int argc, char *argv[]);
 extern SDLMAIN_DECLSPEC void SDL_onDataKey(int key, bool isDown);
 //设置JNIEnv
 extern SDLMAIN_DECLSPEC void SDL_onSetJNIEnv(JNIEnv *env);
+//
+extern SDLMAIN_DECLSPEC void SDL_onSlotNum(int key, bool isSvae);
+
 /**
  *  This is called by the real SDL main function to let the rest of the
  *  library know that initialization was done properly.

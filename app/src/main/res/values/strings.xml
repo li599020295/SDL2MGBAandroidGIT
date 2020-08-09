@@ -2,6 +2,7 @@
     <string name="app_name">Game</string>
     <string name="app_ads_main">ca-app-pub-3940256099942544~3347511713</string>
     <string name="slote_save_desc">Save game data to slot:%d</string>
+    <string name="slote_load_desc">Load game data to slot:%d</string>
     <string name="screen_capture">Screen capture save to:%s</string>
     <string name="set_game_cover">Set the game cover</string>
     <string name="close">Close</string>
@@ -33,4 +34,10 @@
     <string name="cheat_code_status">Cheat code status</string>
     <string name="enable">Enable</string>
     <string name="not_enabled">Not Enabled</string>
+    <string name="load_slot_data">Load slot data</string>
+    <string name="load_slot_data_content">Are you sure Load slot data? This slot data will overwrite your current game progress.</string>
+    <string name="save_slot_data_content">Are you sure Save slot data? This slot data will overwrite your previous game slot data.</string>
+    <string name="load_slot_file_not_find">Slot data not exist</string>
+    <string name="slot_save_time">Data storage time:</string>
+    <string name="save_slot_data">Save slot data</string>
 </resources>

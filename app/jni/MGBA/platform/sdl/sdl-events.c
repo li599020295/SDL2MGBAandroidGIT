@@ -495,6 +495,18 @@ bool onKeySpecial(JNIEnv *_env,struct mCoreThread* context,int key,bool isDown) 
 	return false;
 }
 
+void onSlotKey(struct mCoreThread* context,int key ,bool isSave){
+	if(isSave){
+		mCoreThreadInterrupt(context);
+		mCoreSaveState(context->core, key + 1,SAVESTATE_SAVEDATA | SAVESTATE_SCREENSHOT | SAVESTATE_RTC);
+		mCoreThreadContinue(context);
+	}else{
+		mCoreThreadInterrupt(context);
+		mCoreLoadState(context->core, key + 1, SAVESTATE_SCREENSHOT | SAVESTATE_RTC);
+		mCoreThreadContinue(context);
+	}
+}
+
 static void _mSDLHandleKeypress(struct mCoreThread* context, struct mSDLPlayer* sdlContext, const struct SDL_KeyboardEvent* event) {
 	int key = -1;
 	if (!(event->keysym.mod & ~(KMOD_NUM | KMOD_CAPS))) {

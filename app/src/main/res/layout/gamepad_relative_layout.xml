@@ -31,6 +31,34 @@
             android:layout_height="50dp"
             android:background="@mipmap/screenshot_normal"/>
     </LinearLayout>
+    <LinearLayout
+        android:layout_alignParentRight="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <ToggleButton
+            android:id="@+id/gamepad_togbtn_rewind"
+            android:layout_margin="15dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="@mipmap/speed_normal"
+            android:checked="false"
+            android:textOn="@null"
+            android:textOff="@null"/>
+        <Button
+            android:id="@+id/gamepad_btn_read"
+            android:layout_marginLeft="15dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="@mipmap/save_state"/>
+        <Button
+            android:id="@+id/gamepad_btn_orien"
+            android:layout_marginTop="15dp"
+            android:layout_marginLeft="15dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="@mipmap/screenshot_normal"/>
+    </LinearLayout>
     <RelativeLayout
         android:layout_centerVertical="true"
         android:layout_alignParentBottom="true"
