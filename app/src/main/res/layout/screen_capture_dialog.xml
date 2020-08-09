@@ -2,9 +2,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="10dp"
     android:background="@drawable/mdialog_bg">
     <LinearLayout
+        android:layout_margin="15dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
@@ -12,30 +12,50 @@
             android:id="@+id/screen_capture_imageview"
             android:layout_width="match_parent"
             android:scaleType="fitXY"
-            android:layout_height="180dp" />
+            android:layout_height="200dp" />
         <TextView
+            android:textColor="@color/black"
             android:id="@+id/screen_capture_text_path"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="3dp"
+            android:layout_marginBottom="3dp"
             android:text="xxxxxxxxxx"/>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/grey"></View>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
             <Button
+                android:textColor="@color/black"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@null"
                 android:text="@string/set_game_cover"/>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="@color/grey"></View>
             <Button
+                android:textColor="@color/black"
                 android:id="@+id/screen_capture_btn_delete"
                 android:layout_width="match_parent"
+                android:background="@null"
                 android:layout_height="wrap_content"
                 android:text="@string/delete"/>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="@color/grey"></View>
             <Button
+                android:textColor="@color/black"
                 android:id="@+id/screen_capture_btn_close"
                 android:layout_width="match_parent"
+                android:background="@null"
                 android:layout_height="wrap_content"
                 android:text="@string/close"/>
         </LinearLayout>

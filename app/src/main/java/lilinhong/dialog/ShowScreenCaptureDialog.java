@@ -21,19 +21,7 @@ public class ShowScreenCaptureDialog extends Dialog {
     private String path = null;
 
     public ShowScreenCaptureDialog(Context context) {
-        super(context);
-        this.context = context;
-        this.init();
-    }
-
-    public ShowScreenCaptureDialog(Context context, int themeResId) {
-        super(context, themeResId);
-        this.context = context;
-        this.init();
-    }
-
-    protected ShowScreenCaptureDialog(Context context, boolean cancelable, OnCancelListener cancelListener) {
-        super(context, cancelable, cancelListener);
+        super(context, R.style.mdialog);
         this.context = context;
         this.init();
     }
