@@ -168,6 +168,10 @@ JNIEXPORT void JNICALL SDL_JAVA_INTERFACE(onDataKey)(
 JNIEXPORT void JNICALL SDL_JAVA_INTERFACE(onSlotNum)(
         JNIEnv *env, jclass cls,
         jint key, jboolean isSave);
+//内部自己调用
+JNIEXPORT void JNICALL SDL_JAVA_INTERFACE(onScreenSize)(
+        JNIEnv *env, jclass cls,
+        jboolean isFull,jint width, jint height);
 
 static JNINativeMethod SDLActivity_tab[] = {
     { "nativeSetupJNI",             "()I", SDL_JAVA_INTERFACE(nativeSetupJNI) },
@@ -198,7 +202,8 @@ static JNINativeMethod SDLActivity_tab[] = {
     { "nativeAddTouch",             "(ILjava/lang/String;)V", SDL_JAVA_INTERFACE(nativeAddTouch) },
     { "nativePermissionResult",     "(IZ)V", SDL_JAVA_INTERFACE(nativePermissionResult) },
     { "onDataKey",     "(IZ)V", SDL_JAVA_INTERFACE(onDataKey) },
-    { "onSlotNum",     "(IZ)V", SDL_JAVA_INTERFACE(onSlotNum) }
+    { "onSlotNum",     "(IZ)V", SDL_JAVA_INTERFACE(onSlotNum) },
+    { "onScreenSize",     "(ZII)V", SDL_JAVA_INTERFACE(onScreenSize) },
 };
 
 /* Java class SDLInputConnection */
@@ -374,6 +379,9 @@ static SDL_onSetJNIEnv_func SDL_onSetJNIEnvCall = NULL;
 //保存自己实现
 typedef void (*SDL_onSlotNum_func)(int key, bool  down);
 static SDL_onSlotNum_func SDL_onSlotNumCall = NULL;
+//
+typedef void (*SDL_onScreenSize_func)( bool  down,int width,int height);
+static SDL_onScreenSize_func SDL_onScreenSizeCall = NULL;
 /*******************************************************************************
                  Functions called by JNI
 *******************************************************************************/
@@ -745,6 +753,7 @@ JNIEXPORT int JNICALL SDL_JAVA_INTERFACE(nativeRunMain)(JNIEnv *env, jclass cls,
         SDL_onDataKeyCall = (SDL_onDataKey_func)dlsym(library_handle, "SDL_onDataKey");
         SDL_onSetJNIEnvCall = (SDL_onSetJNIEnv_func)dlsym(library_handle, "SDL_onSetJNIEnv");
         SDL_onSlotNumCall = (SDL_onSlotNum_func)dlsym(library_handle, "SDL_onSlotNum");
+        SDL_onScreenSizeCall = (SDL_onScreenSize_func)dlsym(library_handle, "SDL_onScreenSize");
         if (SDL_main) {
             int i;
             int argc;
@@ -1335,6 +1344,15 @@ JNIEXPORT void JNICALL SDL_JAVA_INTERFACE(onSlotNum)(
     SDL_onSlotNumCall(key,isSave);
 }
 
+JNIEXPORT void JNICALL SDL_JAVA_INTERFACE(onScreenSize)(
+        JNIEnv *env, jclass cls,
+        jboolean isFull,jint width, jint height)
+{
+    if(SDL_onScreenSizeCall == NULL){
+        return;
+    }
+    SDL_onScreenSizeCall(isFull,width,height);
+}
 
 JNIEXPORT void JNICALL SDL_JAVA_INTERFACE(onDataKey)(
         JNIEnv* env, jclass cls,

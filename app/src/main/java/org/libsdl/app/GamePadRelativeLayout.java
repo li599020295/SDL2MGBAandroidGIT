@@ -1,12 +1,18 @@
 package org.libsdl.app;
 
 import android.content.Context;
+import android.content.pm.ActivityInfo;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 import android.widget.ToggleButton;
@@ -18,8 +24,9 @@ import lilinhong.dialog.SaveSlotDialog;
 import lilinhong.utils.Utils;
 
 public class GamePadRelativeLayout extends RelativeLayout {
+    //1=横向不全屏 ，2=横向全屏，3=不横向不全屏
+    public static int SCREEN_MODE = 2;
     public final static int SDLK_SCANCODE_MASK = (1<<30);
-    //#define SDL_SCANCODE_TO_KEYCODE(X)  (X | SDLK_SCANCODE_MASK)
     //按钮设置
     //so玩家1对应按键位置
     public final static int PAD1_UP = (82| SDLK_SCANCODE_MASK);
@@ -38,26 +45,27 @@ public class GamePadRelativeLayout extends RelativeLayout {
     //截图
     private static final int PAD1_CAPTURE =(69|SDLK_SCANCODE_MASK);
 
-
+    private SDLActivity sdlActivity = null;
     private Context context;
     private GamePadView gamePadView = null;
-    public GamePadRelativeLayout(Context context) {
+    public GamePadRelativeLayout(Context context,SDLActivity sdlActivity) {
         super(context);
         this.context = context;
+        this.sdlActivity = sdlActivity;
         this.initData();
     }
 
-    public GamePadRelativeLayout(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        this.context = context;
-        this.initData();
-    }
-
-    public GamePadRelativeLayout(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-        this.context = context;
-        this.initData();
-    }
+//    public GamePadRelativeLayout(Context context, AttributeSet attrs) {
+//        super(context, attrs);
+//        this.context = context;
+//        this.initData();
+//    }
+//
+//    public GamePadRelativeLayout(Context context, AttributeSet attrs, int defStyleAttr) {
+//        super(context, attrs, defStyleAttr);
+//        this.context = context;
+//        this.initData();
+//    }
 
 //    public GamePadRelativeLayout(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
 //        super(context, attrs, defStyleAttr, defStyleRes);
@@ -93,6 +101,7 @@ public class GamePadRelativeLayout extends RelativeLayout {
         });
 
         {
+            Button gamepad_btn_orien = gamepadRelativeLayout.findViewById(R.id.gamepad_btn_orien);
             Button gamepad_btn_start = gamepadRelativeLayout.findViewById(R.id.gamepad_btn_start);
             Button gamepad_btn_select = gamepadRelativeLayout.findViewById(R.id.gamepad_btn_select);
             Button gamepad_btn_a = gamepadRelativeLayout.findViewById(R.id.gamepad_btn_a);
@@ -101,6 +110,50 @@ public class GamePadRelativeLayout extends RelativeLayout {
             Button gamepad_btn_r = gamepadRelativeLayout.findViewById(R.id.gamepad_btn_r);
             Button gamepad_btn_menu = gamepadRelativeLayout.findViewById(R.id.gamepad_btn_menu);
             Button gamepad_btn_read = gamepadRelativeLayout.findViewById(R.id.gamepad_btn_read);
+            gamepad_btn_orien.setOnTouchListener(new OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+
+                    FrameLayout frameLayout = SDLActivity.getContentView();
+                    ViewGroup.LayoutParams lp = frameLayout.getLayoutParams();
+
+                    if(event.getAction() == MotionEvent.ACTION_UP){
+                        SDLSurface sdlSurface = sdlActivity.getSDLSurfaceView();
+                        SCREEN_MODE +=1;
+                        float GBA_VIDEO_HORIZONTAL_PIXELS = 240;
+                        float GBA_VIDEO_VERTICAL_PIXELS = 160;
+                        //0.66666666
+                        DisplayMetrics outMetrics = new DisplayMetrics();
+                        sdlActivity.getWindowManager().getDefaultDisplay().getMetrics(outMetrics);
+                        float widthPixels = outMetrics.widthPixels;
+                        float heightPixels = outMetrics.heightPixels;
+
+                        if(SCREEN_MODE == 3){
+                            float heightScale = ((heightPixels/GBA_VIDEO_VERTICAL_PIXELS));
+                            int height = (int)(heightScale * GBA_VIDEO_VERTICAL_PIXELS*0.66666f + 0.5f);
+                            lp.width = (int) heightPixels;
+                            lp.height = height;
+                            sdlActivity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+                        }else{
+                            if(SCREEN_MODE == 1){
+                                float widthScale = ((widthPixels/GBA_VIDEO_VERTICAL_PIXELS));
+                                int width = (int)(widthScale * GBA_VIDEO_HORIZONTAL_PIXELS+0.5f);
+                                lp.width = width;
+                                lp.height = (int) widthPixels;
+                            }else if(SCREEN_MODE == 2) {
+                                lp.width = (int)widthPixels;
+                                lp.height = (int)heightPixels;
+                            }
+                            sdlActivity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+                        }
+                        SDLActivity.getContentView().setLayoutParams(lp);
+                        if(SCREEN_MODE>=3){
+                            SCREEN_MODE = 0;
+                        }
+                    }
+                    return false;
+                }
+            });
             gamepad_btn_read.setOnTouchListener(new OnTouchListener() {
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {

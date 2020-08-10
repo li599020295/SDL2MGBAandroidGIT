@@ -87,7 +87,7 @@ public class SDLActivity extends Activity implements View.OnSystemUiVisibilityCh
     protected static SDLSurface mSurface;
     protected static View mTextEdit;
     protected static boolean mScreenKeyboardShown;
-    protected static ViewGroup mLayout;
+    protected static FrameLayout mLayout;
     protected static SDLClipboardHandler mClipboardHandler;
     protected static Hashtable<Integer, PointerIcon> mCursors;
     protected static int mLastCursorID;
@@ -263,26 +263,31 @@ public class SDLActivity extends Activity implements View.OnSystemUiVisibilityCh
         SDL.setContext(this);
 
         mClipboardHandler = new SDLClipboardHandler_API11();
-
         //  mHIDDeviceManager = HIDDeviceManager.acquire(this);
-
+        RelativeLayout relativeLayout = new RelativeLayout(this);
+        relativeLayout.setBackgroundColor(Utils.getColor(this,R.color.black));
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.MATCH_PARENT);
         // Set up the surface
         mSurface = new SDLSurface(getApplication());
         mLayout = new FrameLayout(this);
-        mLayout.addView(mSurface);
+
+        RelativeLayout.LayoutParams relativeCenterParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.MATCH_PARENT);
+        relativeCenterParams.addRule(RelativeLayout.CENTER_IN_PARENT);
+        relativeLayout.addView(mLayout,relativeCenterParams);
+
+        FrameLayout.LayoutParams frameLayout = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT);
+        mLayout.addView(mSurface,frameLayout);
 
         //加载游戏按键布局
-        RelativeLayout gamepadLayout = new GamePadRelativeLayout(this);
-        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.MATCH_PARENT);
-        gamepadLayout.setLayoutParams(params);
-        mLayout.addView(gamepadLayout);
+        RelativeLayout gamepadLayout = new GamePadRelativeLayout(this,mSingleton);
+        relativeLayout.addView(gamepadLayout,params);
 
         // Get our current screen orientation and pass it down.
         mCurrentOrientation = SDLActivity.getCurrentOrientation();
         // Only record current orientation
         SDLActivity.onNativeOrientationChanged(mCurrentOrientation);
 
-        setContentView(mLayout);
+        setContentView(relativeLayout,params);
 
         setWindowStyle(false);
 
@@ -798,10 +803,12 @@ public class SDLActivity extends Activity implements View.OnSystemUiVisibilityCh
     public static native void nativeAddTouch(int touchId, String name);
     public static native void nativePermissionResult(int requestCode, boolean result);
     //模拟器C实现代码
-//    //按键控制
+    //按键控制
     public static native void onDataKey(int key,boolean down);
-//    //读取和加载一个记录(true保存,false加载)
+    //读取和加载一个记录(true保存,false加载)
     public static native void onSlotNum(int num,boolean saveAndLoad);
+    //设置是否全屏
+    public static native void onScreenSize(boolean isFull,int width,int height);
 //    //游戏退出
 //    public static native void onGameExit(boolean save);
     /**
@@ -1107,7 +1114,7 @@ public class SDLActivity extends Activity implements View.OnSystemUiVisibilityCh
     }
 
     // This method is called by SDLControllerManager's API 26 Generic Motion Handler.
-    public static View getContentView()
+    public static FrameLayout getContentView()
     {
         return mSingleton.mLayout;
     }
@@ -1668,6 +1675,10 @@ public class SDLActivity extends Activity implements View.OnSystemUiVisibilityCh
     }
     public String getGamePath(){
         return gamePath;
+    }
+    //获取SurfaceView
+    public SDLSurface getSDLSurfaceView(){
+        return mSurface;
     }
 }
 
@@ -2356,9 +2367,7 @@ interface SDLClipboardHandler {
 }
 
 
-class SDLClipboardHandler_API11 implements
-        SDLClipboardHandler,
-        android.content.ClipboardManager.OnPrimaryClipChangedListener {
+class SDLClipboardHandler_API11 implements SDLClipboardHandler, android.content.ClipboardManager.OnPrimaryClipChangedListener {
 
     protected android.content.ClipboardManager mClipMgr;
 

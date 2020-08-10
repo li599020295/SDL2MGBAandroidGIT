@@ -12,3 +12,4 @@ app/app.iml
 local.properties
 app/.externalNativeBuild/*
 SDL2MGBAandroidGIT.iml
+local.properties

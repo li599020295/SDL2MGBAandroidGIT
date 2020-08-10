@@ -52,15 +52,25 @@ static struct VFile* _state = NULL;
 static void _loadState(struct mCoreThread* thread) {
 	mCoreLoadStateNamed(thread->core, _state, SAVESTATE_RTC);
 }
+
 JNIEnv *_env = NULL;
 //存储JNIEnv
 void SDL_onSetJNIEnv(JNIEnv *env){
 	_env = env;
 }
+
 //保存读取数据
 void SDL_onSlotNum(int key, bool isSave){
 	onSlotKey(&global_thread,key,isSave);
 }
+
+//设置是否全屏
+void SDL_onScreenSize(bool isFull,int width,int height){
+	SDL_SetWindowFullscreen(global_renderer->player.window, isFull ? SDL_WINDOW_FULLSCREEN_DESKTOP: 0 );
+	global_renderer->player.fullscreen = isFull;
+	global_renderer->player.windowUpdated = 1;
+}
+
 //由java回调保存响应按键
 void SDL_onDataKey(int key, bool down){
     bool isSpecial =  onKeySpecial(_env,&global_thread,key,down);

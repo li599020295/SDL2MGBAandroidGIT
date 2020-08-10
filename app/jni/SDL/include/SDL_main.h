@@ -127,7 +127,8 @@ extern SDLMAIN_DECLSPEC void SDL_onDataKey(int key, bool isDown);
 extern SDLMAIN_DECLSPEC void SDL_onSetJNIEnv(JNIEnv *env);
 //
 extern SDLMAIN_DECLSPEC void SDL_onSlotNum(int key, bool isSvae);
-
+//设置屏幕大小
+extern SDLMAIN_DECLSPEC void SDL_onScreenSize(bool isFull,int width,int height);
 /**
  *  This is called by the real SDL main function to let the rest of the
  *  library know that initialization was done properly.
