@@ -40,4 +40,6 @@
     <string name="load_slot_file_not_find">Slot data not exist</string>
     <string name="slot_save_time">Data storage time:</string>
     <string name="save_slot_data">Save slot data</string>
+    <string name="game_name">Game Name</string>
+    <string name="game_collect">Game Collect</string>
 </resources>

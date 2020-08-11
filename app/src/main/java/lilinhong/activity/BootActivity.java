@@ -62,7 +62,7 @@ public class BootActivity extends AppCompatActivity {
             com.nostra13.universalimageloader.core.ImageLoader.getInstance().init(config);//全局初始化此配置
         }
         preferencesData = PreferencesData.getInstance(BootActivity.this);
-        Intent intent = new Intent(BootActivity.this,GameRomsActivity.class);
+        Intent intent = new Intent(BootActivity.this, MainActivity.class);
         startActivity(intent);
         finish();
     }
