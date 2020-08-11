@@ -36,18 +36,30 @@
                     android:layout_height="wrap_content"
                     android:text="descxxxx"/>
             </LinearLayout>
-            <ToggleButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text=""/>
-
-            <ImageView
-                android:layout_centerVertical="true"
+            <LinearLayout
                 android:layout_alignParentRight="true"
-                android:layout_marginRight="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:srcCompat="@drawable/ic_next_arrow"/>
+                android:orientation="horizontal">
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@mipmap/ic_launcher"/>
+                <ToggleButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""/>
+
+                <ImageView
+                    android:layout_gravity="center"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/ic_next_arrow"/>
+            </LinearLayout>
+
         </RelativeLayout>
     </LinearLayout>
 </RelativeLayout>
