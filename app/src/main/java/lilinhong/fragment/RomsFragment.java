@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -176,41 +177,51 @@ public class RomsFragment extends Fragment {
             if(convertView == null){
                 convertView = LayoutInflater.from(context).inflate(R.layout.roms_fragment_listview_item,null);
                 holdView = new RomsFragment.GameRomsAdapter.HoldView();
-                holdView.game_roms_item_image = (ImageView)convertView.findViewById(R.id.game_roms_item_image);
-                holdView.game_roms_item_name = (TextView) convertView.findViewById(R.id.game_roms_item_name);
-                holdView.game_roms_item_desc = (TextView)convertView.findViewById(R.id.game_roms_item_desc);
+                holdView.roms_fragment_item_image = (ImageView)convertView.findViewById(R.id.roms_fragment_item_image);
+                holdView.roms_fragment_item_name = (TextView) convertView.findViewById(R.id.roms_fragment_item_name);
+                holdView.roms_fragment_item_desc = (TextView)convertView.findViewById(R.id.roms_fragment_item_desc);
+                holdView.roms_fragment_info_imagebtn = (ImageButton)convertView.findViewById(R.id.roms_fragment_info_imagebtn);
+                holdView.roms_fragment_info_imagebtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        GameRom gameRom = (GameRom)v.getTag();
+                    }
+                });
                 convertView.setTag(holdView);
             }else{
                 holdView = (RomsFragment.GameRomsAdapter.HoldView)convertView.getTag();
             }
+            //设置游戏Romd的位置
+            holdView.roms_fragment_info_imagebtn.setTag(gameRom);
             String image =  gameRom.getImage();
             String name = gameRom.getName();
             String desc = gameRom.getDesc();
             if(!image.equals("")){
                 File file = new File(image);
                 if(file.exists()) {
-                    ImageLoader.getInstance().displayImage(image, holdView.game_roms_item_image);
+                    ImageLoader.getInstance().displayImage(image, holdView.roms_fragment_item_image);
                 }else{
                     //drawable://
-                    ImageLoader.getInstance().displayImage("drawable://" + R.mipmap.ic_launcher, holdView.game_roms_item_image);
+                    ImageLoader.getInstance().displayImage("drawable://" + R.mipmap.ic_launcher, holdView.roms_fragment_item_image);
                 }
             }else{
-                ImageLoader.getInstance().displayImage("drawable://" + R.mipmap.ic_launcher, holdView.game_roms_item_image);
+                ImageLoader.getInstance().displayImage("drawable://" + R.mipmap.ic_launcher, holdView.roms_fragment_item_image);
             }
-            holdView.game_roms_item_name.setText(name);
+            holdView.roms_fragment_item_name.setText(name);
             if(desc.equals("")){
-                holdView.game_roms_item_desc.setVisibility(View.GONE);
+                holdView.roms_fragment_item_desc.setVisibility(View.GONE);
             }else{
-                holdView.game_roms_item_desc.setVisibility(View.VISIBLE);
-                holdView.game_roms_item_desc.setText(desc);
+                holdView.roms_fragment_item_desc.setVisibility(View.VISIBLE);
+                holdView.roms_fragment_item_desc.setText(desc);
             }
 
             return convertView;
         }
         class HoldView{
-            ImageView game_roms_item_image= null;
-            TextView game_roms_item_name= null;
-            TextView game_roms_item_desc= null;
+            ImageButton roms_fragment_info_imagebtn = null;
+            ImageView roms_fragment_item_image= null;
+            TextView roms_fragment_item_name= null;
+            TextView roms_fragment_item_desc= null;
         }
     }
 }
