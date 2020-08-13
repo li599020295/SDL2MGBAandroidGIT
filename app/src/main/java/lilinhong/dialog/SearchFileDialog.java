@@ -45,31 +45,8 @@ public class SearchFileDialog extends Dialog {
     }
 
     private void iniDataFinish() {
-        File[] files;
-        List<String> tempList = new ArrayList<>();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            files = this.context.getExternalFilesDirs(Environment.MEDIA_MOUNTED);
-            for(File file:files){
-                Log.e("main:",file.getAbsolutePath());
-                tempList.add(file.getAbsolutePath());
-            }
-        }
-        //低于4.1版本
-        tempList.add(context.getExternalFilesDir(null).getAbsolutePath());
-        //内存存储
-        tempList.add(context.getFilesDir().getAbsolutePath());
-        //外部存储
-        tempList.add(Environment.getExternalStorageDirectory().getAbsolutePath());
 
-        List<File> pathList = new ArrayList<>();
-        for (String mount : tempList) {
-            if(mount !=null){
-                File root = new File(mount);
-                if (root.exists() && root.isDirectory() && root.canRead()) {
-                    pathList.add(root);
-                }
-            }
-        }
+        List<File> pathList = Utils.getAllStoragePath(this.context);
         searchFileAsyncTask = new SearchFileAsyncTask(this.context);
         searchFileAsyncTask.execute(pathList);
     }

@@ -22,6 +22,7 @@ import org.libsdl.app.SDLActivity;
 import java.io.File;
 import java.util.List;
 
+import lilinhong.dialog.GameInfoDialog;
 import lilinhong.dialog.SearchFileDialog;
 import lilinhong.dialog.TipsDialog;
 import lilinhong.model.GameRom;
@@ -185,6 +186,17 @@ public class RomsFragment extends Fragment {
                     @Override
                     public void onClick(View v) {
                         GameRom gameRom = (GameRom)v.getTag();
+                        final GameInfoDialog gameInfoDialog = new GameInfoDialog(getActivity(),gameRom);
+                        gameInfoDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                            @Override
+                            public void onDismiss(DialogInterface dialog) {
+                                if(gameInfoDialog.getIsRefresh()){
+                                    String md5 = gameInfoDialog.getGameRom().getMd5();
+                                    //移除一个游戏xxxx
+                                }
+                            }
+                        });
+                        gameInfoDialog.show();
                     }
                 });
                 convertView.setTag(holdView);

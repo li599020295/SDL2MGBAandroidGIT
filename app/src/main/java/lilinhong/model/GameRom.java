@@ -6,7 +6,12 @@ public class GameRom {
     private String image = "";
     private String path = "";
     private String md5 = "";
+    //游戏封面
+    private String cover = "";
+    //上次使用时间
     private long preUseTime = 0;
+    //玩耍时间
+    private long playTime = 0;
 
     public String getName() {
         return name;
@@ -54,5 +59,21 @@ public class GameRom {
 
     public void setDesc(String desc) {
         this.desc = desc;
+    }
+
+    public String getCover() {
+        return cover;
+    }
+
+    public void setCover(String cover) {
+        this.cover = cover;
+    }
+
+    public long getPlayTime() {
+        return playTime;
+    }
+
+    public void setPlayTime(long playTime) {
+        this.playTime = playTime;
     }
 }

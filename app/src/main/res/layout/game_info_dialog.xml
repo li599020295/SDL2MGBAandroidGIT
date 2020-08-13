@@ -42,11 +42,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
                 <TextView
+                    android:textColor="@color/black"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/game_file_path"/>
                 <TextView
                     android:id="@+id/game_info_text_filepath"
+                    android:textColor="@color/black"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="xxxxxxxxxxxxxxxxxxxxxxxx"/>
@@ -56,11 +58,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
                 <TextView
+                    android:textColor="@color/black"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/game_file_size"/>
                 <TextView
                     android:id="@+id/game_info_text_filesize"
+                    android:textColor="@color/black"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="xxxxxxxxxxxxxxxxxxxxxxxx"/>
@@ -70,11 +74,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
                 <TextView
+                    android:textColor="@color/black"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/game_save_slot"/>
                 <TextView
                     android:id="@+id/game_info_text_saveslot"
+                    android:textColor="@color/black"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="xxxxxxxxxxxxxxxxxxxxxxxx"/>
@@ -84,11 +90,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
                 <TextView
+                    android:textColor="@color/black"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/last_play_time"/>
                 <TextView
                     android:id="@+id/game_info_text_lasttime"
+                    android:textColor="@color/black"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="xxxxxxxxxxxxxxxxxxxxxxxx"/>
@@ -98,11 +106,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
                 <TextView
+                    android:textColor="@color/black"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/game_play_time"/>
                 <TextView
                     android:id="@+id/game_info_text_palytime"
+                    android:textColor="@color/black"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="xxxxxxxxxxxxxxxxxxxxxxxx"/>

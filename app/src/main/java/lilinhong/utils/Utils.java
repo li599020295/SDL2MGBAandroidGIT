@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
+import android.os.Environment;
 import android.util.Log;
 
 import androidx.core.content.ContextCompat;
@@ -14,14 +15,74 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.security.MessageDigest;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.LinkedHashSet;
 import java.util.List;
 import lilinhong.dialog.TipsDialog;
 import lilinhong.model.GameRom;
 
 public class Utils {
+    //路径去掉存储卡自带的那部分
+    public static String getPathDeduplication(Context context,String gamePath){
+        List<String>listPath = getAllStoragePathStr(context);
+        for (String path : listPath){
+            if(gamePath.indexOf(path)>=0){
+                return gamePath.replaceAll(path,"");
+            }
+        }
+        return gamePath;
+    }
+    public static List<String>getAllStoragePathStr(Context context){
+        File[] files;
+        List<String> tempList = new ArrayList<>();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            files = context.getExternalFilesDirs(Environment.MEDIA_MOUNTED);
+            for(File file:files){
+                Log.e("main:",file.getAbsolutePath());
+                tempList.add(file.getAbsolutePath());
+            }
+        }
+        //低于4.1版本
+        tempList.add(context.getExternalFilesDir(null).getAbsolutePath());
+        //内存存储
+        tempList.add(context.getFilesDir().getAbsolutePath());
+        //外部存储
+        tempList.add(Environment.getExternalStorageDirectory().getAbsolutePath());
+        return tempList;
+    }
+    //获取所有存储路径
+    public static List<File>getAllStoragePath(Context context){
+
+        List<String> tempList = getAllStoragePathStr(context);
+        //去重
+        LinkedHashSet<String> hashSet = new LinkedHashSet<>(tempList);
+        tempList = new ArrayList<>(hashSet);
+
+        System.out.println(tempList.toString());
+
+        List<File> pathList = new ArrayList<>();
+        for (String mount : tempList) {
+            if(mount !=null){
+                File root = new File(mount);
+                if (root.exists() && root.isDirectory() && root.canRead()) {
+                    pathList.add(root);
+                }
+            }
+        }
+        return pathList;
+    }
+    //转换文件大小为M
+    public static String getFileSizeForM(long fileSize){
+        DecimalFormat df = new DecimalFormat( "0.## ");
+        Float si=fileSize/1024f/1024f;
+       // System.out.println(df.format(si)+"M");
+        return df.format(si)+"M";
+    }
+
+    //设置颜色兼容
     public static final int getColor(Context context, int id) {
         final int version = Build.VERSION.SDK_INT;
         if (version >= 23) {
@@ -30,11 +91,17 @@ public class Utils {
             return context.getResources().getColor(id);
         }
     }
+
     //日月年美国获取时间方法
     public static String getFileLastModifiedTime(File file) {
-        Calendar cal = Calendar.getInstance();
         long time = file.lastModified();
-        cal.setTimeInMillis(time);
+        return getUSTime(time);
+    }
+
+    //获取美国时间
+    public static String getUSTime(long ctime){
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(ctime);
         int day = cal.get(Calendar.DAY_OF_MONTH);
         int month = cal.get(Calendar.MONTH)+1;
         int year = cal.get(Calendar.YEAR);
@@ -44,20 +111,32 @@ public class Utils {
         // 输出：修改时间[2] 2009-08-17 10:32:38///09 day 11 month in 2020
         return day +" day "+ month + " month in "+year+", "+hour+":"+minute+":"+second;
     }
+
     /**
      * 加载本地图片
      * @param url
      * @return
      */
     public static Bitmap getLoacalBitmap(String url) {
+        if(url == null || url.equals("")){
+            return null;
+        }
+        Bitmap bitmap = null;
+        FileInputStream fis = null;
         try {
-            FileInputStream fis = new FileInputStream(url);
-            return BitmapFactory.decodeStream(fis);  ///把流转化为Bitmap图片
+            fis = new FileInputStream(url);
+            bitmap =  BitmapFactory.decodeStream(fis);  ///把流转化为Bitmap图片
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
-            return null;
+        }finally {
+            try{
+                if(fis!=null){
+                    fis.close();
+                }
+            }catch (Exception e){}
         }
+        return bitmap;
     }
     public static String getSlotPath(String gamePath,int slot){
         if(gamePath == null &&gamePath.equals("")){
@@ -66,6 +145,7 @@ public class Utils {
         String slotPath = gamePath.substring(0,gamePath.lastIndexOf(".")+1)+"ss"+String.valueOf(slot+1);
         return slotPath;
     }
+
     //添加文件列表
     public static void addGameFileList(List<File> fileList) {
         if(fileList == null || fileList.size() == 0){
@@ -133,6 +213,7 @@ public class Utils {
         }
         return stringBuilder.toString();
     }
+
     //遍历游戏文件
     public static void getGameFiles(String path, List<File> fileList) {
         File file = new File(path);
@@ -166,6 +247,7 @@ public class Utils {
             }
         }
     }
+
     public static boolean isGameFile(File file){
         String name = file.getName();
         String suffix = name.substring(name.lastIndexOf(".")+1).toLowerCase();
@@ -174,12 +256,14 @@ public class Utils {
         }
         return false;
     }
+
     public static TipsDialog showTips(Context context, String title, String desc){
         TipsDialog tipsDialog = new TipsDialog(context);
         tipsDialog.setData(title,desc);
         //tipsDialog.show();
         return tipsDialog;
     }
+
     //复制assets的数据到某个地方
     public static void copyAssetsData(Context context, String path){
         InputStream inStream = null;
@@ -201,7 +285,6 @@ public class Utils {
                     outStream.write(buffer, 0, len);//
                 }
             }
-
         }catch (Exception e){
             e.printStackTrace();
         }finally {

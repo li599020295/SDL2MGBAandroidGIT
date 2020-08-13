@@ -42,10 +42,12 @@
     <string name="save_slot_data">Save slot data</string>
     <string name="game_name">By Name</string>
     <string name="game_collect">By Collect</string>
-    <string name="game_file_path">Game file path:</string>
-    <string name="game_file_size">Game file size:</string>
-    <string name="game_save_slot">Game save slot:</string>
-    <string name="last_play_time">Last play time:</string>
-    <string name="game_play_time">Game play time:</string>
+    <string name="game_file_path">Game file path :\t</string>
+    <string name="game_file_size">Game file size :\t</string>
+    <string name="game_save_slot">Game save slot :\t</string>
+    <string name="last_play_time">Last play time :\t</string>
+    <string name="game_play_time">Game play time :\t</string>
     <string name="delete_this_game">Delete this game</string>
+    <string name="hour">Hour</string>
+    <string name="no">No</string>
 </resources>
