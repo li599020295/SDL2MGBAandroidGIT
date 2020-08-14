@@ -10,10 +10,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.ToggleButton;
+
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -182,6 +185,7 @@ public class RomsFragment extends Fragment {
                 holdView.roms_fragment_item_name = (TextView) convertView.findViewById(R.id.roms_fragment_item_name);
                 holdView.roms_fragment_item_desc = (TextView)convertView.findViewById(R.id.roms_fragment_item_desc);
                 holdView.roms_fragment_info_imagebtn = (ImageButton)convertView.findViewById(R.id.roms_fragment_info_imagebtn);
+                holdView.roms_fragment_togglebtn_colle = (ToggleButton)convertView.findViewById(R.id.roms_fragment_togglebtn_colle);
                 holdView.roms_fragment_info_imagebtn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -199,6 +203,17 @@ public class RomsFragment extends Fragment {
                         gameInfoDialog.show();
                     }
                 });
+
+                holdView.roms_fragment_togglebtn_colle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        if(isChecked){
+                            buttonView.setBackgroundResource(R.mipmap.collect_btn);
+                        }else {
+                            buttonView.setBackgroundResource(R.mipmap.un_collect_btn);
+                        }
+                    }
+                });
                 convertView.setTag(holdView);
             }else{
                 holdView = (RomsFragment.GameRomsAdapter.HoldView)convertView.getTag();
@@ -208,6 +223,7 @@ public class RomsFragment extends Fragment {
             String image =  gameRom.getImage();
             String name = gameRom.getName();
             String desc = gameRom.getDesc();
+
             if(!image.equals("")){
                 File file = new File(image);
                 if(file.exists()) {
@@ -219,12 +235,21 @@ public class RomsFragment extends Fragment {
             }else{
                 ImageLoader.getInstance().displayImage("drawable://" + R.mipmap.ic_launcher, holdView.roms_fragment_item_image);
             }
+
             holdView.roms_fragment_item_name.setText(name);
+
             if(desc.equals("")){
                 holdView.roms_fragment_item_desc.setVisibility(View.GONE);
             }else{
                 holdView.roms_fragment_item_desc.setVisibility(View.VISIBLE);
                 holdView.roms_fragment_item_desc.setText(desc);
+            }
+
+            boolean isCollection = gameRom.isCollect();
+            if(isCollection){
+                holdView.roms_fragment_togglebtn_colle.setBackgroundResource(R.mipmap.collect_btn);
+            }else {
+                holdView.roms_fragment_togglebtn_colle.setBackgroundResource(R.mipmap.un_collect_btn);
             }
 
             return convertView;
@@ -234,6 +259,7 @@ public class RomsFragment extends Fragment {
             ImageView roms_fragment_item_image= null;
             TextView roms_fragment_item_name= null;
             TextView roms_fragment_item_desc= null;
+            ToggleButton roms_fragment_togglebtn_colle = null;
         }
     }
 }

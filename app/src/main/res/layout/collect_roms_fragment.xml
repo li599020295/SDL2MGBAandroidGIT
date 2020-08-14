@@ -7,7 +7,7 @@
     android:background="@color/white">
 
     <ListView
-        android:id="@+id/game_roms_listview"
+        android:id="@+id/collect_game_roms_listview"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
     </ListView>

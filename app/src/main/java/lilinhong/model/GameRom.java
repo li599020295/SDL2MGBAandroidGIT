@@ -10,6 +10,8 @@ public class GameRom {
     private String cover = "";
     //上次使用时间
     private long preUseTime = 0;
+    //收藏
+    private boolean collect = false;
     //玩耍时间
     private long playTime = 0;
 
@@ -75,5 +77,13 @@ public class GameRom {
 
     public void setPlayTime(long playTime) {
         this.playTime = playTime;
+    }
+
+    public boolean isCollect() {
+        return collect;
+    }
+
+    public void setCollect(boolean collect) {
+        this.collect = collect;
     }
 }
