@@ -1,5 +1,6 @@
 package lilinhong.utils;
 
+
 public class GlobalConfig {
     public static String GBA_SUFFIX = "gba";
     public static String GB_SUFFIX = "gb";

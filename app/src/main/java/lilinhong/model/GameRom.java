@@ -83,7 +83,8 @@ public class GameRom {
         return collect;
     }
 
-    public void setCollect(boolean collect) {
+    public GameRom setCollect(boolean collect) {
         this.collect = collect;
+        return this;
     }
 }

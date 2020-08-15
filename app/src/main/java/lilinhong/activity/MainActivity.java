@@ -15,10 +15,12 @@ import org.libsdl.app.R;
 import java.util.ArrayList;
 import java.util.List;
 import lilinhong.adapter.MainFragmentPagerAdapter;
+import lilinhong.fragment.CollectFragment;
 import lilinhong.fragment.RomsFragment;
 import lilinhong.utils.PreferencesData;
 
 public class MainActivity extends AppCompatActivity {
+    private static MainActivity mainActivity = null;
     private TabLayout main_tablayout;
     private ViewPager main_viewpage;
     private PreferencesData preferencesData = null;
@@ -34,12 +36,13 @@ public class MainActivity extends AppCompatActivity {
         initFinish();
     }
     private void initData(){
+        mainActivity = this;
         nameList = new ArrayList<>();
         nameList.add(getString(R.string.game_name));
         nameList.add(getString(R.string.game_collect));
         fragmentList = new ArrayList<>();
         fragmentList.add(new RomsFragment());
-        fragmentList.add(new RomsFragment());
+        fragmentList.add(new CollectFragment());
         preferencesData = PreferencesData.getInstance();
         mainFragmentPagerAdapter = new MainFragmentPagerAdapter(getSupportFragmentManager(),fragmentList);
     }
@@ -78,5 +81,16 @@ public class MainActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    //是否刷新
+    public void setCollectRefresh(){
+       CollectFragment fragment = (CollectFragment) fragmentList.get(1);
+       if(fragment!=null){
+           fragment.setReFresh(true);
+       }
+    }
+    public static MainActivity getMainActivity(){
+        return mainActivity;
     }
 }

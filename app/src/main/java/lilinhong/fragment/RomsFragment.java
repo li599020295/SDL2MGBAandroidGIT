@@ -25,6 +25,7 @@ import org.libsdl.app.SDLActivity;
 import java.io.File;
 import java.util.List;
 
+import lilinhong.activity.MainActivity;
 import lilinhong.dialog.GameInfoDialog;
 import lilinhong.dialog.SearchFileDialog;
 import lilinhong.dialog.TipsDialog;
@@ -34,6 +35,7 @@ import lilinhong.utils.PreferencesData;
 import lilinhong.utils.Utils;
 
 public class RomsFragment extends Fragment {
+    private String TAG = RomsFragment.class.getName();
     private RomsFragment.GameRomsAdapter gameRomsAdapter = null;
     private ListView game_roms_listview = null;
     private List<GameRom> gameARomList = null;
@@ -48,6 +50,7 @@ public class RomsFragment extends Fragment {
         initData();
         initUI();
         initFinish();
+        Log.i(TAG,"onCreateView");
         return mainView;
     }
 
@@ -175,9 +178,9 @@ public class RomsFragment extends Fragment {
         }
 
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
+        public View getView(final int position, View convertView, ViewGroup parent) {
             RomsFragment.GameRomsAdapter.HoldView holdView = null;
-            GameRom gameRom = gameRomList.get(position);
+            GameRom rom = gameRomList.get(position);
             if(convertView == null){
                 convertView = LayoutInflater.from(context).inflate(R.layout.roms_fragment_listview_item,null);
                 holdView = new RomsFragment.GameRomsAdapter.HoldView();
@@ -207,11 +210,16 @@ public class RomsFragment extends Fragment {
                 holdView.roms_fragment_togglebtn_colle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        GameRom gameRom1 = (GameRom)buttonView.getTag();
                         if(isChecked){
                             buttonView.setBackgroundResource(R.mipmap.collect_btn);
                         }else {
                             buttonView.setBackgroundResource(R.mipmap.un_collect_btn);
                         }
+                        gameRom1 = gameRomList.get(position).setCollect(isChecked);
+                        preferencesData.setCollectRom(gameRom1);
+                        notifyDataSetChanged();
+                        MainActivity.getMainActivity().setCollectRefresh();
                     }
                 });
                 convertView.setTag(holdView);
@@ -219,10 +227,11 @@ public class RomsFragment extends Fragment {
                 holdView = (RomsFragment.GameRomsAdapter.HoldView)convertView.getTag();
             }
             //设置游戏Romd的位置
-            holdView.roms_fragment_info_imagebtn.setTag(gameRom);
-            String image =  gameRom.getImage();
-            String name = gameRom.getName();
-            String desc = gameRom.getDesc();
+            holdView.roms_fragment_info_imagebtn.setTag(rom);
+            holdView.roms_fragment_togglebtn_colle.setTag(rom);
+            String image =  rom.getImage();
+            String name = rom.getName();
+            String desc = rom.getDesc();
 
             if(!image.equals("")){
                 File file = new File(image);
@@ -245,12 +254,8 @@ public class RomsFragment extends Fragment {
                 holdView.roms_fragment_item_desc.setText(desc);
             }
 
-            boolean isCollection = gameRom.isCollect();
-            if(isCollection){
-                holdView.roms_fragment_togglebtn_colle.setBackgroundResource(R.mipmap.collect_btn);
-            }else {
-                holdView.roms_fragment_togglebtn_colle.setBackgroundResource(R.mipmap.un_collect_btn);
-            }
+            boolean isCollection = rom.isCollect();
+            holdView.roms_fragment_togglebtn_colle.setChecked(isCollection);
 
             return convertView;
         }

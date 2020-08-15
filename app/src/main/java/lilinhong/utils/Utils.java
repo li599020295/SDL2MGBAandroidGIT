@@ -19,8 +19,11 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
+
 import lilinhong.dialog.TipsDialog;
 import lilinhong.model.GameRom;
 
@@ -152,7 +155,7 @@ public class Utils {
             return;
         }
 
-        List<GameRom> gameRomList = new ArrayList<>();
+        Map<String,GameRom> gameRomMap = new HashMap<>();
         for (File file : fileList) {
             Log.e("xxxxaddFile",file.getAbsolutePath());
             String md5 = getFileMD5(file);
@@ -167,12 +170,12 @@ public class Utils {
             gameRom.setPreUseTime(0);
             gameRom.setDesc("");
             gameRom.setImage("");
-            gameRomList.add(gameRom);
+            gameRomMap.put(md5,gameRom);
         }
 
-        if(gameRomList.size() > 0){
+        if(gameRomMap.size() > 0){
             PreferencesData preferencesData = PreferencesData.getInstance();
-            preferencesData.addGameSearchAllRomList(gameRomList);
+            preferencesData.addGameAllRomList(gameRomMap);
         }
     }
 

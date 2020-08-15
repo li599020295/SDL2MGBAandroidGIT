@@ -7,7 +7,9 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import lilinhong.model.GameRom;
 
@@ -42,20 +44,49 @@ public class PreferencesData {
     public void setFirstScance(boolean value){
         sp.edit().putBoolean("first_scance",value).commit();
     }
-    //获取数据
-    public static List<GameRom> getRoms(){
+
+    //获取map数据
+    public static Map<String,GameRom> getMapRoms(){
         String roms = preferencesData.sp.getString("roms","");
         Gson gson1=new Gson();
-        List<GameRom> list= gson1.fromJson(roms, new TypeToken<List<GameRom>>() {}.getType());
-        if(list == null){
-            list = new ArrayList<>();
+        Map<String,GameRom> map= gson1.fromJson(roms, new TypeToken<Map<String,GameRom>>() {}.getType());
+        if(map == null){
+            map = new HashMap<>();
         }
-        return list;
+        return map;
     }
+
+    //获取list数据
+    public static List<GameRom> getRoms(){
+        Map<String,GameRom> gameRomMap = getMapRoms();
+        List<GameRom> gameRomList = new ArrayList<>(gameRomMap.values()) ;
+        return gameRomList;
+    }
+
+    //添加一个收藏
+    public void setCollectRom(GameRom rom){
+        Map<String,GameRom> gameRomMap = getMapRoms();
+        GameRom gameRom1 =  gameRomMap.get(rom.getMd5());
+        gameRom1.setCollect(rom.isCollect());
+        addGameAllRomList(gameRomMap);
+    }
+
+    //获取收藏数据
+    public List<GameRom>  getCollectRoms(){
+        List<GameRom> romList = getRoms();
+        for (int i=romList.size()-1;i>=0;i--){
+            GameRom gameRom = romList.get(i);
+            if(!gameRom.isCollect()){
+                romList.remove(i);
+            }
+        }
+        return romList;
+    }
+
     //添加多个文件
-    public void addGameSearchAllRomList(List<GameRom> romList){
+    public void addGameAllRomList(Map<String,GameRom> mapRoms){
         Gson gson2=new Gson();
-        String str=gson2.toJson(romList);
+        String str=gson2.toJson(mapRoms);
         sp.edit().putString("roms",str).commit();
         System.out.println(str);
     }
