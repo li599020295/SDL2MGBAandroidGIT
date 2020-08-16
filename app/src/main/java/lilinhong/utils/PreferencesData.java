@@ -56,11 +56,27 @@ public class PreferencesData {
         return map;
     }
 
+    //移除一个游戏
+    public void removeRomGame(GameRom rom){
+        Map<String,GameRom> gameRomMap = getMapRoms();
+        gameRomMap.remove(rom.getMd5());
+        addGameAllRomList(gameRomMap);
+    }
+
     //获取list数据
-    public static List<GameRom> getRoms(){
+    public List<GameRom> getRoms(){
         Map<String,GameRom> gameRomMap = getMapRoms();
         List<GameRom> gameRomList = new ArrayList<>(gameRomMap.values()) ;
         return gameRomList;
+    }
+
+    //保存所有数据
+    public void setSaveRomData(GameRom rom){
+        Map<String,GameRom> gameRomMap = getMapRoms();
+        GameRom gameRom1 =  gameRomMap.get(rom.getMd5());
+        gameRom1.setPlayTime(rom.getPlayTime());
+        gameRom1.setLastPlayTime(rom.getLastPlayTime());
+        addGameAllRomList(gameRomMap);
     }
 
     //添加一个收藏

@@ -49,5 +49,7 @@
     <string name="game_play_time">Game play time :\t</string>
     <string name="delete_this_game">Delete this game</string>
     <string name="hour">Hour</string>
+    <string name="minute">Minute</string>
+    <string name="second">Second</string>
     <string name="no">No</string>
 </resources>

@@ -1,6 +1,8 @@
 package lilinhong.model;
 
-public class GameRom {
+import java.io.Serializable;
+
+public class GameRom implements Serializable {
     private String name = "";
     private String desc = "";
     private String image = "";
@@ -9,11 +11,13 @@ public class GameRom {
     //游戏封面
     private String cover = "";
     //上次使用时间
-    private long preUseTime = 0;
+    private long lastPlayTime = 0;
     //收藏
     private boolean collect = false;
     //玩耍时间
     private long playTime = 0;
+    //开始玩耍的时间这个是临时使用的
+    private long startPlayTime = 0;
 
     public String getName() {
         return name;
@@ -37,14 +41,6 @@ public class GameRom {
 
     public void setMd5(String md5) {
         this.md5 = md5;
-    }
-
-    public long getPreUseTime() {
-        return preUseTime;
-    }
-
-    public void setPreUseTime(long preUseTime) {
-        this.preUseTime = preUseTime;
     }
 
     public String getImage() {
@@ -86,5 +82,21 @@ public class GameRom {
     public GameRom setCollect(boolean collect) {
         this.collect = collect;
         return this;
+    }
+
+    public long getLastPlayTime() {
+        return lastPlayTime;
+    }
+
+    public void setLastPlayTime(long lastPlayTime) {
+        this.lastPlayTime = lastPlayTime;
+    }
+
+    public long getStartPlayTime() {
+        return startPlayTime;
+    }
+
+    public void setStartPlayTime(long startPlayTime) {
+        this.startPlayTime = startPlayTime;
     }
 }

@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.animation.AnimatorInflater;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -11,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.CompoundButton;
 import android.widget.ImageButton;
@@ -23,6 +25,8 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import org.libsdl.app.R;
+import org.libsdl.app.SDLActivity;
+
 import java.io.File;
 import java.util.List;
 import lilinhong.dialog.GameInfoDialog;
@@ -61,10 +65,10 @@ public class CollectFragment extends Fragment {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                gameRomList = preferencesData.getCollectRoms();
+                List<GameRom> collectRomList = preferencesData.getCollectRoms();
                 Message msg = handler.obtainMessage();
                 msg.what = 1;
-                msg.obj = gameRomList;
+                msg.obj = collectRomList;
                 handler.sendMessage(msg);
             }
         }).start();
@@ -83,6 +87,17 @@ public class CollectFragment extends Fragment {
     private void initUI() {
         collect_game_roms_listview = (ListView)mainView.findViewById(R.id.collect_game_roms_listview);
         collect_game_roms_listview.setAdapter(adapter);
+        collect_game_roms_listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                GameRom gameRom = (GameRom)adapter.getItem(position);
+                Intent sdlActivityIntent = new Intent(getActivity(), SDLActivity.class);
+                Bundle bundle=new Bundle();
+                bundle.putSerializable("GAME_ROM",gameRom);
+                sdlActivityIntent.putExtras(bundle);
+                startActivity(sdlActivityIntent);
+            }
+        });
     }
 
     @Override
@@ -143,8 +158,10 @@ public class CollectFragment extends Fragment {
                             @Override
                             public void onDismiss(DialogInterface dialog) {
                                 if(gameInfoDialog.getIsRefresh()){
-                                    String md5 = gameInfoDialog.getGameRom().getMd5();
+                                    GameRom rom = gameInfoDialog.getGameRom();
                                     //移除一个游戏xxxx
+                                    preferencesData.removeRomGame(rom);
+                                    reFreshData();
                                 }
                             }
                         });

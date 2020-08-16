@@ -34,15 +34,18 @@ import android.content.pm.ApplicationInfo;
 
 import lilinhong.dialog.ShowScreenCaptureDialog;
 import lilinhong.dialog.TipsDialog;
+import lilinhong.model.GameRom;
+import lilinhong.utils.PreferencesData;
 import lilinhong.utils.Utils;
 
 /**
  SDL Activity
  */
 public class SDLActivity extends Activity implements View.OnSystemUiVisibilityChangeListener {
+    private PreferencesData preferencesData = null;
+    private GameRom gameRom = null;
     public TipsDialog tipsDialog = null;
-    //文件路径
-    private String gamePath = "";
+
     private static final String TAG = "SDL";
 
     public static boolean mIsResumedCalled, mHasFocus;
@@ -173,7 +176,7 @@ public class SDLActivity extends Activity implements View.OnSystemUiVisibilityCh
      * @return arguments for the native application.
      */
     protected String[] getArguments() {
-        String gamePath = SDLActivity.mSingleton.gamePath;
+        String gamePath = SDLActivity.mSingleton.gameRom.getPath();
         String argData[]={gamePath};
         return argData;
     }
@@ -207,8 +210,12 @@ public class SDLActivity extends Activity implements View.OnSystemUiVisibilityCh
         //全屏
         getWindow().setFlags(WindowManager.LayoutParams. FLAG_FULLSCREEN , WindowManager.LayoutParams. FLAG_FULLSCREEN);
 
+        preferencesData = new PreferencesData(this);
+
         Intent intent = getIntent();
-        gamePath = intent.getStringExtra("path");
+        Bundle bundle =intent.getExtras();
+        gameRom = (GameRom)bundle.get("GAME_ROM");
+        gameRom.setStartPlayTime(System.currentTimeMillis());
         try {
             Thread.currentThread().setName("SDLActivity");
         } catch (Exception e) {
@@ -449,6 +456,10 @@ public class SDLActivity extends Activity implements View.OnSystemUiVisibilityCh
                 SDLActivity.mSingleton.tipsDialog.dismiss();
             }
         }
+        long endTime = System.currentTimeMillis();
+        gameRom.setLastPlayTime(endTime);
+        gameRom.setPlayTime((endTime - gameRom.getStartPlayTime()) + gameRom.getPlayTime());
+        preferencesData.setSaveRomData(gameRom);
         SDLActivity.nativeSendQuit();
         SDLActivity.nativeQuit();
         android.os.Process.killProcess(android.os.Process.myPid());
@@ -518,7 +529,7 @@ public class SDLActivity extends Activity implements View.OnSystemUiVisibilityCh
     /* Transition to next state */
     public static void handleNativeState() {
 
-        if (mNextNativeState == mCurrentNativeState || SDLActivity.mSingleton.gamePath.equals("")) {
+        if (mNextNativeState == mCurrentNativeState || SDLActivity.mSingleton.gameRom == null) {
             // Already in same state, discard.
             return;
         }
@@ -1674,7 +1685,7 @@ public class SDLActivity extends Activity implements View.OnSystemUiVisibilityCh
         });
     }
     public String getGamePath(){
-        return gamePath;
+        return gameRom.getPath();
     }
     //获取SurfaceView
     public SDLSurface getSDLSurfaceView(){

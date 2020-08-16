@@ -9,6 +9,8 @@ import android.util.Log;
 
 import androidx.core.content.ContextCompat;
 
+import org.libsdl.app.R;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -28,6 +30,18 @@ import lilinhong.dialog.TipsDialog;
 import lilinhong.model.GameRom;
 
 public class Utils {
+    //获取所有的slot数量
+    public static List<File>getAllSlotList(String gamePath){
+        List<File> slotList = new ArrayList<>();
+        for (int i=0;i<9;i++){
+            String slotPath = gamePath.substring(0,gamePath.lastIndexOf(".")+1)+"ss"+String.valueOf(i+1);
+            File file =new File(slotPath);
+            if(file.exists()){
+                slotList.add(file);
+            }
+        }
+        return slotList;
+    }
     //路径去掉存储卡自带的那部分
     public static String getPathDeduplication(Context context,String gamePath){
         List<String>listPath = getAllStoragePathStr(context);
@@ -38,6 +52,34 @@ public class Utils {
         }
         return gamePath;
     }
+
+    //获取时间自动转换为分钟或者小时或者秒
+    public static String getTimeHourOrMinuteOrSecon(long times,Context context){
+        if(times <= 0){
+            return times + " "+context.getString(R.string.second);
+        }
+        long second = times/1000;
+        long minute = -1;
+        long hour = -1;
+        if(second > 60){
+            minute = second / 60;
+            if(minute > 60){
+                hour = minute / 60;
+            }
+        }
+
+        if(hour > 0){
+            return hour + " "+context.getString(R.string.hour);
+        }
+
+        if (minute > 0){
+            return minute + " "+context.getString(R.string.minute);
+        }
+
+        return second + " "+context.getString(R.string.second);
+    }
+
+    //获取所有存储的位置
     public static List<String>getAllStoragePathStr(Context context){
         File[] files;
         List<String> tempList = new ArrayList<>();
@@ -167,7 +209,7 @@ public class Utils {
             gameRom.setName(file.getName());
             gameRom.setMd5(md5);
             gameRom.setPath(file.getAbsolutePath());
-            gameRom.setPreUseTime(0);
+            gameRom.setLastPlayTime(0);
             gameRom.setDesc("");
             gameRom.setImage("");
             gameRomMap.put(md5,gameRom);

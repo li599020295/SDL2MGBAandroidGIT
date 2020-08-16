@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,6 +37,17 @@ import lilinhong.utils.PreferencesData;
 import lilinhong.utils.Utils;
 
 public class RomsFragment extends Fragment {
+    private Handler handler = new Handler(){
+        @Override
+        public void handleMessage(@NonNull Message msg) {
+            super.handleMessage(msg);
+            if(msg.what == 1){
+                List<GameRom>romList = (List<GameRom>)msg.obj;
+                gameRomsAdapter.setRomsDataList(romList);
+                gameRomsAdapter.notifyDataSetChanged();
+            }
+        }
+    };
     private String TAG = RomsFragment.class.getName();
     private RomsFragment.GameRomsAdapter gameRomsAdapter = null;
     private ListView game_roms_listview = null;
@@ -54,10 +67,23 @@ public class RomsFragment extends Fragment {
         return mainView;
     }
 
+    public void reFreshData(){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                List<GameRom> gameRomList = preferencesData.getRoms();
+                Message msg = handler.obtainMessage();
+                msg.what = 1;
+                msg.obj = gameRomList;
+                handler.sendMessage(msg);
+            }
+        }).start();
+    }
+
     private void initData() {
         permissionSystem = new PermissionSystem(getActivity());
         preferencesData = PreferencesData.getInstance(getActivity());
-        gameARomList = PreferencesData.getRoms();
+        gameARomList = preferencesData.getRoms();
         gameRomsAdapter = new RomsFragment.GameRomsAdapter(getActivity(),gameARomList);
     }
 
@@ -69,7 +95,9 @@ public class RomsFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 GameRom gameRom = (GameRom)gameRomsAdapter.getItem(position);
                 Intent sdlActivityIntent = new Intent(getActivity(), SDLActivity.class);
-                sdlActivityIntent.putExtra("path",gameRom.getPath());
+                Bundle bundle=new Bundle();
+                bundle.putSerializable("GAME_ROM",gameRom);
+                sdlActivityIntent.putExtras(bundle);
                 startActivity(sdlActivityIntent);
             }
         });
@@ -198,8 +226,11 @@ public class RomsFragment extends Fragment {
                             @Override
                             public void onDismiss(DialogInterface dialog) {
                                 if(gameInfoDialog.getIsRefresh()){
-                                    String md5 = gameInfoDialog.getGameRom().getMd5();
+                                    GameRom rom = gameInfoDialog.getGameRom();
                                     //移除一个游戏xxxx
+                                    preferencesData.removeRomGame(rom);
+                                    reFreshData();
+
                                 }
                             }
                         });
