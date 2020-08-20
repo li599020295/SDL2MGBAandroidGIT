@@ -52,7 +52,34 @@ static struct VFile* _state = NULL;
 static void _loadState(struct mCoreThread* thread) {
 	mCoreLoadStateNamed(thread->core, _state, SAVESTATE_RTC);
 }
+//作弊
+struct mCheatDevice*  m_device = NULL;
+struct mCheatSet* m_cheatSet = NULL;
+//
+void enterCheat(int codeType, char*chat_str, char*chat_name) {
+	if (m_cheatSet == NULL) {
+		m_cheatSet = m_device->createSet(m_device, chat_name);
+	}
+	mCheatAddLine(m_cheatSet,chat_str, codeType);
 
+	m_cheatSet->refresh(m_cheatSet,m_device);
+}
+//获取当前行的cheat
+struct mCheatSet* getItemCheat(int index){
+	return *mCheatSetsGetPointer(&m_device->cheats, index);
+}
+//停用或者开启一个cheat
+void enableCheat(int index,bool enabled){
+	struct mCheatSet* set = *mCheatSetsGetPointer(&m_device->cheats, index);
+	set->enabled = enabled;
+}
+//移除一个cheat
+void removeCheat(int index){
+	struct mCheatSet* set = *mCheatSetsGetPointer(&m_device->cheats, index);
+	mCheatRemoveSet(m_device, set);
+	mCheatSetDeinit(set);
+	mCheatAutosave(m_device);
+}
 JNIEnv *_env = NULL;
 //存储JNIEnv
 void SDL_onSetJNIEnv(JNIEnv *env){
@@ -156,6 +183,10 @@ int main(int argc, char** argv) {
 			mCheatParseFile(device, vf);
 			vf->close(vf);
 		}
+	}
+
+	if(device!=NULL){
+	    m_device = device;
 	}
 #ifndef MINIMAL_CORE
 	mInputMapInit(&renderer.core->inputMap, &GBAInputInfo);
