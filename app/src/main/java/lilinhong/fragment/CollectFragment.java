@@ -1,7 +1,5 @@
 package lilinhong.fragment;
 
-import android.animation.Animator;
-import android.animation.AnimatorInflater;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -20,13 +18,11 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.ToggleButton;
-
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import org.libsdl.app.R;
 import org.libsdl.app.SDLActivity;
-
 import java.io.File;
 import java.util.List;
 import lilinhong.dialog.GameInfoDialog;

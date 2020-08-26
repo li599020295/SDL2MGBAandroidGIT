@@ -41,7 +41,7 @@
             android:layout_margin="15dp"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:background="@mipmap/speed_normal"
+            android:background="@mipmap/reback_normal"
             android:checked="false"
             android:textOn="@null"
             android:textOff="@null"/>
@@ -50,14 +50,14 @@
             android:layout_marginLeft="15dp"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:background="@mipmap/save_state"/>
+            android:background="@mipmap/load_state"/>
         <Button
             android:id="@+id/gamepad_btn_orien"
             android:layout_marginTop="15dp"
             android:layout_marginLeft="15dp"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:background="@mipmap/screenshot_normal"/>
+            android:background="@mipmap/change_ori"/>
     </LinearLayout>
     <RelativeLayout
         android:layout_centerVertical="true"
@@ -127,14 +127,14 @@
     </RelativeLayout>
     <RelativeLayout
         android:layout_centerHorizontal="true"
-        android:layout_alignParentBottom="true"
+        android:layout_alignParentTop="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
         <Button
             android:id="@+id/gamepad_btn_menu"
-            android:layout_width="70dp"
-            android:layout_height="35dp"
-            android:background="@mipmap/game_menu_bg"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="@mipmap/setting_game"
             />
     </RelativeLayout>
 

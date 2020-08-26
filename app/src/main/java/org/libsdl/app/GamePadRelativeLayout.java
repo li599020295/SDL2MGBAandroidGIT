@@ -21,6 +21,7 @@ import java.io.File;
 
 import lilinhong.dialog.LoadSlotDialog;
 import lilinhong.dialog.SaveSlotDialog;
+import lilinhong.dialog.SettingDialog;
 import lilinhong.utils.Utils;
 
 public class GamePadRelativeLayout extends RelativeLayout {
@@ -54,24 +55,6 @@ public class GamePadRelativeLayout extends RelativeLayout {
         this.sdlActivity = sdlActivity;
         this.initData();
     }
-
-//    public GamePadRelativeLayout(Context context, AttributeSet attrs) {
-//        super(context, attrs);
-//        this.context = context;
-//        this.initData();
-//    }
-//
-//    public GamePadRelativeLayout(Context context, AttributeSet attrs, int defStyleAttr) {
-//        super(context, attrs, defStyleAttr);
-//        this.context = context;
-//        this.initData();
-//    }
-
-//    public GamePadRelativeLayout(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-//        super(context, attrs, defStyleAttr, defStyleRes);
-//        this.context = context;
-//        this.initData();
-//    }
 
     private void initData(){
         RelativeLayout gamepadRelativeLayout = (RelativeLayout)LayoutInflater.from(this.context).inflate(R.layout.gamepad_relative_layout,null);
@@ -176,10 +159,10 @@ public class GamePadRelativeLayout extends RelativeLayout {
                 @Override
                 public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                     if(b){
-                        gamepad_togbtn_rewind.setBackgroundResource(R.mipmap.speed_press);
+                        gamepad_togbtn_rewind.setBackgroundResource(R.mipmap.reback_press);
                         SDLActivity.onDataKey(PAD1_REWIND,true);
                     }else{
-                        gamepad_togbtn_rewind.setBackgroundResource(R.mipmap.speed_normal);
+                        gamepad_togbtn_rewind.setBackgroundResource(R.mipmap.reback_normal);
                         SDLActivity.onDataKey(PAD1_REWIND,false);
                     }
                 }
@@ -189,6 +172,13 @@ public class GamePadRelativeLayout extends RelativeLayout {
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
                     if(event.getAction() == MotionEvent.ACTION_UP){
+
+                        DisplayMetrics dm = new DisplayMetrics();
+                        SDLActivity.getmSingleton().getWindowManager().getDefaultDisplay().getMetrics(dm);
+                        int width = dm.widthPixels;
+                        int height = dm.heightPixels;
+                        SettingDialog dialog = new SettingDialog(context,SDLActivity.getmSingleton().getGamePath());
+                        dialog.show((int) (width*0.75),(int)(height*0.75));
 
                     }
                     return false;

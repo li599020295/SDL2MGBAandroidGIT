@@ -33,7 +33,7 @@ public class Utils {
     //获取所有的slot数量
     public static List<File>getAllSlotList(String gamePath){
         List<File> slotList = new ArrayList<>();
-        for (int i=0;i<9;i++){
+        for (int i=0;i<8;i++){
             String slotPath = gamePath.substring(0,gamePath.lastIndexOf(".")+1)+"ss"+String.valueOf(i+1);
             File file =new File(slotPath);
             if(file.exists()){
