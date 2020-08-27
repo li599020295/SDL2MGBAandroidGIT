@@ -8,7 +8,7 @@
 #include "gl-common.h"
 
 #include <mgba/core/core.h>
-#include <mgba/core/threads.h>
+#include <mgba/core/thread.h>
 #include <mgba-util/math.h>
 #if NO_OPENGL
 #include "platform/opengl/gl.h"

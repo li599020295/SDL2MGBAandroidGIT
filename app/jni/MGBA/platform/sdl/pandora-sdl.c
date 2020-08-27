@@ -5,7 +5,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 #include "main.h"
 
-#include <mgba/core/threads.h>
+#include <mgba/core/thread.h>
 
 #include <linux/omapfb.h>
 #include <linux/fb.h>

@@ -8,7 +8,7 @@
 #include <mgba/core/core.h>
 #include <mgba/core/input.h>
 #include <mgba/core/serialize.h>
-#include <mgba/core/threads.h>
+#include <mgba/core/thread.h>
 #include <mgba/debugger/debugger.h>
 #include <mgba/internal/gba/input.h>
 #include <mgba-util/configuration.h>
@@ -54,7 +54,7 @@ bool mSDLInitEvents(struct mSDLEvents* context) {
 		mLOG(SDL_EVENTS, ERROR, "SDL video initialization failed: %s", SDL_GetError());
 	}
 #endif
-    //这个会导致摇杆生效和按键冲突先注释！
+	//这个会导致摇杆生效和按键冲突先注释！
 	//SDL_JoystickEventState(SDL_ENABLE);
 	//强制等于0
 	int nJoysticks = 0;//SDL_NumJoysticks();
@@ -447,51 +447,51 @@ static void _pauseAfterFrame(struct mCoreThread* context) {
 }
 //按钮按下操作
 void  onKeyDown(struct mCoreThread* context,int key){
-    mCoreThreadInterrupt(context);
+	mCoreThreadInterrupt(context);
 	context->core->addKeys(context->core, 1 << key);
-    mCoreThreadContinue(context);
-    return;
+	mCoreThreadContinue(context);
+	return;
 }
 //按钮弹起操作
 void onKeyUp(struct mCoreThread* context,int key){
-    mCoreThreadInterrupt(context);
+	mCoreThreadInterrupt(context);
 	context->core->clearKeys(context->core, 1 << key);
-    mCoreThreadContinue(context);
-    return;
+	mCoreThreadContinue(context);
+	return;
 }
 //实现一些特殊操作
 bool onKeySpecial(JNIEnv *_env,struct mCoreThread* context,int key,bool isDown) {
-    if (key == SDLK_TAB) {
-        context->impl->sync.audioWait = !isDown;
-        return true;
-    }
-    if (key == SDLK_BACKQUOTE) {
-        mCoreThreadSetRewinding(context, isDown);
-        return true;
-    }
-    if (key == SDLK_F12) {
-        if(!isDown){
-        	//注意screenshotPath是指针必须删除
-           char*screenshotPath =  mCoreTakeScreenshot(context->core);
+	if (key == SDLK_TAB) {
+		context->impl->sync.audioWait = !isDown;
+		return true;
+	}
+	if (key == SDLK_BACKQUOTE) {
+		mCoreThreadSetRewinding(context, isDown);
+		return true;
+	}
+	if (key == SDLK_F12) {
+		if(!isDown){
+			//注意screenshotPath是指针必须删除
+			char*screenshotPath =  mCoreTakeScreenshot(context->core);
 			//所有数据准备完成回调java,通知加载保存图片
 			if(screenshotPath!=NULL){
-                //char buffer[2048];
-                jclass sdlActivity = (*_env)->FindClass(_env,"org/libsdl/app/SDLActivity");
-                jmethodID mid = (*_env)->GetStaticMethodID(_env,sdlActivity,"gameScreenCapture","(Ljava/lang/String;)V");
-                if(mid != NULL){
-                    //回调
-                    jstring capPath = (*_env)->NewStringUTF(_env,screenshotPath);
-                    (*_env)->CallStaticVoidMethod(_env,sdlActivity,mid,capPath);
-                    (*_env)->DeleteLocalRef(_env,capPath);
-                }
+				//char buffer[2048];
+				jclass sdlActivity = (*_env)->FindClass(_env,"org/libsdl/app/SDLActivity");
+				jmethodID mid = (*_env)->GetStaticMethodID(_env,sdlActivity,"gameScreenCapture","(Ljava/lang/String;)V");
+				if(mid != NULL){
+					//回调
+					jstring capPath = (*_env)->NewStringUTF(_env,screenshotPath);
+					(*_env)->CallStaticVoidMethod(_env,sdlActivity,mid,capPath);
+					(*_env)->DeleteLocalRef(_env,capPath);
+				}
 			}
 			if(screenshotPath!=NULL){
 				free(screenshotPath);
 				screenshotPath = NULL;
 			}
-        }
-        return true;
-    }
+		}
+		return true;
+	}
 	return false;
 }
 
@@ -539,7 +539,7 @@ static void _mSDLHandleKeypress(struct mCoreThread* context, struct mSDLPlayer* 
 			return;
 #endif
 #ifdef USE_PNG
-		case SDLK_F12:
+			case SDLK_F12:
         {
             char *screenshotPath = mCoreTakeScreenshot(context->core);
             if(screenshotPath!=NULL){

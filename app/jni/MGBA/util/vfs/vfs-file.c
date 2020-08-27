@@ -25,7 +25,7 @@ static void _vffUnmap(struct VFile* vf, void* memory, size_t size);
 static void _vffTruncate(struct VFile* vf, size_t size);
 static ssize_t _vffSize(struct VFile* vf);
 static bool _vffSync(struct VFile* vf, const void* buffer, size_t size);
-#ifdef USE_VFS_FILE
+
 struct VFile* VFileFOpen(const char* path, const char* mode) {
 	if (!path && !mode) {
 		return 0;
@@ -62,7 +62,7 @@ struct VFile* VFileFromFILE(FILE* file) {
 
 	return &vff->d;
 }
-#endif
+
 bool _vffClose(struct VFile* vf) {
 	struct VFileFILE* vff = (struct VFileFILE*) vf;
 	if (fclose(vff->file) < 0) {

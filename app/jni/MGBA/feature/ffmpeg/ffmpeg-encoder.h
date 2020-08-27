@@ -11,7 +11,7 @@
 CXX_GUARD_START
 
 #include <mgba/internal/gba/gba.h>
-#if 0
+
 #include <libavformat/avformat.h>
 #include <libavcodec/version.h>
 
@@ -102,5 +102,5 @@ void FFmpegEncoderClose(struct FFmpegEncoder*);
 bool FFmpegEncoderIsOpen(struct FFmpegEncoder*);
 
 CXX_GUARD_END
-#endif
+
 #endif

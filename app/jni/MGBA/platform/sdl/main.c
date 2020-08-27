@@ -4,7 +4,6 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 #include "main.h"
-#include "../../include/mgba/core/threads.h"
 
 #include <mgba/internal/debugger/cli-debugger.h>
 
@@ -27,7 +26,7 @@
 #include <mgba/core/config.h>
 #include <mgba/core/input.h>
 #include <mgba/core/serialize.h>
-#include <mgba/core/threads.h>
+#include <mgba/core/thread.h>
 #include <mgba/internal/gba/input.h>
 
 #include <mgba/feature/commandline.h>
@@ -100,13 +99,13 @@ void SDL_onScreenSize(bool isFull,int width,int height){
 
 //由java回调保存响应按键
 void SDL_onDataKey(int key, bool down){
-    bool isSpecial =  onKeySpecial(_env,&global_thread,key,down);
-    if(isSpecial){
-        return;
-    }
-    key = mInputMapKey(global_renderer->player.bindings, SDL_BINDING_KEY, key);
+	bool isSpecial =  onKeySpecial(_env,&global_thread,key,down);
+	if(isSpecial){
+		return;
+	}
+	key = mInputMapKey(global_renderer->player.bindings, SDL_BINDING_KEY, key);
 	if(down){
-        onKeyDown(&global_thread,key);
+		onKeyDown(&global_thread,key);
 	}else{
 		onKeyUp(&global_thread,key);
 	}
@@ -153,7 +152,8 @@ int main(int argc, char** argv) {
 		freeArguments(&args);
 		return 1;
 	}
-    global_renderer = &renderer;
+	global_renderer = &renderer;
+
 	if (!renderer.core->init(renderer.core)) {
 		freeArguments(&args);
 		return 1;
@@ -186,13 +186,11 @@ int main(int argc, char** argv) {
 	}
 
 	if(device!=NULL){
-	    m_device = device;
+		m_device = device;
 	}
-#ifndef MINIMAL_CORE
-	mInputMapInit(&renderer.core->inputMap, &GBAInputInfo);
-#endif
-	mCoreInitConfig(renderer.core, PORT);
 
+	mInputMapInit(&renderer.core->inputMap, &GBAInputInfo);
+	mCoreInitConfig(renderer.core, PORT);
 	applyArguments(&args, &subparser, &renderer.core->config);
 
 	mCoreConfigLoadDefaults(&renderer.core->config, &opts);
@@ -209,17 +207,14 @@ int main(int argc, char** argv) {
 	renderer.filter = renderer.core->opts.resampleVideo;
 
 	if (!mSDLInit(&renderer)) {
-
 		freeArguments(&args);
-
 		mCoreConfigDeinit(&renderer.core->config);
 		renderer.core->deinit(renderer.core);
 		return 1;
 	}
-#ifndef MINIMAL_CORE
+
 	renderer.player.bindings = &renderer.core->inputMap;
 	mSDLInitBindingsGBA(&renderer.core->inputMap);
-#endif
 	mSDLInitEvents(&renderer.events);
 	mSDLEventsLoadConfig(&renderer.events, mCoreConfigGetInput(&renderer.core->config));
 	mSDLAttachPlayer(&renderer.events, &renderer.player);
@@ -234,9 +229,8 @@ int main(int argc, char** argv) {
 	// TODO: Use opts and config
 	ret = mSDLRun(&renderer, &args);
 	mSDLDetachPlayer(&renderer.events, &renderer.player);
-#ifndef MINIMAL_CORE
 	mInputMapDeinit(&renderer.core->inputMap);
-#endif
+
 	if (device) {
 		mCheatDeviceDestroy(device);
 	}
@@ -244,7 +238,6 @@ int main(int argc, char** argv) {
 	mSDLDeinit(&renderer);
 
 	freeArguments(&args);
-
 	mCoreConfigFreeOpts(&opts);
 	mCoreConfigDeinit(&renderer.core->config);
 	renderer.core->deinit(renderer.core);
@@ -317,7 +310,7 @@ int mSDLRun(struct mSDLRenderer* renderer, struct mArguments* args) {
 
 	bool didFail = !mCoreThreadStart(&thread);
 	if (!didFail) {
-        global_thread = thread;
+		global_thread = thread;
 #if SDL_VERSION_ATLEAST(2, 0, 0)
 		renderer->core->desiredVideoDimensions(renderer->core, &renderer->width, &renderer->height);
 		unsigned width = renderer->width * renderer->ratio;

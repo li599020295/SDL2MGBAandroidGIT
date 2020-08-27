@@ -202,7 +202,6 @@ int futimes(int fd, const struct timespec times[2]);
 int futimes(int fd, const struct timespec times[2]) {
 	return syscall(__NR_utimensat,  fd, NULL, times, 0);//utimensat(fd, NULL, times, 0);
 }
-
 static bool _vfdSync(struct VFile* vf, const void* buffer, size_t size) {
 	UNUSED(buffer);
 	UNUSED(size);

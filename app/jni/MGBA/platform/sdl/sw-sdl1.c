@@ -6,7 +6,7 @@
 #include "main.h"
 
 #include <mgba/core/core.h>
-#include <mgba/core/threads.h>
+#include <mgba/core/thread.h>
 #include <mgba/core/version.h>
 #include <mgba-util/arm-algo.h>
 #if NO_SDL1

@@ -6,7 +6,7 @@
 #include "sdl-audio.h"
 
 #include <mgba/core/core.h>
-#include <mgba/core/threads.h>
+#include <mgba/core/thread.h>
 #include <mgba/internal/gba/audio.h>
 #include <mgba/internal/gba/gba.h>
 

@@ -93,10 +93,10 @@ struct VDir* VDeviceList(void);
 
 bool VDirCreate(const char* path);
 
-#ifdef USE_VFS_FILE
+//#ifdef USE_VFS_FILE
 struct VFile* VFileFOpen(const char* path, const char* mode);
 struct VFile* VFileFromFILE(FILE* file);
-#endif
+//#endif
 
 void separatePath(const char* path, char* dirname, char* basename, char* extension);
 

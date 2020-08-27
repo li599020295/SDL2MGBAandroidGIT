@@ -11,7 +11,7 @@
 #endif
 
 #include <mgba/core/core.h>
-#include <mgba/core/threads.h>
+#include <mgba/core/thread.h>
 #include <video-backend.h>
 #ifdef __linux__
 #include <malloc.h>

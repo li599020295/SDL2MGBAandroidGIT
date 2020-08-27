@@ -4,7 +4,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 #include "ffmpeg-encoder.h"
-#if 0
+
 #include <mgba/core/core.h>
 #include <mgba/gba/interface.h>
 
@@ -378,7 +378,18 @@ bool FFmpegEncoderOpen(struct FFmpegEncoder* encoder, const char* outfile) {
 			// QuickTime and a few other things require YUV420
 			encoder->video->pix_fmt = AV_PIX_FMT_YUV420P;
 		}
+		if (encoder->video->codec->id == AV_CODEC_ID_FFV1) {
+#if LIBAVCODEC_VERSION_MAJOR >= 57
+			av_opt_set(encoder->video->priv_data, "coder", "range_tab", 0);
+			av_opt_set_int(encoder->video->priv_data, "context", 1, 0);
+#endif
+			encoder->video->gop_size = 128;
+			encoder->video->level = 3;
+		}
 
+		if (encoder->video->codec->id == AV_CODEC_ID_PNG) {
+			encoder->video->compression_level = 8;
+		}
 		if (strcmp(vcodec->name, "libx264") == 0) {
 			// Try to adaptively figure out when you can use a slower encoder
 			if (encoder->width * encoder->height > 1000000) {
@@ -389,13 +400,15 @@ bool FFmpegEncoderOpen(struct FFmpegEncoder* encoder, const char* outfile) {
 				av_opt_set(encoder->video->priv_data, "preset", "faster", 0);
 			}
 			if (encoder->videoBitrate == 0) {
-				av_opt_set(encoder->video->priv_data, "crf", "0", 0);
+				av_opt_set(encoder->video->priv_data, "qp", "0", 0);
 				encoder->video->pix_fmt = AV_PIX_FMT_YUV444P;
 			}
 		}
 		if (strcmp(vcodec->name, "libvpx-vp9") == 0 && encoder->videoBitrate == 0) {
-			av_opt_set(encoder->video->priv_data, "lossless", "1", 0);
-			encoder->video->pix_fmt = AV_PIX_FMT_YUV444P;
+			av_opt_set_int(encoder->video->priv_data, "lossless", 1, 0);
+			av_opt_set_int(encoder->video->priv_data, "crf", 0, 0);
+			encoder->video->gop_size = 120;
+			encoder->video->pix_fmt = AV_PIX_FMT_GBRP;
 		}
 
 		if (encoder->pixFormat == AV_PIX_FMT_PAL8) {
@@ -794,4 +807,3 @@ static void _ffmpegSetVideoDimensions(struct mAVStream* stream, unsigned width, 
 	    encoder->videoFrame->width, encoder->videoFrame->height, encoder->videoFrame->format,
 	    SWS_POINT, 0, 0, 0);
 }
-#endif

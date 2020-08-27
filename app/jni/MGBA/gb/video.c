@@ -6,7 +6,7 @@
 #include <mgba/internal/gb/video.h>
 
 #include <mgba/core/sync.h>
-#include <mgba/core/threads.h>
+#include <mgba/core/thread.h>
 #include <mgba/core/cache-set.h>
 #include <mgba/internal/gb/gb.h>
 #include <mgba/internal/gb/io.h>
@@ -870,6 +870,9 @@ void GBVideoDeserialize(struct GBVideo* video, const struct GBSerializedState* s
 		mTimingSchedule(&video->p->timing, &video->frameEvent, when);
 	}
 
+	video->renderer->deinit(video->renderer);
+	video->renderer->init(video->renderer, video->p->model, video->sgbBorders);
+
 	size_t i;
 	for (i = 0; i < 64; ++i) {
 		LOAD_16LE(video->palette[i], i * 2, state->video.palette);
@@ -881,7 +884,4 @@ void GBVideoDeserialize(struct GBVideo* video, const struct GBSerializedState* s
 
 	_cleanOAM(video, video->ly);
 	GBVideoSwitchBank(video, video->vramCurrentBank);
-
-	video->renderer->deinit(video->renderer);
-	video->renderer->init(video->renderer, video->p->model, video->sgbBorders);
 }

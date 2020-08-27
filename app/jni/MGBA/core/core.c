@@ -62,7 +62,7 @@ struct mCore* mCoreFindVF(struct VFile* vf) {
 
 enum mPlatform mCoreIsCompatible(struct VFile* vf) {
 	if (!vf) {
-		return false;
+		return PLATFORM_NONE;
 	}
 	const struct mCoreFilter* filter;
 	for (filter = &_filters[0]; filter->filter; ++filter) {
@@ -262,80 +262,78 @@ void mCoreDeleteState(struct mCore* core, int slot) {
 	snprintf(name, sizeof(name), "%s.ss%i", core->dirs.baseName, slot);
 	core->dirs.state->deleteFile(core->dirs.state, name);
 }
-
 //用于获取路径
 typedef struct DIR DIR;
 struct VDirDE;
 struct VDirEntryDE {
-    struct VDirEntry d;
-    struct VDirDE* p;
-    struct dirent* ent;
+	struct VDirEntry d;
+	struct VDirDE* p;
+	struct dirent* ent;
 };
 
 struct VDirDE {
-    struct VDir d;
-    DIR* de;
-    struct VDirEntryDE vde;
-    char* path;
+	struct VDir d;
+	DIR* de;
+	struct VDirEntryDE vde;
+	char* path;
 };
 char * getScreenshotPth(struct VDir* dir, const char* basename, const char* infix, const char* suffix, int mode){
-    if (!dir) {
-        return 0;
-    }
-    dir->rewind(dir);
-    struct VDirEntry* dirent;
-    size_t prefixLen = strlen(basename);
-    size_t infixLen = strlen(infix);
-    char path[PATH_MAX];
-    unsigned next = 0;
-    while ((dirent = dir->listNext(dir))) {
-        const char* filename = dirent->name(dirent);
-        const char* dotPoint = strrchr(filename, '.');
-        size_t len = strlen(filename);
-        if (dotPoint) {
-            len = (dotPoint - filename);
-        }
-        const char* separator = strnrstr(filename, infix, len);
-        if (!separator) {
-            continue;
-        }
-        len = separator - filename;
-        if (len != prefixLen) {
-            continue;
-        }
-        if (strncmp(filename, basename, prefixLen) == 0) {
-            int nlen;
-            separator += infixLen;
-            snprintf(path, PATH_MAX - 1, "%%u%s%%n", suffix);
-            unsigned increment;
-            if (sscanf(separator, path, &increment, &nlen) < 1) {
-                continue;
-            }
-            len = strlen(separator);
-            if (nlen < (ssize_t) len) {
-                continue;
-            }
-            if (next <= increment) {
-                next = increment + 1;
-            }
-        }
-    }
-    snprintf(path, PATH_MAX - 1, "%s%s%u%s", basename, infix, next, suffix);
-    path[PATH_MAX - 1] = '\0';
-    char * screenshotPath = NULL;
-    //如果为NULL直接返回0
-    if (!path) {
-        return 0;
-    }else{
-        struct VDirDE* vdde = (struct VDirDE*)dir;
-        const char* charDir = vdde->path;
-        screenshotPath = malloc(sizeof(char) * (strlen(path) + strlen(charDir) + 2));
-        //成功获取自己想要的名字
-        sprintf(screenshotPath, "%s%s%s", charDir, PATH_SEP, path);
-    }
-    return screenshotPath;
+	if (!dir) {
+		return 0;
+	}
+	dir->rewind(dir);
+	struct VDirEntry* dirent;
+	size_t prefixLen = strlen(basename);
+	size_t infixLen = strlen(infix);
+	char path[PATH_MAX];
+	unsigned next = 0;
+	while ((dirent = dir->listNext(dir))) {
+		const char* filename = dirent->name(dirent);
+		const char* dotPoint = strrchr(filename, '.');
+		size_t len = strlen(filename);
+		if (dotPoint) {
+			len = (dotPoint - filename);
+		}
+		const char* separator = strnrstr(filename, infix, len);
+		if (!separator) {
+			continue;
+		}
+		len = separator - filename;
+		if (len != prefixLen) {
+			continue;
+		}
+		if (strncmp(filename, basename, prefixLen) == 0) {
+			int nlen;
+			separator += infixLen;
+			snprintf(path, PATH_MAX - 1, "%%u%s%%n", suffix);
+			unsigned increment;
+			if (sscanf(separator, path, &increment, &nlen) < 1) {
+				continue;
+			}
+			len = strlen(separator);
+			if (nlen < (ssize_t) len) {
+				continue;
+			}
+			if (next <= increment) {
+				next = increment + 1;
+			}
+		}
+	}
+	snprintf(path, PATH_MAX - 1, "%s%s%u%s", basename, infix, next, suffix);
+	path[PATH_MAX - 1] = '\0';
+	char * screenshotPath = NULL;
+	//如果为NULL直接返回0
+	if (!path) {
+		return 0;
+	}else{
+		struct VDirDE* vdde = (struct VDirDE*)dir;
+		const char* charDir = vdde->path;
+		screenshotPath = malloc(sizeof(char) * (strlen(path) + strlen(charDir) + 2));
+		//成功获取自己想要的名字
+		sprintf(screenshotPath, "%s%s%s", charDir, PATH_SEP, path);
+	}
+	return screenshotPath;
 }
-
 char* mCoreTakeScreenshot(struct mCore* core) {
 	char *screenshotPath = getScreenshotPth(core->dirs.screenshot, core->dirs.baseName, "-", ".png", O_CREAT | O_TRUNC | O_WRONLY);
 #ifdef USE_PNG
@@ -378,8 +376,8 @@ char* mCoreTakeScreenshot(struct mCore* core) {
 #endif
 	mLOG(STATUS, WARN, "Failed to take screenshot");
 	if(screenshotPath!=NULL){
-        free(screenshotPath);
-        screenshotPath = NULL;
+		free(screenshotPath);
+		screenshotPath = NULL;
 	}
 	return screenshotPath;
 }

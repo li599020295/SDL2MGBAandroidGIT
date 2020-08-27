@@ -6,7 +6,7 @@
 #include <mgba/core/log.h>
 
 #include <mgba/core/config.h>
-#include <mgba/core/threads.h>
+#include <mgba/core/thread.h>
 
 #define MAX_CATEGORY 64
 

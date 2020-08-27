@@ -6,7 +6,7 @@
 #include "main.h"
 
 #include <mgba/core/core.h>
-#include <mgba/core/threads.h>
+#include <mgba/core/thread.h>
 #include <mgba/core/version.h>
 #include <mgba-util/arm-algo.h>
 //默认全屏
@@ -27,7 +27,7 @@ bool mSDLSWInit(struct mSDLRenderer* renderer) {
 	width = 0;
 	height = 0;
 	renderer->core->desiredVideoDimensions(renderer->core, &width, &height);
-    int flags = fullScreen ? SDL_WINDOW_FULLSCREEN_DESKTOP : 0;
+	int flags = fullScreen ? SDL_WINDOW_FULLSCREEN_DESKTOP : 0;
 	renderer->window = SDL_CreateWindow("mGBA", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, renderer->viewportWidth, renderer->viewportHeight, flags);
 	SDL_GetWindowSize(renderer->window, &renderer->viewportWidth, &renderer->viewportHeight);
 	renderer->player.window = renderer->window;

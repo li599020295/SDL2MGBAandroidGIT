@@ -4,9 +4,11 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 #include <mgba-util/vfs.h>
+
 #if NO_NEED
 #include <sys/iosupport.h>
 #endif
+
 static bool _vdlClose(struct VDir* vd);
 static void _vdlRewind(struct VDir* vd);
 static struct VDirEntry* _vdlListNext(struct VDir* vd);

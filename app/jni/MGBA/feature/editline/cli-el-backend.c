@@ -8,7 +8,7 @@
 #include <mgba/core/version.h>
 
 #include <signal.h>
-#if 0
+
 static struct CLIDebugger* _activeDebugger;
 
 static char* _prompt(EditLine* el) {
@@ -125,4 +125,3 @@ struct CLIDebuggerBackend* CLIDebuggerEditLineBackendCreate(void) {
 	elbe->d.historyAppend = _CLIDebuggerEditLineHistoryAppend;
 	return &elbe->d;
 }
-#endif

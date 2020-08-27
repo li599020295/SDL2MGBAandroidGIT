@@ -17,7 +17,6 @@ void mRPIGLCommonSwap(struct VideoBackend* context) {
 void mRPIGLCommonInit(struct mSDLRenderer* renderer) {
 #ifdef BUILD_RASPI
 	bcm_host_init();
-
 	renderer->eglDisplay = eglGetDisplay(EGL_DEFAULT_DISPLAY);
 	int major, minor;
 	if (EGL_FALSE == eglInitialize(renderer->eglDisplay, &major, &minor)) {
@@ -86,5 +85,4 @@ void mRPIGLCommonInit(struct mSDLRenderer* renderer) {
 		return false;
 	}
 #endif
-    return ;
 }
