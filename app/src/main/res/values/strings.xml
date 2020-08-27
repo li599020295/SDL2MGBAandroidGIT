@@ -61,4 +61,6 @@
     <string name="cheat_name">Cheat Name</string>
     <string name="add_cheat_code">Add Cheat Code</string>
     <string name="slot">Slot:%d</string>
+    <string name="save_game_data_slot">Save Game Data to Slot %d</string>
+    <string name="time_s">Time:%s</string>
 </resources>

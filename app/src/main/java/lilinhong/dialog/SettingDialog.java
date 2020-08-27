@@ -1,6 +1,7 @@
 package lilinhong.dialog;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.libsdl.app.R;
+import org.libsdl.app.SDLActivity;
 
 import java.io.File;
 
@@ -151,6 +153,7 @@ public class SettingDialog extends BaseDialog {
             if(convertView == null){
                 holdView = new HoldView();
                 convertView = LayoutInflater.from(context).inflate(R.layout.set_slot_include_listview_item,null);
+                holdView.set_slot_include_listview_item_text_tips = convertView.findViewById(R.id.set_slot_include_listview_item_text_tips);
                 holdView.set_slot_include_listview_item_relative_add = convertView.findViewById(R.id.set_slot_include_listview_item_relative_add);
                 holdView.set_slot_include_listview_item_linear_content = convertView.findViewById(R.id.set_slot_include_listview_item_linear_content);
                 holdView.set_slot_include_listview_item_imagebtn_add = convertView.findViewById(R.id.set_slot_include_listview_item_imagebtn_add);
@@ -163,18 +166,28 @@ public class SettingDialog extends BaseDialog {
                     @Override
                     public void onClick(View v) {
                         int pos = (int)v.getTag();
+                        SDLActivity.onSlotNum(pos,false);
+                        dismiss();
                     }
                 });
                 holdView.set_slot_include_listview_item_imagebtn_add.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         int pos = (int)v.getTag();
+                        SDLActivity.onSlotNum(pos,true);
+                        adapter.notifyDataSetChanged();
                     }
                 });
                 holdView.set_slot_include_listview_item_btn_delete.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         int pos = (int)v.getTag();
+                        String filePath = Utils.getSlotPath(gamePath,pos);
+                        File file = new File(filePath);
+                        if(file.exists()){
+                            file.delete();
+                        }
+                        adapter.notifyDataSetChanged();
                     }
                 });
                 convertView.setTag(holdView);
@@ -186,18 +199,26 @@ public class SettingDialog extends BaseDialog {
             holdView.set_slot_include_listview_item_text_slot.setText(String.format(context.getString(R.string.slot),position+1));
             String slotPath = Utils.getSlotPath(gamePath,position);
             File file = new File(slotPath);
-//            if(file.exists()){
-//                holdView.set_slot_include_listview_item_linear_content.setVisibility(View.VISIBLE);
-//                holdView.set_slot_include_listview_item_relative_add.setVisibility(View.INVISIBLE);
-//            }else{
-//                holdView.set_slot_include_listview_item_linear_content.setVisibility(View.INVISIBLE);
-//                holdView.set_slot_include_listview_item_relative_add.setVisibility(View.VISIBLE);
-//            }
+            if(file.exists()){
+                Bitmap bitmap = Utils.getLoacalBitmap(slotPath);
+                holdView.set_slot_include_listview_item_image_icon.setImageBitmap(bitmap);
+                holdView.set_slot_include_listview_item_linear_content.setVisibility(View.VISIBLE);
+                holdView.set_slot_include_listview_item_relative_add.setVisibility(View.INVISIBLE);
+
+                String fileTime = Utils.getFileLastModifiedTime(file);
+                holdView.set_slot_include_listview_item_text_time.setText(String.format(context.getString(R.string.time_s),fileTime));
+            }else{
+                holdView.set_slot_include_listview_item_linear_content.setVisibility(View.INVISIBLE);
+                holdView.set_slot_include_listview_item_relative_add.setVisibility(View.VISIBLE);
+
+                holdView.set_slot_include_listview_item_text_tips.setText(String.format(context.getString(R.string.save_game_data_slot),position+1));
+            }
 
             return convertView;
         }
         class HoldView{
             RelativeLayout set_slot_include_listview_item_relative_add;
+            TextView set_slot_include_listview_item_text_tips = null;
             LinearLayout set_slot_include_listview_item_linear_content;
             ImageButton set_slot_include_listview_item_imagebtn_add;
             ImageView set_slot_include_listview_item_image_icon;
