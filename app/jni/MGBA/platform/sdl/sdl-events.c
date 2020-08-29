@@ -461,6 +461,19 @@ void onKeyUp(struct mCoreThread* context,int key){
 }
 //实现一些特殊操作
 bool onKeySpecial(JNIEnv *_env,struct mCoreThread* context,int key,bool isDown) {
+	if(key == SDLK_v){
+		if(isDown){
+            ConfigurationSetIntValue(&context->core->config.defaultsTable, 0, "volume", 0x100);
+		}else{
+            ConfigurationSetIntValue(&context->core->config.defaultsTable, 0, "volume", 0);
+		}
+
+		context->core->reloadConfigOption(context->core,"volume",NULL);
+	}
+	if(key == SDLK_r){
+		mCoreThreadReset(context);
+		return true;
+	}
 	if (key == SDLK_TAB) {
 		context->impl->sync.audioWait = !isDown;
 		return true;

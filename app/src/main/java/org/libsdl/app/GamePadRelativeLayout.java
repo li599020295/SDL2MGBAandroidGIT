@@ -1,6 +1,7 @@
 package org.libsdl.app;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.pm.ActivityInfo;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
@@ -37,9 +38,13 @@ public class GamePadRelativeLayout extends RelativeLayout {
     private static final int PAD1_START = (int)'\r';
     private static final int PAD1_SELECT = (int)'\b';
     private static final int PAD1_L = (int) 'a';
-    private static final int PAD1_R = (int)'s';
+    private static final int PAD1_S = (int)'s';
     private static final int PAD1_A = (int)'x';
     private static final int PAD1_B = (int)'z';
+    //重置
+    public static final int PAD1_R = (int)'r';
+    //声音
+    public static final int PAD1_V = (int)'v';
     private static final int PAD1_SPEED = (int)'\t';
     //倒退
     private static final int PAD1_REWIND = (int)'`';
@@ -49,6 +54,8 @@ public class GamePadRelativeLayout extends RelativeLayout {
     private SDLActivity sdlActivity = null;
     private Context context;
     private GamePadView gamePadView = null;
+
+    private boolean audioSwitch = true;
     public GamePadRelativeLayout(Context context,SDLActivity sdlActivity) {
         super(context);
         this.context = context;
@@ -57,6 +64,7 @@ public class GamePadRelativeLayout extends RelativeLayout {
     }
 
     private void initData(){
+        this.audioSwitch = true;
         RelativeLayout gamepadRelativeLayout = (RelativeLayout)LayoutInflater.from(this.context).inflate(R.layout.gamepad_relative_layout,null);
         LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
         addView(gamepadRelativeLayout,params);
@@ -177,8 +185,20 @@ public class GamePadRelativeLayout extends RelativeLayout {
                         SDLActivity.getmSingleton().getWindowManager().getDefaultDisplay().getMetrics(dm);
                         int width = dm.widthPixels;
                         int height = dm.heightPixels;
-                        SettingDialog dialog = new SettingDialog(context,SDLActivity.getmSingleton().getGamePath());
-                        dialog.show((int) (width*0.75),(int)(height*0.75));
+                        final SettingDialog setDialog = new SettingDialog(context,SDLActivity.getmSingleton().getGamePath());
+                        setDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                            @Override
+                            public void onDismiss(DialogInterface dialog) {
+                                audioSwitch = setDialog.getAudioSwitch();
+                            }
+                        });
+                        setDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+                            @Override
+                            public void onShow(DialogInterface dialog) {
+                                setDialog.setAudioSwitch(audioSwitch);
+                            }
+                        });
+                        setDialog.show((int) (width*0.75),(int)(height*0.75));
 
                     }
                     return false;
@@ -190,11 +210,11 @@ public class GamePadRelativeLayout extends RelativeLayout {
                 public boolean onTouch(View view, MotionEvent event) {
                     switch (event.getAction()) {
                         case MotionEvent.ACTION_DOWN:
-                            SDLActivity.onDataKey(PAD1_R,true);
+                            SDLActivity.onDataKey(PAD1_S,true);
                             break;
                         case MotionEvent.ACTION_UP:
                         case MotionEvent.ACTION_CANCEL:
-                            SDLActivity.onDataKey(PAD1_R,false);
+                            SDLActivity.onDataKey(PAD1_S,false);
                             break;
                         case MotionEvent.ACTION_MOVE:
                             break;

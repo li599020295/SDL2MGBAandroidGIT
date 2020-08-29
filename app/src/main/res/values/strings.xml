@@ -63,4 +63,6 @@
     <string name="slot">Slot:%d</string>
     <string name="save_game_data_slot">Save Game Data to Slot %d</string>
     <string name="time_s">Time:%s</string>
+    <string name="on">ON</string>
+    <string name="off">OFF</string>
 </resources>

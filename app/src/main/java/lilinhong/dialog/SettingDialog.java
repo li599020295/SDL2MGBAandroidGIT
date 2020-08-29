@@ -13,21 +13,21 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
+import org.libsdl.app.GamePadRelativeLayout;
 import org.libsdl.app.R;
 import org.libsdl.app.SDLActivity;
-
 import java.io.File;
-
 import lilinhong.utils.Utils;
 
 public class SettingDialog extends BaseDialog {
     private View viewSetNormal = null;
     private View viewSetSlot = null;
     private View viewSetCheat = null;
+    private Button set_normal_include_btn_audio = null;
     private SlotAdapter adapter = null;
     private Context context = null;
     private String gamePath = null;
+    private boolean audioSwitch = true;
     public SettingDialog(Context context,String gamePath) {
         super(context, R.style.mdialog);
         this.context = context;
@@ -80,19 +80,24 @@ public class SettingDialog extends BaseDialog {
         changePage(0);
         //普通设置
         Button set_normal_include_btn_restart = viewSetNormal.findViewById(R.id.set_normal_include_btn_restart);
-        Button set_normal_include_btn_audio = viewSetNormal.findViewById(R.id.set_normal_include_btn_audio);
+        set_normal_include_btn_audio = viewSetNormal.findViewById(R.id.set_normal_include_btn_audio);
         Button set_normal_include_btn_button = viewSetNormal.findViewById(R.id.set_normal_include_btn_button);
         Button set_normal_include_btn_gamepad = viewSetNormal.findViewById(R.id.set_normal_include_btn_gamepad);
 
         set_normal_include_btn_restart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                SDLActivity.onDataKey(GamePadRelativeLayout.PAD1_R,true);
+                dismiss();
             }
         });
+
         set_normal_include_btn_audio.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                audioSwitch = !audioSwitch;
+                changeAudio();
+                SDLActivity.onDataKey(GamePadRelativeLayout.PAD1_V,audioSwitch);
 
             }
         });
@@ -111,8 +116,17 @@ public class SettingDialog extends BaseDialog {
         //存档设置
         ListView set_slot_include_listview = (ListView)viewSetSlot.findViewById(R.id.set_slot_include_listview);
         set_slot_include_listview.setAdapter(adapter);
+
+        this.changeAudio();
     }
 
+    private void changeAudio(){
+        if(audioSwitch){
+            set_normal_include_btn_audio.setText(context.getString(R.string.audio)+":"+context.getString(R.string.on));
+        }else{
+            set_normal_include_btn_audio.setText(context.getString(R.string.audio)+":"+context.getString(R.string.off));
+        }
+    }
     private void changePage(int index){
         viewSetNormal.setVisibility(View.GONE);
         viewSetSlot.setVisibility(View.GONE);
@@ -126,6 +140,13 @@ public class SettingDialog extends BaseDialog {
         }
     }
 
+    public void setAudioSwitch(boolean audioSwitch){
+        this.audioSwitch = audioSwitch;
+        changeAudio();
+    }
+    public boolean getAudioSwitch(){
+        return audioSwitch;
+    }
     class SlotAdapter extends BaseAdapter {
         private Context context;
         public SlotAdapter(Context context){
