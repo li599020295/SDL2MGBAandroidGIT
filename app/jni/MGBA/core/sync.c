@@ -44,9 +44,11 @@ void mCoreSyncForceFrame(struct mCoreSync* sync) {
 }
 
 bool mCoreSyncWaitFrameStart(struct mCoreSync* sync) {
-	if (!sync) {
+	if (!sync || !sync->audioWait) {
 		return true;
 	}
+
+	sync->isVideoLock = true;
 
 	MutexLock(&sync->videoFrameMutex);
 	ConditionWake(&sync->videoFrameRequiredCond);
@@ -63,11 +65,15 @@ bool mCoreSyncWaitFrameStart(struct mCoreSync* sync) {
 }
 
 void mCoreSyncWaitFrameEnd(struct mCoreSync* sync) {
-	if (!sync) {
-		return;
+	if (!sync || !sync->audioWait) {
+	    if(!sync->isVideoLock){
+            return;
+	    }
 	}
 
 	MutexUnlock(&sync->videoFrameMutex);
+	//一个lock流程完成
+    sync->isVideoLock = false;
 }
 
 void mCoreSyncSetVideoSync(struct mCoreSync* sync, bool wait) {

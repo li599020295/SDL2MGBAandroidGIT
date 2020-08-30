@@ -13,6 +13,7 @@ CXX_GUARD_START
 #include <mgba-util/threading.h>
 
 struct mCoreSync {
+	bool isVideoLock;
 	int videoFramePending;
 	bool videoFrameWait;
 	bool videoFrameOn;
