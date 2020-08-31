@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/mdialog_bg">
+    <LinearLayout
+        android:layout_margin="10dp"
+        android:id="@+id/game_relative_util_linear_buttonsize"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <SeekBar
+            android:id="@+id/game_relative_util_linear_seeksize"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:progress="500"
+            android:max="1000"
+            android:min="0" />
+        <TextView
+            android:id="@+id/game_relative_util_linear_textsize"
+            android:layout_marginTop="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:text="@string/btn_size"
+            android:layout_gravity="center"/>
+        <View
+            android:layout_marginTop="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/grey"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <Button
+                android:layout_weight="1"
+                android:id="@+id/game_relative_util_linear_btnok"
+                android:layout_marginTop="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@color/trans"
+                android:textColor="@color/black"
+                android:text="@string/ok"/>
+            <View
+                android:layout_marginTop="5dp"
+                android:layout_width="1px"
+                android:layout_height="match_parent"
+                android:background="@color/grey"/>
+            <Button
+                android:layout_weight="1"
+                android:id="@+id/game_relative_util_linear_btnreset"
+                android:layout_marginTop="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@color/trans"
+                android:textColor="@color/black"
+                android:text="@string/reset"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+</FrameLayout>

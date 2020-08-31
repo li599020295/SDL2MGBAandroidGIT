@@ -1,6 +1,7 @@
 package lilinhong.dialog;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +18,8 @@ import org.libsdl.app.GamePadRelativeLayout;
 import org.libsdl.app.R;
 import org.libsdl.app.SDLActivity;
 import java.io.File;
+
+import lilinhong.activity.GamePadActivity;
 import lilinhong.utils.Utils;
 
 public class SettingDialog extends BaseDialog {
@@ -28,6 +31,8 @@ public class SettingDialog extends BaseDialog {
     private Context context = null;
     private String gamePath = null;
     private boolean audioSwitch = true;
+    //返回码用于处理关闭事件显示一些东西 1 = button,
+    private int backCode = -1;
     public SettingDialog(Context context,String gamePath) {
         super(context, R.style.mdialog);
         this.context = context;
@@ -104,13 +109,16 @@ public class SettingDialog extends BaseDialog {
         set_normal_include_btn_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                setBackCode(1);
+                dismiss();
             }
         });
         set_normal_include_btn_gamepad.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent = new Intent(context, GamePadActivity.class);
+                context.startActivity(intent);
+                dismiss();
             }
         });
         //存档设置
@@ -147,6 +155,15 @@ public class SettingDialog extends BaseDialog {
     public boolean getAudioSwitch(){
         return audioSwitch;
     }
+
+    public int getBackCode() {
+        return backCode;
+    }
+
+    public void setBackCode(int backCode) {
+        this.backCode = backCode;
+    }
+
     class SlotAdapter extends BaseAdapter {
         private Context context;
         public SlotAdapter(Context context){

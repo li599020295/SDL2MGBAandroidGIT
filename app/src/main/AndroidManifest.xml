@@ -80,6 +80,7 @@
             android:configChanges="orientation|uiMode|screenLayout|screenSize|smallestScreenSize|keyboard|keyboardHidden|navigation">
         </activity>
         <activity android:name="lilinhong.activity.MainActivity" android:theme="@style/AppTheme" />
+        <activity android:name="lilinhong.activity.GamePadActivity" android:theme="@style/AppTheme" />
     </application>
 
 </manifest>

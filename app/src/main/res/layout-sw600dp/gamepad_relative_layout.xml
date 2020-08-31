@@ -60,6 +60,7 @@
             android:background="@mipmap/change_ori"/>
     </LinearLayout>
     <RelativeLayout
+        android:id="@+id/gamepad_relative_gamepadview"
         android:layout_centerVertical="true"
         android:layout_alignParentBottom="true"
         android:layout_margin="15dp"
@@ -92,6 +93,7 @@
             android:background="@mipmap/emu_select"/>
     </LinearLayout>
     <RelativeLayout
+        android:id="@+id/gamepad_relative_4btn"
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
         android:layout_margin="15dp"
@@ -137,5 +139,11 @@
             android:background="@mipmap/setting_game"
             />
     </RelativeLayout>
-
+    <include
+        android:id="@+id/gamepad_relative_util_layout"
+        layout="@layout/gamepad_relative_util_layout"
+        android:layout_centerInParent="true"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        />
 </RelativeLayout>

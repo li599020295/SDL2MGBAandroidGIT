@@ -65,4 +65,8 @@
     <string name="time_s">Time:%s</string>
     <string name="on">ON</string>
     <string name="off">OFF</string>
+    <string name="btn_size">Button scale size: %d</string>
+    <string name="reset">Reset</string>
+    <string name="game_pad_1">Player Gamepad 1</string>
+    <string name="game_pad_2">Player Gamepad 2</string>
 </resources>

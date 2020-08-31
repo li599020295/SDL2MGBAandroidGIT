@@ -3,26 +3,26 @@ package org.libsdl.app;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.ActivityInfo;
-import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.SeekBar;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
-
 import java.io.File;
-
+import java.util.ArrayList;
 import lilinhong.dialog.LoadSlotDialog;
 import lilinhong.dialog.SaveSlotDialog;
 import lilinhong.dialog.SettingDialog;
+import lilinhong.model.ViewSize;
 import lilinhong.utils.Utils;
 
 public class GamePadRelativeLayout extends RelativeLayout {
@@ -54,23 +54,54 @@ public class GamePadRelativeLayout extends RelativeLayout {
     private SDLActivity sdlActivity = null;
     private Context context;
     private GamePadView gamePadView = null;
-
+    private  View viewGamePadUtil = null;
+    //设置里面的按钮缩放
+    private LinearLayout game_relative_util_linear_buttonsize = null;
+    //记录声音是否打开
     private boolean audioSwitch = true;
+    //存储按钮的视图
+    private ArrayList<View> gamePadList = null;
     public GamePadRelativeLayout(Context context,SDLActivity sdlActivity) {
         super(context);
         this.context = context;
         this.sdlActivity = sdlActivity;
         this.initData();
+        this.initUI();
     }
 
-    private void initData(){
-        this.audioSwitch = true;
+    private void initUI() {
         RelativeLayout gamepadRelativeLayout = (RelativeLayout)LayoutInflater.from(this.context).inflate(R.layout.gamepad_relative_layout,null);
         LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
         addView(gamepadRelativeLayout,params);
+        this.viewGamePadUtil = gamepadRelativeLayout.findViewById(R.id.gamepad_relative_util_layout);
+        //b初始化设置utton Size
+        this.initUISetButtonSize();
+        this.setGamePadUtilsVisible(false);
+        //初始化按钮
+        this.initUIButton(gamepadRelativeLayout);
+    }
 
-        gamePadView = (GamePadView)gamepadRelativeLayout.findViewById(R.id.gamepad_view_joy);
-        gamePadView.setOnJoystickMoveListener(new GamePadView.OnJoystickMoveListener() {
+    public void onWindowFocusChanged(boolean hasWindowFocus){
+        super.onWindowFocusChanged(hasWindowFocus);
+        //设置宽高
+        for(View view :gamePadList){
+            view.setTag(new ViewSize(view.getWidth(),view.getHeight()));
+        }
+        //设置buttonSize窗口大小
+        ViewGroup.LayoutParams layoutParams = this.viewGamePadUtil.getLayoutParams();
+        layoutParams.width = (int) (getWidth() * 0.75f);
+        layoutParams.height = LayoutParams.WRAP_CONTENT;
+        this.viewGamePadUtil.setLayoutParams(layoutParams);
+    }
+
+    private void initData(){
+        this.gamePadList = new ArrayList<>();
+        this.audioSwitch = true;
+    }
+
+    private void initUIButton(RelativeLayout gamepadRelativeLayout){
+        this.gamePadView = (GamePadView)gamepadRelativeLayout.findViewById(R.id.gamepad_view_joy);
+        this.gamePadView.setOnJoystickMoveListener(new GamePadView.OnJoystickMoveListener() {
             @Override
             public void onValueChanged(int angle, int power, int direction) {
                 boolean isDowm = true;
@@ -91,7 +122,14 @@ public class GamePadRelativeLayout extends RelativeLayout {
             }
         });
 
+        gamePadList.add(gamePadView);
+
         {
+            RelativeLayout gamepad_relative_4btn = gamepadRelativeLayout.findViewById(R.id.gamepad_relative_4btn);
+            gamePadList.add(gamepad_relative_4btn);
+            RelativeLayout gamepad_relative_gamepadview = gamepadRelativeLayout.findViewById(R.id.gamepad_relative_gamepadview);
+            gamePadList.add(gamepad_relative_gamepadview);
+
             Button gamepad_btn_orien = gamepadRelativeLayout.findViewById(R.id.gamepad_btn_orien);
             Button gamepad_btn_start = gamepadRelativeLayout.findViewById(R.id.gamepad_btn_start);
             Button gamepad_btn_select = gamepadRelativeLayout.findViewById(R.id.gamepad_btn_select);
@@ -101,6 +139,14 @@ public class GamePadRelativeLayout extends RelativeLayout {
             Button gamepad_btn_r = gamepadRelativeLayout.findViewById(R.id.gamepad_btn_r);
             Button gamepad_btn_menu = gamepadRelativeLayout.findViewById(R.id.gamepad_btn_menu);
             Button gamepad_btn_read = gamepadRelativeLayout.findViewById(R.id.gamepad_btn_read);
+
+            gamePadList.add(gamepad_btn_a);
+            gamePadList.add(gamepad_btn_b);
+            gamePadList.add(gamepad_btn_l);
+            gamePadList.add(gamepad_btn_r);
+            gamePadList.add(gamepad_btn_start);
+            gamePadList.add(gamepad_btn_select);
+
             gamepad_btn_orien.setOnTouchListener(new OnTouchListener() {
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
@@ -190,6 +236,9 @@ public class GamePadRelativeLayout extends RelativeLayout {
                             @Override
                             public void onDismiss(DialogInterface dialog) {
                                 audioSwitch = setDialog.getAudioSwitch();
+                                if(setDialog.getBackCode() == 1){
+                                    setShowGamePadUtilsButtonSize();
+                                }
                             }
                         });
                         setDialog.setOnShowListener(new DialogInterface.OnShowListener() {
@@ -304,7 +353,7 @@ public class GamePadRelativeLayout extends RelativeLayout {
                             break;
                         case MotionEvent.ACTION_UP:
                         case MotionEvent.ACTION_CANCEL:
-                           SDLActivity.onDataKey(PAD1_B,false);
+                            SDLActivity.onDataKey(PAD1_B,false);
                             break;
                         case MotionEvent.ACTION_MOVE:
                             break;
@@ -357,6 +406,67 @@ public class GamePadRelativeLayout extends RelativeLayout {
             });
         }
     }
+
+    private void initUISetButtonSize(){
+        game_relative_util_linear_buttonsize = (LinearLayout)viewGamePadUtil.findViewById(R.id.game_relative_util_linear_buttonsize);
+        final SeekBar game_relative_util_linear_seeksize = (SeekBar) viewGamePadUtil.findViewById(R.id.game_relative_util_linear_seeksize);
+        final TextView game_relative_util_linear_textsize = (TextView)viewGamePadUtil.findViewById(R.id.game_relative_util_linear_textsize);
+        game_relative_util_linear_textsize.setText(String.format(context.getString(R.string.btn_size),0)+"%");
+        game_relative_util_linear_seeksize.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                float pro = progress - 500;
+                if(pro < 0){
+                    pro = (pro/500.0f) * 100;
+                }
+                for (View view:gamePadList){
+                    ViewGroup.LayoutParams params = view.getLayoutParams();
+                    if(pro<0){
+                        float scale = pro/100 + 1;
+                        ViewSize viewSize = (ViewSize)view.getTag();
+                        params.height =(int) (viewSize.getHeight());
+                        params.width =(int) (viewSize.getWidth());
+
+                        view.setScaleX(scale);
+                        view.setScaleY(scale);
+                    }else if(pro>0){
+                        ViewSize viewSize = (ViewSize)view.getTag();
+                        float scale = pro/100 + 1;
+                        params.height =(int) (viewSize.getHeight() * scale);
+                        params.width =(int) (viewSize.getWidth() * scale);
+                    }else{
+                        ViewSize viewSize = (ViewSize)view.getTag();
+                        params.height =(int) (viewSize.getHeight());
+                        params.width =(int) (viewSize.getWidth());
+
+                        view.setScaleX(1);
+                        view.setScaleY(1);
+                    }
+                    view.setLayoutParams(params);
+                }
+                game_relative_util_linear_textsize.setText(String.format(context.getString(R.string.btn_size),(int)pro)+"%");
+            }
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) { }
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) { }
+        });
+        Button game_relative_util_linear_btnok = (Button)findViewById(R.id.game_relative_util_linear_btnok);
+        game_relative_util_linear_btnok.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setGamePadUtilsVisible(false);
+            }
+        });
+        Button game_relative_util_linear_btnreset = (Button)findViewById(R.id.game_relative_util_linear_btnreset);
+        game_relative_util_linear_btnreset.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                game_relative_util_linear_seeksize.setProgress(500);
+            }
+        });
+    }
+
     private void onKeyCheck(int orition,boolean isdown){
 
         switch (orition) {
@@ -405,4 +515,18 @@ public class GamePadRelativeLayout extends RelativeLayout {
             gamePadView.setGamePadOriBG(orition);
         }
     }
+
+    private void setGamePadUtilsVisible(boolean visible){
+        if(visible){
+            viewGamePadUtil.setVisibility(VISIBLE);
+        }else{
+            viewGamePadUtil.setVisibility(GONE);
+            game_relative_util_linear_buttonsize.setVisibility(GONE);
+        }
+    }
+    private void setShowGamePadUtilsButtonSize(){
+        setGamePadUtilsVisible(true);
+        game_relative_util_linear_buttonsize.setVisibility(VISIBLE);
+    }
+
 }
