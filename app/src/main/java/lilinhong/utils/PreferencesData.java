@@ -5,12 +5,18 @@ import android.content.SharedPreferences;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+
+import org.libsdl.app.GamePadRelativeLayout;
+import org.libsdl.app.R;
+
+import java.io.Console;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import lilinhong.model.GamePad;
 import lilinhong.model.GameRom;
 
 import static android.content.Context.MODE_PRIVATE;
@@ -136,5 +142,39 @@ public class PreferencesData {
         Gson gson2=new Gson();
         String str=gson2.toJson(gameRomList);
         sp.edit().putString("roms",str).commit();
+    }
+
+    public void saveGamePadList1(List<GamePad> gamePads){
+        Gson gson2=new Gson();
+        String str=gson2.toJson(gamePads);
+        sp.edit().putString("game_pads1",str).commit();
+    }
+
+    public List<GamePad> getGamePadList1(Context context){
+        String gamePadStr = sp.getString("game_pads1","");
+        Gson gson1=new Gson();
+        List<GamePad> gamePads = gson1.fromJson(gamePadStr, new TypeToken<List<GamePad>>() {}.getType());
+        if(gamePads == null){
+            gamePads = new ArrayList<>();
+            gamePads.add(new GamePad(GamePadRelativeLayout.PAD1_UP,-1,context.getString(R.string.key_up)));
+            gamePads.add(new GamePad(GamePadRelativeLayout.PAD1_DOWN,-1,context.getString(R.string.key_down)));
+            gamePads.add(new GamePad(GamePadRelativeLayout.PAD1_LEFT,-1,context.getString(R.string.key_left)));
+            gamePads.add(new GamePad(GamePadRelativeLayout.PAD1_RIGHT,-1,context.getString(R.string.key_right)));
+            gamePads.add(new GamePad(GamePadRelativeLayout.PAD1_START,-1,context.getString(R.string.key_start)));
+            gamePads.add(new GamePad(GamePadRelativeLayout.PAD1_SELECT,-1,context.getString(R.string.key_select)));
+            gamePads.add(new GamePad(GamePadRelativeLayout.PAD1_L,-1,context.getString(R.string.key_l)));
+            gamePads.add(new GamePad(GamePadRelativeLayout.PAD1_S,-1,context.getString(R.string.key_s)));
+            gamePads.add(new GamePad(GamePadRelativeLayout.PAD1_A,-1,context.getString(R.string.key_a)));
+            gamePads.add(new GamePad(GamePadRelativeLayout.PAD1_B,-1,context.getString(R.string.key_b)));
+            gamePads.add(new GamePad(GamePadRelativeLayout.PAD1_R,-1,context.getString(R.string.key_r)));
+            gamePads.add(new GamePad(GamePadRelativeLayout.PAD1_V,-1,context.getString(R.string.key_v)));
+            gamePads.add(new GamePad(GamePadRelativeLayout.PAD1_SPEED,-1,context.getString(R.string.key_speed)));
+            gamePads.add(new GamePad(GamePadRelativeLayout.PAD1_REWIND,-1,context.getString(R.string.key_rewind)));
+            gamePads.add(new GamePad(GamePadRelativeLayout.PAD1_CAPTURE,-1,context.getString(R.string.key_capture)));
+            gamePads.add(new GamePad(GamePadRelativeLayout.PAD1_SAVE_SLOT1,-1,context.getString(R.string.key_saveslot1)));
+            gamePads.add(new GamePad(GamePadRelativeLayout.PAD1_LOAD_SLOT1,-1,context.getString(R.string.key_loadslot1)));
+            saveGamePadList1(gamePads);
+        }
+        return gamePads;
     }
 }

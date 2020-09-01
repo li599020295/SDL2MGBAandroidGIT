@@ -1,6 +1,5 @@
 package org.libsdl.app;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Hashtable;
@@ -9,7 +8,6 @@ import java.lang.Math;
 import android.app.*;
 import android.content.*;
 import android.content.res.Configuration;
-import android.os.Process;
 import android.text.InputType;
 import android.view.*;
 import android.view.inputmethod.BaseInputConnection;
@@ -31,7 +29,6 @@ import android.hardware.*;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ApplicationInfo;
-
 import lilinhong.dialog.ShowScreenCaptureDialog;
 import lilinhong.dialog.TipsDialog;
 import lilinhong.model.GameRom;
@@ -45,6 +42,7 @@ public class SDLActivity extends Activity implements View.OnSystemUiVisibilityCh
     private PreferencesData preferencesData = null;
     private GameRom gameRom = null;
     public TipsDialog tipsDialog = null;
+    private GamePadRelativeLayout gamepadLayout = null;
 
     private static final String TAG = "SDL";
 
@@ -118,6 +116,10 @@ public class SDLActivity extends Activity implements View.OnSystemUiVisibilityCh
     //获取实例
     public static SDLActivity getmSingleton(){
         return mSingleton;
+    }
+    //
+    public GamePadRelativeLayout getGamePadRelativeLayout(){
+        return gamepadLayout;
     }
     /**
      * This method returns the name of the shared object with the application entry point
@@ -286,7 +288,7 @@ public class SDLActivity extends Activity implements View.OnSystemUiVisibilityCh
         mLayout.addView(mSurface,frameLayout);
 
         //加载游戏按键布局
-        RelativeLayout gamepadLayout = new GamePadRelativeLayout(this,mSingleton);
+        gamepadLayout = new GamePadRelativeLayout(this,mSingleton);
         relativeLayout.addView(gamepadLayout,params);
 
         // Get our current screen orientation and pass it down.
@@ -354,7 +356,10 @@ public class SDLActivity extends Activity implements View.OnSystemUiVisibilityCh
         // if (mHIDDeviceManager != null) {
         //     mHIDDeviceManager.setFrozen(false);
         // }
-
+        GamePadRelativeLayout gamePadRelativeLayout = this.getGamePadRelativeLayout();
+        if(gamePadRelativeLayout!=null){
+            gamePadRelativeLayout.onResume();
+        }
         if (!mHasMultiWindow) {
             resumeNativeThread();
         }
@@ -1962,6 +1967,11 @@ class SDLSurface extends SurfaceView implements SurfaceHolder.Callback,
         if(event.getAction() == KeyEvent.ACTION_UP){
             onKeyUp(keyCode);
         }
+
+        if(SDLActivity.getmSingleton().getGamePadRelativeLayout().onKey(keyCode,event)){
+            return true;
+        }
+
         // Dispatch the different events depending on where they come from
         // Some SOURCE_JOYSTICK, SOURCE_DPAD or SOURCE_GAMEPAD are also SOURCE_KEYBOARD
         // So, we try to process them as JOYSTICK/DPAD/GAMEPAD events first, if that fails we try them as KEYBOARD

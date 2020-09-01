@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.ActivityInfo;
 import android.util.DisplayMetrics;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -19,37 +20,47 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import lilinhong.dialog.LoadSlotDialog;
 import lilinhong.dialog.SaveSlotDialog;
 import lilinhong.dialog.SettingDialog;
+import lilinhong.model.GamePad;
 import lilinhong.model.ViewSize;
+import lilinhong.utils.PreferencesData;
 import lilinhong.utils.Utils;
 
 public class GamePadRelativeLayout extends RelativeLayout {
     //1=横向不全屏 ，2=横向全屏，3=不横向不全屏
-    public static int SCREEN_MODE = 2;
-    public final static int SDLK_SCANCODE_MASK = (1<<30);
+    private static int SCREEN_MODE = 2;
+    private final static int SDLK_SCANCODE_MASK = (1<<30);
     //按钮设置
     //so玩家1对应按键位置
     public final static int PAD1_UP = (82| SDLK_SCANCODE_MASK);
     public final static int PAD1_DOWN = (81| SDLK_SCANCODE_MASK);
     public final static int PAD1_LEFT = (80| SDLK_SCANCODE_MASK);
     public final static int PAD1_RIGHT = (79| SDLK_SCANCODE_MASK);
-    private static final int PAD1_START = (int)'\r';
-    private static final int PAD1_SELECT = (int)'\b';
-    private static final int PAD1_L = (int) 'a';
-    private static final int PAD1_S = (int)'s';
-    private static final int PAD1_A = (int)'x';
-    private static final int PAD1_B = (int)'z';
+    public static final int PAD1_START = (int)'\r';
+    public static final int PAD1_SELECT = (int)'\b';
+    public static final int PAD1_L = (int) 'a';
+    public static final int PAD1_S = (int)'s';
+    public static final int PAD1_A = (int)'x';
+    public static final int PAD1_B = (int)'z';
     //重置
     public static final int PAD1_R = (int)'r';
     //声音
     public static final int PAD1_V = (int)'v';
-    private static final int PAD1_SPEED = (int)'\t';
+    //加速
+    public static final int PAD1_SPEED = (int)'\t';
     //倒退
-    private static final int PAD1_REWIND = (int)'`';
+    public static final int PAD1_REWIND = (int)'`';
     //截图
-    private static final int PAD1_CAPTURE =(69|SDLK_SCANCODE_MASK);
+    public static final int PAD1_CAPTURE =(69|SDLK_SCANCODE_MASK);
+    //快速保存
+    public static final int PAD1_SAVE_SLOT1 = 1000001;
+    //快速读取
+    public static final int PAD1_LOAD_SLOT1 = 1000002;
 
     private SDLActivity sdlActivity = null;
     private Context context;
@@ -61,6 +72,9 @@ public class GamePadRelativeLayout extends RelativeLayout {
     private boolean audioSwitch = true;
     //存储按钮的视图
     private ArrayList<View> gamePadList = null;
+    //保存map gamepad1
+    private Map<Integer,Integer> gamepadMap1 = null;
+    private PreferencesData preferencesData = null;
     public GamePadRelativeLayout(Context context,SDLActivity sdlActivity) {
         super(context);
         this.context = context;
@@ -95,8 +109,21 @@ public class GamePadRelativeLayout extends RelativeLayout {
     }
 
     private void initData(){
+        this.gamepadMap1 = new HashMap<>();
+        this.preferencesData = PreferencesData.getInstance(context);
         this.gamePadList = new ArrayList<>();
         this.audioSwitch = true;
+        this.initGamePad();
+    }
+
+    private void initGamePad(){
+        List<GamePad> gamePads1 = preferencesData.getGamePadList1(context);
+        for (GamePad gamePad:gamePads1){
+            if(gamePad.getKeyMapCode() == -1){
+                continue;
+            }
+            this.gamepadMap1.put(gamePad.getKeyMapCode(),gamePad.getKeyCode());
+        }
     }
 
     private void initUIButton(RelativeLayout gamepadRelativeLayout){
@@ -123,7 +150,6 @@ public class GamePadRelativeLayout extends RelativeLayout {
         });
 
         gamePadList.add(gamePadView);
-
         {
             RelativeLayout gamepad_relative_4btn = gamepadRelativeLayout.findViewById(R.id.gamepad_relative_4btn);
             gamePadList.add(gamepad_relative_4btn);
@@ -191,6 +217,7 @@ public class GamePadRelativeLayout extends RelativeLayout {
                     return false;
                 }
             });
+
             gamepad_btn_read.setOnTouchListener(new OnTouchListener() {
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
@@ -516,6 +543,11 @@ public class GamePadRelativeLayout extends RelativeLayout {
         }
     }
 
+    //重置数据
+    public void onResume(){
+        initGamePad();
+    }
+
     private void setGamePadUtilsVisible(boolean visible){
         if(visible){
             viewGamePadUtil.setVisibility(VISIBLE);
@@ -524,9 +556,35 @@ public class GamePadRelativeLayout extends RelativeLayout {
             game_relative_util_linear_buttonsize.setVisibility(GONE);
         }
     }
+
     private void setShowGamePadUtilsButtonSize(){
         setGamePadUtilsVisible(true);
         game_relative_util_linear_buttonsize.setVisibility(VISIBLE);
     }
 
+    public boolean onKey( int keyCode, KeyEvent event){
+        if(!gamepadMap1.containsKey(keyCode)){
+            return false;
+        }
+
+        int gameKeyCode = gamepadMap1.get(keyCode);
+        if(event.getAction() == KeyEvent.ACTION_UP){
+            if(gameKeyCode == GamePadRelativeLayout.PAD1_SAVE_SLOT1){
+                SDLActivity.onSlotNum(0,true);
+            }
+            else if(gameKeyCode == GamePadRelativeLayout.PAD1_LOAD_SLOT1)
+            {
+                SDLActivity.onSlotNum(0,false);
+            }
+            else
+            {
+                SDLActivity.onDataKey(gameKeyCode,false);
+            }
+            return true;
+        }else if(event.getAction() == KeyEvent.ACTION_DOWN){
+                SDLActivity.onDataKey(gameKeyCode,true);
+            return true;
+        }
+        return false;
+    }
 }

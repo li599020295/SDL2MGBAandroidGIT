@@ -69,4 +69,23 @@
     <string name="reset">Reset</string>
     <string name="game_pad_1">Player Gamepad 1</string>
     <string name="game_pad_2">Player Gamepad 2</string>
+    <string name="key_up">KEY UP</string>
+    <string name="key_down">KEY DOWN</string>
+    <string name="key_left">KEY LEFT</string>
+    <string name="key_right">KEY RIGHT</string>
+    <string name="key_start">KEY START</string>
+    <string name="key_select">KEY SELECT</string>
+    <string name="key_l">KEY L</string>
+    <string name="key_s">KEY R</string>
+    <string name="key_a">KEY A</string>
+    <string name="key_b">KEY B</string>
+    <string name="key_r">KEY RESET</string>
+    <string name="key_v">KEY SOUND: ON/OFF</string>
+    <string name="key_speed">KEY SPEED</string>
+    <string name="key_rewind">KEY REWIND</string>
+    <string name="key_capture">KEY CAPTURE</string>
+    <string name="key_saveslot1">KEY SAVE SLOT1</string>
+    <string name="key_loadslot1">KEY LOAD SLOT1</string>
+    <string name="gamepad_code">GamePad Code</string>
+    <string name="press_hardke_">Press a hardware key...</string>
 </resources>
