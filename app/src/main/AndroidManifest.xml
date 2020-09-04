@@ -75,6 +75,7 @@
             </intent-filter>
         </activity>
         <activity android:name="SDLActivity"
+            android:process=":emulator"
             android:label="@string/app_name"
             android:screenOrientation="landscape"
             android:configChanges="orientation|uiMode|screenLayout|screenSize|smallestScreenSize|keyboard|keyboardHidden|navigation">
