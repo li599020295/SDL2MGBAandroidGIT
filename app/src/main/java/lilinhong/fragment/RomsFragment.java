@@ -42,8 +42,6 @@ public class RomsFragment extends Fragment {
         public void handleMessage(@NonNull Message msg) {
             super.handleMessage(msg);
             if(msg.what == 1){
-                List<GameRom>romList = (List<GameRom>)msg.obj;
-                gameRomsAdapter.setRomsDataList(romList);
                 gameRomsAdapter.notifyDataSetChanged();
             }
         }
@@ -57,6 +55,7 @@ public class RomsFragment extends Fragment {
     //存储权限返回标志
     private static final int REQUEST_EXTERNAL_STORAGE = 3;
     private View mainView = null;
+    private boolean isReFresh = false;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mainView = inflater.inflate(R.layout.roms_fragment, container, false);
@@ -68,23 +67,21 @@ public class RomsFragment extends Fragment {
     }
 
     public void reFreshData(){
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                List<GameRom> gameRomList = preferencesData.getRoms();
-                Message msg = handler.obtainMessage();
-                msg.what = 1;
-                msg.obj = gameRomList;
-                handler.sendMessage(msg);
-            }
-        }).start();
+        gameARomList = preferencesData.getRoms();
+        Message msg = handler.obtainMessage();
+        msg.what = 1;
+        handler.sendMessage(msg);
+    }
+
+    public void setReFresh(boolean isReFresh){
+        this.isReFresh = isReFresh;
     }
 
     private void initData() {
         permissionSystem = new PermissionSystem(getActivity());
         preferencesData = PreferencesData.getInstance(getActivity());
         gameARomList = preferencesData.getRoms();
-        gameRomsAdapter = new RomsFragment.GameRomsAdapter(getActivity(),gameARomList);
+        gameRomsAdapter = new RomsFragment.GameRomsAdapter(getActivity());
     }
 
     private void initUI(){
@@ -155,7 +152,7 @@ public class RomsFragment extends Fragment {
             searchFileDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                 @Override
                 public void onDismiss(DialogInterface dialog) {
-                    gameRomsAdapter.setRomsDataList(preferencesData.getRoms());
+                    gameARomList = preferencesData.getRoms();
                     gameRomsAdapter.notifyDataSetChanged();
                 }
             });
@@ -180,24 +177,29 @@ public class RomsFragment extends Fragment {
         }
     }
 
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if(isReFresh){
+            reFreshData();
+            isReFresh = false;
+        }
+    }
+
     class GameRomsAdapter extends BaseAdapter {
         private Context context;
-        private List<GameRom> gameRomList = null;
-        public void setRomsDataList(List<GameRom> gameRomList){
-            this.gameRomList = gameRomList;
-        }
-        public GameRomsAdapter(Context context, List<GameRom> gameRomList){
+
+        public GameRomsAdapter(Context context){
             this.context = context;
-            this.gameRomList = gameRomList;
         }
         @Override
         public int getCount() {
-            return this.gameRomList.size();
+            return gameARomList.size();
         }
 
         @Override
         public Object getItem(int position) {
-            return gameRomList.get(position);
+            return gameARomList.get(position);
         }
 
         @Override
@@ -208,7 +210,7 @@ public class RomsFragment extends Fragment {
         @Override
         public View getView(final int position, View convertView, ViewGroup parent) {
             RomsFragment.GameRomsAdapter.HoldView holdView = null;
-            GameRom rom = gameRomList.get(position);
+            GameRom rom = gameARomList.get(position);
             if(convertView == null){
                 convertView = LayoutInflater.from(context).inflate(R.layout.roms_fragment_listview_item,null);
                 holdView = new RomsFragment.GameRomsAdapter.HoldView();
@@ -241,16 +243,17 @@ public class RomsFragment extends Fragment {
                 holdView.roms_fragment_togglebtn_colle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                        GameRom gameRom1 = (GameRom)buttonView.getTag();
                         if(isChecked){
                             buttonView.setBackgroundResource(R.mipmap.collect_btn);
                         }else {
                             buttonView.setBackgroundResource(R.mipmap.un_collect_btn);
                         }
-                        gameRom1 = gameRomList.get(position).setCollect(isChecked);
+
+                        GameRom gameRom1 = (GameRom)buttonView.getTag();
+                        gameRom1 = gameARomList.get(position).setCollect(isChecked);
                         preferencesData.setCollectRom(gameRom1);
                         notifyDataSetChanged();
-                        MainActivity.getMainActivity().setCollectRefresh();
+                        MainActivity.getMainActivity().setFragmentRefresh();
                     }
                 });
                 convertView.setTag(holdView);
@@ -270,10 +273,10 @@ public class RomsFragment extends Fragment {
                     ImageLoader.getInstance().displayImage(image, holdView.roms_fragment_item_image);
                 }else{
                     //drawable://
-                    ImageLoader.getInstance().displayImage("drawable://" + R.mipmap.ic_launcher, holdView.roms_fragment_item_image);
+                    ImageLoader.getInstance().displayImage("drawable://" + R.mipmap.gba_item_icon, holdView.roms_fragment_item_image);
                 }
             }else{
-                ImageLoader.getInstance().displayImage("drawable://" + R.mipmap.ic_launcher, holdView.roms_fragment_item_image);
+                ImageLoader.getInstance().displayImage("drawable://" + R.mipmap.gba_item_icon, holdView.roms_fragment_item_image);
             }
 
             holdView.roms_fragment_item_name.setText(name);

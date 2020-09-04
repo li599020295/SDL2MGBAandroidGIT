@@ -10,6 +10,7 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import org.libsdl.app.R;
@@ -55,8 +56,9 @@ public class GamePadActivity extends AppCompatActivity {
         gamepad_activity_btn_player2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                gamepad_activity_btn_player1.setBackgroundColor(bgUnSelectColor);
-                gamepad_activity_btn_player2.setBackgroundColor(bgSelectColor);
+                Toast.makeText(GamePadActivity.this,getString(R.string.no_current_supperted),Toast.LENGTH_SHORT).show();
+                //gamepad_activity_btn_player1.setBackgroundColor(bgUnSelectColor);
+                //gamepad_activity_btn_player2.setBackgroundColor(bgSelectColor);
             }
         });
         gamepad_activity_listview_player1.setAdapter(adapter);

@@ -25,6 +25,8 @@ import org.libsdl.app.R;
 import org.libsdl.app.SDLActivity;
 import java.io.File;
 import java.util.List;
+
+import lilinhong.activity.MainActivity;
 import lilinhong.dialog.GameInfoDialog;
 import lilinhong.model.GameRom;
 import lilinhong.utils.PreferencesData;
@@ -35,8 +37,6 @@ public class CollectFragment extends Fragment {
         public void handleMessage(@NonNull Message msg) {
             super.handleMessage(msg);
             if(msg.what == 1){
-                List<GameRom>romList = (List<GameRom>)msg.obj;
-                adapter.setRomsDataList(romList);
                 adapter.notifyDataSetChanged();
             }
         }
@@ -58,16 +58,10 @@ public class CollectFragment extends Fragment {
     }
 
     public void reFreshData(){
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                List<GameRom> collectRomList = preferencesData.getCollectRoms();
-                Message msg = handler.obtainMessage();
-                msg.what = 1;
-                msg.obj = collectRomList;
-                handler.sendMessage(msg);
-            }
-        }).start();
+        gameRomList = preferencesData.getCollectRoms();
+        Message msg = handler.obtainMessage();
+        msg.what = 1;
+        handler.sendMessage(msg);
     }
 
     public void setReFresh(boolean isReFresh){
@@ -77,7 +71,7 @@ public class CollectFragment extends Fragment {
     private void initData() {
         preferencesData = PreferencesData.getInstance(getContext());
         gameRomList = preferencesData.getCollectRoms();
-        adapter = new CollectGameRomsAdapter(getActivity(),gameRomList);
+        adapter = new CollectGameRomsAdapter(getActivity());
     }
 
     private void initUI() {
@@ -107,15 +101,9 @@ public class CollectFragment extends Fragment {
 
     class CollectGameRomsAdapter extends BaseAdapter {
         private Context context;
-        private List<GameRom> gameRomList = null;
 
-        public void setRomsDataList(List<GameRom> gameRomList) {
-            this.gameRomList = gameRomList;
-        }
-
-        public CollectGameRomsAdapter(Context context, List<GameRom> gameRomList) {
+        public CollectGameRomsAdapter(Context context) {
             this.context = context;
-            this.gameRomList = gameRomList;
         }
 
         @Override
@@ -134,7 +122,7 @@ public class CollectFragment extends Fragment {
         }
 
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
+        public View getView(final int position, View convertView, ViewGroup parent) {
             GameRom gameRom = gameRomList.get(position);
             HoldView holdView = null;
             if(convertView == null){
@@ -173,6 +161,13 @@ public class CollectFragment extends Fragment {
                         }else {
                             buttonView.setBackgroundResource(R.mipmap.un_collect_btn);
                         }
+
+                        GameRom gameRom1 = (GameRom)buttonView.getTag();
+                        gameRom1 = gameRomList.get(position).setCollect(isChecked);
+                        preferencesData.setCollectRom(gameRom1);
+                        gameRomList = preferencesData.getCollectRoms();
+                        notifyDataSetChanged();
+                        MainActivity.getMainActivity().setFragmentRefresh();
                     }
                 });
                 convertView.setTag(holdView);
@@ -181,6 +176,7 @@ public class CollectFragment extends Fragment {
             }
             //设置游戏Romd的位置
             holdView.collect_roms_fragment_info_imagebtn.setTag(gameRom);
+            holdView.collect_roms_fragment_togglebtn_colle.setTag(gameRom);
             String image =  gameRom.getImage();
             String name = gameRom.getName();
             String desc = gameRom.getDesc();
@@ -191,10 +187,10 @@ public class CollectFragment extends Fragment {
                     ImageLoader.getInstance().displayImage(image, holdView.collect_roms_fragment_item_image);
                 }else{
                     //drawable://
-                    ImageLoader.getInstance().displayImage("drawable://" + R.mipmap.ic_launcher, holdView.collect_roms_fragment_item_image);
+                    ImageLoader.getInstance().displayImage("drawable://" + R.mipmap.gba_item_icon, holdView.collect_roms_fragment_item_image);
                 }
             }else{
-                ImageLoader.getInstance().displayImage("drawable://" + R.mipmap.ic_launcher, holdView.collect_roms_fragment_item_image);
+                ImageLoader.getInstance().displayImage("drawable://" + R.mipmap.gba_item_icon, holdView.collect_roms_fragment_item_image);
             }
 
             holdView.collect_roms_fragment_item_name.setText(name);

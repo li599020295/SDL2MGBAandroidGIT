@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">GBA Emulator Master-EMU</string>
+    <string name="app_name">GBA Emulator Box</string>
     <string name="app_ads_main">ca-app-pub-3940256099942544~3347511713</string>
     <string name="slote_save_desc">Save game data to slot:%d</string>
     <string name="slote_load_desc">Load game data to slot:%d</string>
@@ -97,4 +97,7 @@
     <string name="code_type_gameshark">GameShark:XXXXXXXX XXXXXXXX</string>
     <string name="code_type_actionreplay">ActionReplay:XXXXXXXX XXXXXXXX</string>
     <string name="code_type_vba">VBA:XXXXXXXX:XXXXXXXX</string>
+    <string name="hide_button">Hide button</string>
+    <string name="show_button">Show button</string>
+    <string name="no_current_supperted">Sorry, not currently supported</string>
 </resources>

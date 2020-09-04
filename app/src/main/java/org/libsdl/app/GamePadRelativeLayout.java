@@ -3,9 +3,6 @@ package org.libsdl.app;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.ActivityInfo;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Rect;
 import android.util.DisplayMetrics;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -31,6 +28,7 @@ import lilinhong.dialog.SaveSlotDialog;
 import lilinhong.dialog.SettingDialog;
 import lilinhong.model.GamePad;
 import lilinhong.model.ViewSize;
+import lilinhong.utils.GlobalConfig;
 import lilinhong.utils.PreferencesData;
 import lilinhong.utils.Utils;
 
@@ -75,6 +73,8 @@ public class GamePadRelativeLayout extends RelativeLayout {
     private boolean audioSwitch = true;
     //存储按钮的视图
     private ArrayList<View> gamePadList = null;
+    //所有按钮除了菜单
+    private ArrayList<View> gameAllButton = null;
     //保存map gamepad1
     private Map<Integer,Integer> gamepadMap1 = null;
     private PreferencesData preferencesData = null;
@@ -84,6 +84,13 @@ public class GamePadRelativeLayout extends RelativeLayout {
         this.sdlActivity = sdlActivity;
         this.initData();
         this.initUI();
+        this.initUIFinish();
+    }
+
+    private void initUIFinish() {
+        //初始化数据
+        this.initGamePad();
+        this.virtualButtonControl();
     }
 
     private void initUI() {
@@ -114,9 +121,10 @@ public class GamePadRelativeLayout extends RelativeLayout {
     private void initData(){
         this.gamepadMap1 = new HashMap<>();
         this.preferencesData = PreferencesData.getInstance(context);
+        this.gameAllButton = new ArrayList<>();
         this.gamePadList = new ArrayList<>();
         this.audioSwitch = true;
-        this.initGamePad();
+
     }
 
     private void initGamePad(){
@@ -156,8 +164,10 @@ public class GamePadRelativeLayout extends RelativeLayout {
         {
             RelativeLayout gamepad_relative_4btn = gamepadRelativeLayout.findViewById(R.id.gamepad_relative_4btn);
             gamePadList.add(gamepad_relative_4btn);
+            gameAllButton.add(gamepad_relative_4btn);
             RelativeLayout gamepad_relative_gamepadview = gamepadRelativeLayout.findViewById(R.id.gamepad_relative_gamepadview);
             gamePadList.add(gamepad_relative_gamepadview);
+            gameAllButton.add(gamepad_relative_gamepadview);
 
             Button gamepad_btn_orien = gamepadRelativeLayout.findViewById(R.id.gamepad_btn_orien);
             Button gamepad_btn_start = gamepadRelativeLayout.findViewById(R.id.gamepad_btn_start);
@@ -168,6 +178,19 @@ public class GamePadRelativeLayout extends RelativeLayout {
             Button gamepad_btn_r = gamepadRelativeLayout.findViewById(R.id.gamepad_btn_r);
             Button gamepad_btn_menu = gamepadRelativeLayout.findViewById(R.id.gamepad_btn_menu);
             Button gamepad_btn_read = gamepadRelativeLayout.findViewById(R.id.gamepad_btn_read);
+            Button gamepad_btn_screenshot = (Button)gamepadRelativeLayout.findViewById(R.id.gamepad_btn_screenshot);
+            Button gamepad_btn_save = (Button)gamepadRelativeLayout.findViewById(R.id.gamepad_btn_save);
+            final ToggleButton gamepad_togbtn_speed = (ToggleButton)gamepadRelativeLayout.findViewById(R.id.gamepad_togbtn_speed);
+            final ToggleButton gamepad_togbtn_rewind = (ToggleButton)gamepadRelativeLayout.findViewById(R.id.gamepad_togbtn_rewind);
+
+            gameAllButton.add(gamepad_togbtn_rewind);
+            gameAllButton.add(gamepad_btn_orien);
+            gameAllButton.add(gamepad_btn_start);
+            gameAllButton.add(gamepad_btn_select);
+            gameAllButton.add(gamepad_btn_read);
+            gameAllButton.add(gamepad_btn_screenshot);
+            gameAllButton.add(gamepad_btn_save);
+            gameAllButton.add(gamepad_togbtn_speed);
 
             gamePadList.add(gamepad_btn_a);
             gamePadList.add(gamepad_btn_b);
@@ -238,7 +261,6 @@ public class GamePadRelativeLayout extends RelativeLayout {
                 }
             });
 
-            final ToggleButton gamepad_togbtn_rewind = (ToggleButton)gamepadRelativeLayout.findViewById(R.id.gamepad_togbtn_rewind);
             gamepad_togbtn_rewind.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
@@ -269,6 +291,7 @@ public class GamePadRelativeLayout extends RelativeLayout {
                                 if(setDialog.getBackCode() == 1){
                                     setShowGamePadUtilsButtonSize();
                                 }
+                                virtualButtonControl();
                             }
                         });
                         setDialog.setOnShowListener(new DialogInterface.OnShowListener() {
@@ -391,7 +414,7 @@ public class GamePadRelativeLayout extends RelativeLayout {
                     return true;
                 }
             });
-            final ToggleButton gamepad_togbtn_speed = (ToggleButton)gamepadRelativeLayout.findViewById(R.id.gamepad_togbtn_speed);
+
             gamepad_togbtn_speed.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
@@ -405,7 +428,6 @@ public class GamePadRelativeLayout extends RelativeLayout {
                 }
             });
 
-            Button gamepad_btn_save = (Button)gamepadRelativeLayout.findViewById(R.id.gamepad_btn_save);
             gamepad_btn_save.setOnTouchListener(new OnTouchListener() {
                 @Override
                 public boolean onTouch(View view, MotionEvent event) {
@@ -418,7 +440,7 @@ public class GamePadRelativeLayout extends RelativeLayout {
                     return true;
                 }
             });
-            Button gamepad_btn_screenshot = (Button)gamepadRelativeLayout.findViewById(R.id.gamepad_btn_screenshot);
+
             gamepad_btn_screenshot.setOnTouchListener(new OnTouchListener() {
                 @Override
                 public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -553,6 +575,21 @@ public class GamePadRelativeLayout extends RelativeLayout {
         initGamePad();
     }
 
+    private void virtualButtonControl(){
+        if(preferencesData != null){
+            GlobalConfig.VIRTUAL_BUTTON_CONTROL = preferencesData.getVirtualButtonControl();
+        }
+
+        if(gameAllButton!=null){
+            for (View view:gameAllButton){
+                if(GlobalConfig.VIRTUAL_BUTTON_CONTROL){
+                    view.setVisibility(VISIBLE);
+                }else{
+                    view.setVisibility(INVISIBLE);
+                }
+            }
+        }
+    }
     private void setGamePadUtilsVisible(boolean visible){
         if(visible){
             viewGamePadUtil.setVisibility(VISIBLE);

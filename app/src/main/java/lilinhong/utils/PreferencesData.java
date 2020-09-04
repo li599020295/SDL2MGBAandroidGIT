@@ -80,6 +80,9 @@ public class PreferencesData {
     //保存所有数据
     public void setSaveRomData(GameRom rom){
         Map<String,GameRom> gameRomMap = getMapRoms();
+        if(!gameRomMap.containsKey(rom.getMd5())){
+            return;
+        }
         GameRom gameRom1 =  gameRomMap.get(rom.getMd5());
         gameRom1.setPlayTime(rom.getPlayTime());
         gameRom1.setLastPlayTime(rom.getLastPlayTime());
@@ -89,6 +92,9 @@ public class PreferencesData {
     //添加一个收藏
     public void setCollectRom(GameRom rom){
         Map<String,GameRom> gameRomMap = getMapRoms();
+        if(!gameRomMap.containsKey(rom.getMd5())){
+            return;
+        }
         GameRom gameRom1 =  gameRomMap.get(rom.getMd5());
         gameRom1.setCollect(rom.isCollect());
         addGameAllRomList(gameRomMap);
@@ -194,5 +200,13 @@ public class PreferencesData {
     }
     public void setCheatList(List<CheatData> cheatList,String name){
         saveCheatList(cheatList,name);
+    }
+
+    public void setVirtualButtonControl(boolean isShow){
+        sp.edit().putBoolean("virtual_button_control",isShow).commit();
+    }
+    //虚拟按钮控制
+    public boolean getVirtualButtonControl(){
+        return sp.getBoolean("virtual_button_control",true);
     }
 }

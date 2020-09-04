@@ -122,6 +122,26 @@ public class SettingDialog extends BaseDialog {
         set_normal_include_btn_audio = viewSetNormal.findViewById(R.id.set_normal_include_btn_audio);
         Button set_normal_include_btn_button = viewSetNormal.findViewById(R.id.set_normal_include_btn_button);
         Button set_normal_include_btn_gamepad = viewSetNormal.findViewById(R.id.set_normal_include_btn_gamepad);
+        final Button set_normal_include_btn_shbutton = viewSetNormal.findViewById(R.id.set_normal_include_btn_shbutton);
+        set_normal_include_btn_shbutton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                boolean vbc = !preferencesData.getVirtualButtonControl();
+                preferencesData.setVirtualButtonControl(vbc);
+                if(vbc){
+                    set_normal_include_btn_shbutton.setText(context.getString(R.string.hide_button));
+                }else{
+                    set_normal_include_btn_shbutton.setText(context.getString(R.string.show_button));
+                }
+                GlobalConfig.VIRTUAL_BUTTON_CONTROL = vbc;
+            }
+        });
+        boolean vbc = !preferencesData.getVirtualButtonControl();
+        if(vbc){
+            set_normal_include_btn_shbutton.setText(context.getString(R.string.show_button));
+        }else{
+            set_normal_include_btn_shbutton.setText(context.getString(R.string.hide_button));
+        }
 
         set_normal_include_btn_restart.setOnClickListener(new View.OnClickListener() {
             @Override

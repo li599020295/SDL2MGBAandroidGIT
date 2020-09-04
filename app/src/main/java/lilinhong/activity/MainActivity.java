@@ -17,12 +17,13 @@ import java.util.List;
 import lilinhong.adapter.MainFragmentPagerAdapter;
 import lilinhong.fragment.CollectFragment;
 import lilinhong.fragment.RomsFragment;
+import lilinhong.utils.GlobalConfig;
 import lilinhong.utils.PreferencesData;
 
 public class MainActivity extends AppCompatActivity {
     private static MainActivity mainActivity = null;
-    private TabLayout main_tablayout;
-    private ViewPager main_viewpage;
+    private TabLayout main_tablayout = null;
+    private ViewPager main_viewpage = null;
     private PreferencesData preferencesData = null;
     private MainFragmentPagerAdapter mainFragmentPagerAdapter = null;
     private List<Fragment>fragmentList = null;
@@ -43,8 +44,9 @@ public class MainActivity extends AppCompatActivity {
         fragmentList = new ArrayList<>();
         fragmentList.add(new RomsFragment());
         fragmentList.add(new CollectFragment());
-        preferencesData = PreferencesData.getInstance();
+        preferencesData = PreferencesData.getInstance(MainActivity.this);
         mainFragmentPagerAdapter = new MainFragmentPagerAdapter(getSupportFragmentManager(),fragmentList);
+        GlobalConfig.VIRTUAL_BUTTON_CONTROL = preferencesData.getVirtualButtonControl();
     }
     private void initUI(){
         main_tablayout = findViewById(R.id.main_tablayout);
@@ -84,10 +86,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //是否刷新
-    public void setCollectRefresh(){
-       CollectFragment fragment = (CollectFragment) fragmentList.get(1);
-       if(fragment!=null){
-           fragment.setReFresh(true);
+    public void setFragmentRefresh(){
+        if(fragmentList == null || fragmentList.size() == 0){
+            return;
+        }
+        RomsFragment romsFragment = (RomsFragment) fragmentList.get(0);
+        if(romsFragment!=null){
+            romsFragment.setReFresh(true);
+        }
+       CollectFragment collectFragment = (CollectFragment) fragmentList.get(1);
+       if(collectFragment!=null){
+           collectFragment.setReFresh(true);
        }
     }
     public static MainActivity getMainActivity(){
