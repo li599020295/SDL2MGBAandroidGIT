@@ -35,8 +35,8 @@
     <string name="enable">Enable</string>
     <string name="not_enabled">Not Enabled</string>
     <string name="load_slot_data">Load slot data</string>
-    <string name="load_slot_data_content">Are you sure Load slot data? This slot data will overwrite your current game progress.</string>
-    <string name="save_slot_data_content">Are you sure Save slot data? This slot data will overwrite your previous game slot data.</string>
+    <string name="load_slot_data_content">Are you sure Load slot 1 data? This slot data will overwrite your current game progress.</string>
+    <string name="save_slot_data_content">Are you sure Save slot 1 data? This slot data will overwrite your previous game slot 1 data.</string>
     <string name="load_slot_file_not_find">Slot data not exist</string>
     <string name="slot_save_time">Data storage time:</string>
     <string name="save_slot_data">Save slot data</string>
@@ -88,4 +88,13 @@
     <string name="key_loadslot1">KEY LOAD SLOT1</string>
     <string name="gamepad_code">GamePad Code</string>
     <string name="press_hardke_">Press a hardware key...</string>
+    <string name="add_cheat">Add cheat</string>
+    <string name="input_chaet_name">Please input cheat name</string>
+    <string name="input_chaet_code">Please input cheat code</string>
+    <string name="cheat_error">Input cheat code error !</string>
+    <string name="cheat_super_type">Support input cheat code type</string>
+    <string name="code_type_breaker">CodeBreaker:XXXXXXXX XXXX</string>
+    <string name="code_type_gameshark">GameShark:XXXXXXXX XXXXXXXX</string>
+    <string name="code_type_actionreplay">ActionReplay:XXXXXXXX XXXXXXXX</string>
+    <string name="code_type_vba">VBA:XXXXXXXX:XXXXXXXX</string>
 </resources>

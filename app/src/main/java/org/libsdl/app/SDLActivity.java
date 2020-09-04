@@ -32,6 +32,7 @@ import android.content.pm.ApplicationInfo;
 import lilinhong.dialog.ShowScreenCaptureDialog;
 import lilinhong.dialog.TipsDialog;
 import lilinhong.model.GameRom;
+import lilinhong.utils.GlobalConfig;
 import lilinhong.utils.PreferencesData;
 import lilinhong.utils.Utils;
 
@@ -451,6 +452,7 @@ public class SDLActivity extends Activity implements View.OnSystemUiVisibilityCh
     protected void onDestroy() {
         Log.v(TAG, "onDestroy()");
         super.onDestroy();
+        GlobalConfig.FIRST_RUN_GAME_CHEAT = "";
         //  if (mHIDDeviceManager != null) {
         //     HIDDeviceManager.release(mHIDDeviceManager);
         //     mHIDDeviceManager = null;
@@ -825,6 +827,12 @@ public class SDLActivity extends Activity implements View.OnSystemUiVisibilityCh
     public static native void onSlotNum(int num,boolean saveAndLoad);
     //设置是否全屏
     public static native void onScreenSize(boolean isFull,int width,int height);
+    //输入cheat code
+    public static native int addCheatCode(String name,String code,boolean enable);
+    //启用禁用cheat code
+    public static native void enableCheat(int index,boolean enable);
+    //移除cheat code
+    public static native void removeCheat(int index);
 //    //游戏退出
 //    public static native void onGameExit(boolean save);
     /**

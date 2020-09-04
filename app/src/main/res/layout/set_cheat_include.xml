@@ -13,8 +13,10 @@
             android:orientation="vertical">
             <Button
                 android:id="@+id/set_cheat_include_btn_addcode"
+                android:background="@color/white"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textColor="@color/black"
                 android:text="@string/add_cheat_code"/>
             <ListView
                 android:id="@+id/set_cheat_include_listview"
@@ -28,23 +30,90 @@
             android:layout_height="match_parent"
             android:orientation="vertical"
             android:background="@color/grey">
-            <EditText
-                android:id="@+id/set_cheat_include_edit_codename"
+            <LinearLayout
+                android:layout_margin="10dp"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/cheat_name"
-                />
-            <EditText
-                android:id="@+id/set_cheat_include_edit_code"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/cheat_code"/>
-            <Button
-                android:id="@+id/set_cheat_include_btn_codeok"
-                android:layout_gravity="center"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/ok"/>
+                android:layout_height="match_parent"
+                android:orientation="vertical" >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/cheat_super_type"
+                    android:textColor="@color/black"/>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:background="@color/white"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/code_type_breaker"
+                    android:textColor="@color/black"/>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:background="@color/white"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/code_type_gameshark"
+                    android:textColor="@color/black"/>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:background="@color/white"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/code_type_actionreplay"
+                    android:textColor="@color/black"/>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:background="@color/white"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/code_type_vba"
+                    android:textColor="@color/black"/>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:background="@color/white"
+                    />
+                <EditText
+                    android:layout_marginTop="5dp"
+                    android:id="@+id/set_cheat_include_edit_codename"
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:textColorHint="@color/black"
+                    android:textColor="@color/black"
+                    android:hint="@string/cheat_name"
+                    android:background="@drawable/btn_bg"
+                    />
+                <EditText
+                    android:layout_marginTop="5dp"
+                    android:id="@+id/set_cheat_include_edit_code"
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:textColorHint="@color/black"
+                    android:textColor="@color/black"
+                    android:background="@drawable/btn_bg"
+                    android:hint="@string/cheat_code"/>
+                <Button
+                    android:layout_marginTop="5dp"
+                    android:id="@+id/set_cheat_include_btn_codeok"
+                    android:layout_gravity="center"
+                    android:textColor="@color/black"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:text="@string/add_cheat"/>
+            </LinearLayout>
         </LinearLayout>
     </FrameLayout>
 </LinearLayout>

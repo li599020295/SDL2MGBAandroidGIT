@@ -3,23 +3,34 @@ package lilinhong.dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+import android.widget.ToggleButton;
+
 import org.libsdl.app.GamePadRelativeLayout;
 import org.libsdl.app.R;
 import org.libsdl.app.SDLActivity;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import lilinhong.activity.GamePadActivity;
+import lilinhong.model.CheatData;
+import lilinhong.utils.GlobalConfig;
+import lilinhong.utils.PreferencesData;
 import lilinhong.utils.Utils;
 
 public class SettingDialog extends BaseDialog {
@@ -27,12 +38,21 @@ public class SettingDialog extends BaseDialog {
     private View viewSetSlot = null;
     private View viewSetCheat = null;
     private Button set_normal_include_btn_audio = null;
-    private SlotAdapter adapter = null;
+    private SlotAdapter slotAdapter = null;
     private Context context = null;
     private String gamePath = null;
     private boolean audioSwitch = true;
+    private LinearLayout set_cheat_include_linrat_listcode = null;
+    private LinearLayout set_cheat_include_linrat_code = null;
     //返回码用于处理关闭事件显示一些东西 1 = button,
     private int backCode = -1;
+    //秘籍list
+    private List<CheatData>cheatDataList = null;
+    //数据管理
+    private PreferencesData preferencesData = null;
+    //作弊器适配器
+    private CheatAdapter cheatAdapter = null;
+    private String gameName = "";
     public SettingDialog(Context context,String gamePath) {
         super(context, R.style.mdialog);
         this.context = context;
@@ -42,7 +62,21 @@ public class SettingDialog extends BaseDialog {
     }
 
     private void initData() {
-        adapter = new SlotAdapter(context);
+        File file = new File(this.gamePath);
+        gameName = file.getName();
+        preferencesData = PreferencesData.getInstance(context);
+        cheatDataList = preferencesData.getCheatList(gameName);
+        if(!GlobalConfig.FIRST_RUN_GAME_CHEAT.equals(gameName)) {
+            for (CheatData cheatData : cheatDataList) {
+                cheatData.setEnable(false);
+                //第一次进入关闭作弊码
+                SDLActivity.addCheatCode(cheatData.getName(),cheatData.getCode(),false);
+            }
+            preferencesData.setCheatList(cheatDataList, gameName);
+        }
+        GlobalConfig.FIRST_RUN_GAME_CHEAT = gameName;
+        slotAdapter = new SlotAdapter(context);
+        cheatAdapter = new CheatAdapter();
     }
 
     private void initUI(){
@@ -123,9 +157,50 @@ public class SettingDialog extends BaseDialog {
         });
         //存档设置
         ListView set_slot_include_listview = (ListView)viewSetSlot.findViewById(R.id.set_slot_include_listview);
-        set_slot_include_listview.setAdapter(adapter);
-
+        set_slot_include_listview.setAdapter(slotAdapter);
         this.changeAudio();
+
+        //add cheat
+        set_cheat_include_linrat_listcode = viewSetCheat.findViewById(R.id.set_cheat_include_linrat_listcode);
+        set_cheat_include_linrat_code = viewSetCheat.findViewById(R.id.set_cheat_include_linrat_code);
+        ListView set_cheat_include_listview = set_cheat_include_linrat_listcode.findViewById(R.id.set_cheat_include_listview);
+        set_cheat_include_listview.setAdapter(cheatAdapter);
+        final EditText set_cheat_include_edit_codename = set_cheat_include_linrat_code.findViewById(R.id.set_cheat_include_edit_codename);
+        final EditText set_cheat_include_edit_code = set_cheat_include_linrat_code.findViewById(R.id.set_cheat_include_edit_code);
+        Button set_cheat_include_btn_addcode = set_cheat_include_linrat_listcode.findViewById(R.id.set_cheat_include_btn_addcode);
+        set_cheat_include_btn_addcode.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                set_cheat_include_linrat_code.setVisibility(View.VISIBLE);
+            }
+        });
+        set_cheat_include_linrat_code.setVisibility(View.INVISIBLE);
+        Button set_cheat_include_btn_codeok = set_cheat_include_linrat_code.findViewById(R.id.set_cheat_include_btn_codeok);
+        set_cheat_include_btn_codeok.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(TextUtils.isEmpty(set_cheat_include_edit_codename.getText())){
+                    Toast.makeText(context,context.getString(R.string.input_chaet_name),Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if(TextUtils.isEmpty(set_cheat_include_edit_code.getText())){
+                    Toast.makeText(context,context.getString(R.string.input_chaet_code),Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                String name = set_cheat_include_edit_codename.getText().toString();
+                String codeData = set_cheat_include_edit_code.getText().toString();
+                int code = SDLActivity.addCheatCode(name,codeData,true);
+                if(code == 0|| code < 0){
+                    Toast.makeText(context,context.getString(R.string.cheat_error),Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                cheatDataList.add(new CheatData(name,codeData));
+
+                preferencesData.setCheatList(cheatDataList,gameName);
+                cheatAdapter.notifyDataSetChanged();
+                set_cheat_include_linrat_code.setVisibility(View.INVISIBLE);
+            }
+        });
     }
 
     private void changeAudio(){
@@ -164,6 +239,71 @@ public class SettingDialog extends BaseDialog {
         this.backCode = backCode;
     }
 
+    class CheatAdapter extends BaseAdapter{
+
+        @Override
+        public int getCount() {
+            return cheatDataList.size();
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return cheatDataList.get(position);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return cheatDataList.size();
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            CheatData cheatData = cheatDataList.get(position);
+            HoldView holdView = null;
+            if(convertView == null){
+                holdView = new HoldView();
+                convertView = LayoutInflater.from(context).inflate(R.layout.set_cheat_include_listview_item,null);
+                holdView.set_cheat_include_listview_item_text_name = convertView.findViewById(R.id.set_cheat_include_listview_item_text_name);
+                holdView.set_cheat_include_listview_item_text_code = convertView.findViewById(R.id.set_cheat_include_listview_item_text_code);
+                holdView.set_cheat_include_listview_item_toggle_switch = convertView.findViewById(R.id.set_cheat_include_listview_item_toggle_switch);
+                holdView.set_cheat_include_listview_item_imagebtn_delete = convertView.findViewById(R.id.set_cheat_include_listview_item_imagebtn_delete);
+                holdView.set_cheat_include_listview_item_toggle_switch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        int pos = (int)buttonView.getTag();
+                        SDLActivity.enableCheat(pos,isChecked);
+                        cheatDataList.get(pos).setEnable(isChecked);
+                        preferencesData.setCheatList(cheatDataList,gameName);
+                    }
+                });
+
+                holdView.set_cheat_include_listview_item_imagebtn_delete.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        int pos = (int)v.getTag();
+                        SDLActivity.removeCheat(pos);
+                        cheatDataList.remove(pos);
+                        preferencesData.setCheatList(cheatDataList,gameName);
+                        cheatAdapter.notifyDataSetChanged();
+                    }
+                });
+                convertView.setTag(holdView);
+            }
+            holdView = (HoldView) convertView.getTag();
+            holdView.set_cheat_include_listview_item_toggle_switch.setTag(position);
+            holdView.set_cheat_include_listview_item_toggle_switch.setChecked(cheatData.isEnable());
+            holdView.set_cheat_include_listview_item_text_name.setText(cheatData.getName());
+            holdView.set_cheat_include_listview_item_text_code.setText(cheatData.getCode());
+            return convertView;
+        }
+
+        class HoldView{
+            TextView set_cheat_include_listview_item_text_name;
+            TextView set_cheat_include_listview_item_text_code;
+            ToggleButton set_cheat_include_listview_item_toggle_switch;
+            ImageButton set_cheat_include_listview_item_imagebtn_delete;
+        }
+    }
     class SlotAdapter extends BaseAdapter {
         private Context context;
         public SlotAdapter(Context context){
@@ -213,7 +353,7 @@ public class SettingDialog extends BaseDialog {
                     public void onClick(View v) {
                         int pos = (int)v.getTag();
                         SDLActivity.onSlotNum(pos,true);
-                        adapter.notifyDataSetChanged();
+                        slotAdapter.notifyDataSetChanged();
                     }
                 });
                 holdView.set_slot_include_listview_item_btn_delete.setOnClickListener(new View.OnClickListener() {
@@ -225,7 +365,7 @@ public class SettingDialog extends BaseDialog {
                         if(file.exists()){
                             file.delete();
                         }
-                        adapter.notifyDataSetChanged();
+                        slotAdapter.notifyDataSetChanged();
                     }
                 });
                 convertView.setTag(holdView);

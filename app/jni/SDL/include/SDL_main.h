@@ -129,6 +129,12 @@ extern SDLMAIN_DECLSPEC void SDL_onSetJNIEnv(JNIEnv *env);
 extern SDLMAIN_DECLSPEC void SDL_onSlotNum(int key, bool isSvae);
 //设置屏幕大小
 extern SDLMAIN_DECLSPEC void SDL_onScreenSize(bool isFull,int width,int height);
+//添加作弊码
+extern SDLMAIN_DECLSPEC bool SDL_addCheatCode(char *name, char*code,bool enable);
+//禁用启用作弊码
+extern SDLMAIN_DECLSPEC void SDL_enableCheat(int index,bool enable);
+//移除作弊码
+extern SDLMAIN_DECLSPEC void SDL_removeCheat(int index);
 /**
  *  This is called by the real SDL main function to let the rest of the
  *  library know that initialization was done properly.

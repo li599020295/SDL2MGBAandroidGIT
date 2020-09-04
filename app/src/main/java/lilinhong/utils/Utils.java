@@ -3,14 +3,15 @@ package lilinhong.utils;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Environment;
 import android.util.Log;
+import android.view.View;
 
 import androidx.core.content.ContextCompat;
-
 import org.libsdl.app.R;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -18,18 +19,32 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.security.MessageDigest;
 import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
-
 import lilinhong.dialog.TipsDialog;
 import lilinhong.model.GameRom;
 
 public class Utils {
+
+    public static Bitmap captureView(View view) {
+        // 根据View的宽高创建一个空的Bitmap
+        Bitmap bitmap = Bitmap.createBitmap(
+                view.getWidth(),
+                view.getHeight(),
+                Bitmap.Config.RGB_565);
+        // 利用该Bitmap创建一个空的Canvas
+        Canvas canvas = new Canvas(bitmap);
+        // 绘制背景(可选)
+        canvas.drawColor(Color.WHITE);
+        // 将view的内容绘制到我们指定的Canvas上
+        view.draw(canvas);
+        return bitmap;
+    }
+
     //获取所有的slot数量
     public static List<File>getAllSlotList(String gamePath){
         List<File> slotList = new ArrayList<>();

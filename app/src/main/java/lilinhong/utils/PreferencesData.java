@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import lilinhong.model.CheatData;
 import lilinhong.model.GamePad;
 import lilinhong.model.GameRom;
 
@@ -144,12 +145,6 @@ public class PreferencesData {
         sp.edit().putString("roms",str).commit();
     }
 
-    public void saveGamePadList1(List<GamePad> gamePads){
-        Gson gson2=new Gson();
-        String str=gson2.toJson(gamePads);
-        sp.edit().putString("game_pads1",str).commit();
-    }
-
     public List<GamePad> getGamePadList1(Context context){
         String gamePadStr = sp.getString("game_pads1","");
         Gson gson1=new Gson();
@@ -176,5 +171,28 @@ public class PreferencesData {
             saveGamePadList1(gamePads);
         }
         return gamePads;
+    }
+    public void saveGamePadList1(List<GamePad> gamePads){
+        Gson gson2=new Gson();
+        String str=gson2.toJson(gamePads);
+        sp.edit().putString("game_pads1",str).commit();
+    }
+
+    private void saveCheatList(List<CheatData> cheatList,String name){
+        Gson gson2=new Gson();
+        String str=gson2.toJson(cheatList);
+        sp.edit().putString("cheat_"+name,str).commit();
+    }
+    public List<CheatData> getCheatList(String name){
+        String cheatDataStr = sp.getString("cheat_"+name,"");
+        Gson gson1=new Gson();
+        List<CheatData> cheatDataList = gson1.fromJson(cheatDataStr, new TypeToken<List<CheatData>>() {}.getType());
+        if(cheatDataList == null){
+            cheatDataList = new ArrayList<>();
+        }
+        return cheatDataList;
+    }
+    public void setCheatList(List<CheatData> cheatList,String name){
+        saveCheatList(cheatList,name);
     }
 }

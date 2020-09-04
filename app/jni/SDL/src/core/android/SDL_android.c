@@ -172,6 +172,18 @@ JNIEXPORT void JNICALL SDL_JAVA_INTERFACE(onSlotNum)(
 JNIEXPORT void JNICALL SDL_JAVA_INTERFACE(onScreenSize)(
         JNIEnv *env, jclass cls,
         jboolean isFull,jint width, jint height);
+//内部调用添加addCheatCode
+JNIEXPORT int JNICALL SDL_JAVA_INTERFACE(addCheatCode)(
+        JNIEnv *env, jclass cls,
+        jstring name,jstring code,jboolean enable);
+//
+JNIEXPORT void JNICALL SDL_JAVA_INTERFACE(enableCheat)(
+        JNIEnv *env, jclass cls,
+        jint index,jboolean enable);
+//
+JNIEXPORT void JNICALL SDL_JAVA_INTERFACE(removeCheat)(
+        JNIEnv *env, jclass cls,
+        jint index);
 
 static JNINativeMethod SDLActivity_tab[] = {
     { "nativeSetupJNI",             "()I", SDL_JAVA_INTERFACE(nativeSetupJNI) },
@@ -204,6 +216,9 @@ static JNINativeMethod SDLActivity_tab[] = {
     { "onDataKey",     "(IZ)V", SDL_JAVA_INTERFACE(onDataKey) },
     { "onSlotNum",     "(IZ)V", SDL_JAVA_INTERFACE(onSlotNum) },
     { "onScreenSize",     "(ZII)V", SDL_JAVA_INTERFACE(onScreenSize) },
+    { "addCheatCode",     "(Ljava/lang/String;Ljava/lang/String;Z)I", SDL_JAVA_INTERFACE(addCheatCode) },
+    { "enableCheat",     "(IZ)V", SDL_JAVA_INTERFACE(enableCheat) },
+    { "removeCheat",     "(I)V", SDL_JAVA_INTERFACE(removeCheat) },
 };
 
 /* Java class SDLInputConnection */
@@ -382,6 +397,15 @@ static SDL_onSlotNum_func SDL_onSlotNumCall = NULL;
 //
 typedef void (*SDL_onScreenSize_func)( bool  down,int width,int height);
 static SDL_onScreenSize_func SDL_onScreenSizeCall = NULL;
+//添加作弊码
+typedef bool (*SDL_addCheatCode_func)(char* name, char*code,bool enable);
+static SDL_addCheatCode_func SDL_addCheatCodeCall = NULL;
+//启用禁用作弊码
+typedef bool (*SDL_enableCheat_func)(int index, bool enable);
+static SDL_enableCheat_func SDL_enableCheatCall = NULL;
+//移除作弊码
+typedef bool (*SDL_removeCheat_func)(int index);
+static SDL_removeCheat_func SDL_removeCheatCall = NULL;
 /*******************************************************************************
                  Functions called by JNI
 *******************************************************************************/
@@ -754,6 +778,9 @@ JNIEXPORT int JNICALL SDL_JAVA_INTERFACE(nativeRunMain)(JNIEnv *env, jclass cls,
         SDL_onSetJNIEnvCall = (SDL_onSetJNIEnv_func)dlsym(library_handle, "SDL_onSetJNIEnv");
         SDL_onSlotNumCall = (SDL_onSlotNum_func)dlsym(library_handle, "SDL_onSlotNum");
         SDL_onScreenSizeCall = (SDL_onScreenSize_func)dlsym(library_handle, "SDL_onScreenSize");
+        SDL_addCheatCodeCall = (SDL_addCheatCode_func)dlsym(library_handle, "SDL_addCheatCode");
+        SDL_enableCheatCall = (SDL_enableCheat_func)dlsym(library_handle, "SDL_enableCheat");
+        SDL_removeCheatCall = (SDL_removeCheat_func)dlsym(library_handle, "SDL_removeCheat");
         if (SDL_main) {
             int i;
             int argc;
@@ -1366,6 +1393,36 @@ JNIEXPORT void JNICALL SDL_JAVA_INTERFACE(onDataKey)(
     }
     SDL_onDataKeyCall(key,isDown);
     // sdlUpdateKey(key,dowm);
+}
+//添加一个作弊码
+JNIEXPORT int JNICALL SDL_JAVA_INTERFACE(addCheatCode)(
+        JNIEnv *env, jclass cls,
+        jstring name,jstring code,jboolean enable){
+    bool isOk = false;
+    if(SDL_addCheatCodeCall!=NULL){
+        const char *utfname = (*env)->GetStringUTFChars(env, name, NULL);
+        const char *utfcode = (*env)->GetStringUTFChars(env, code, NULL);
+        isOk = SDL_addCheatCodeCall(utfname,utfcode,enable);
+        (*env)->ReleaseStringUTFChars(env, name, utfname);
+        (*env)->ReleaseStringUTFChars(env, code, utfcode);
+    }
+    return isOk;
+}
+//启用禁用一个作弊码
+JNIEXPORT void JNICALL SDL_JAVA_INTERFACE(enableCheat)(
+        JNIEnv *env, jclass cls,
+        jint index,jboolean enable){
+    if(SDL_enableCheatCall!=NULL){
+        SDL_enableCheatCall(index,enable);
+    }
+}
+//移除一个作弊码
+JNIEXPORT void JNICALL SDL_JAVA_INTERFACE(removeCheat)(
+        JNIEnv *env, jclass cls,
+        jint index){
+    if(SDL_removeCheatCall!=NULL){
+        SDL_removeCheatCall(index);
+    }
 }
 
 /*******************************************************************************

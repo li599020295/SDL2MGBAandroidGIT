@@ -3,6 +3,9 @@ package org.libsdl.app;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.ActivityInfo;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Rect;
 import android.util.DisplayMetrics;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -407,7 +410,9 @@ public class GamePadRelativeLayout extends RelativeLayout {
                 @Override
                 public boolean onTouch(View view, MotionEvent event) {
                     if(event.getAction() == MotionEvent.ACTION_UP){
+                        //Bitmap bitmap = Utils.captureView(SDLActivity.getContentView());
                         SaveSlotDialog saveSlotDialog = new SaveSlotDialog(SDLActivity.getmSingleton());
+                       // saveSlotDialog.setIconBitmap(bitmap);
                         saveSlotDialog.show();
                     }
                     return true;
@@ -571,10 +576,12 @@ public class GamePadRelativeLayout extends RelativeLayout {
         if(event.getAction() == KeyEvent.ACTION_UP){
             if(gameKeyCode == GamePadRelativeLayout.PAD1_SAVE_SLOT1){
                 SDLActivity.onSlotNum(0,true);
+                Toast.makeText(sdlActivity, String.format(sdlActivity.getString(R.string.slote_save_desc),1),Toast.LENGTH_SHORT).show();
             }
             else if(gameKeyCode == GamePadRelativeLayout.PAD1_LOAD_SLOT1)
             {
                 SDLActivity.onSlotNum(0,false);
+                Toast.makeText(sdlActivity, String.format(sdlActivity.getString(R.string.slote_load_desc),1),Toast.LENGTH_SHORT).show();
             }
             else
             {

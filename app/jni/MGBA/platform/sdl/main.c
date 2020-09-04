@@ -37,6 +37,7 @@
 #include <errno.h>
 #include <signal.h>
 #include <jni.h>
+#include <include/mgba/internal/gba/cheats.h>
 
 #define PORT "sdl"
 struct mCoreThread global_thread = {0};
@@ -53,31 +54,35 @@ static void _loadState(struct mCoreThread* thread) {
 }
 //作弊
 struct mCheatDevice*  m_device = NULL;
-struct mCheatSet* m_cheatSet = NULL;
-//
-void enterCheat(int codeType, char*chat_str, char*chat_name) {
-	if (m_cheatSet == NULL) {
-		m_cheatSet = m_device->createSet(m_device, chat_name);
+//struct mCheatSet* m_cheatSet = NULL;
+//添加作弊码
+bool SDL_addCheatCode(char*chat_name,char*chat_str,bool enable) {
+	int codeType = GBA_CHEAT_AUTODETECT;
+	struct mCheatSet* m_cheatSet = m_device->createSet(m_device, chat_name);
+    m_cheatSet->enabled = enable;
+	bool isOK = mCheatAddLine(m_cheatSet,chat_str, codeType);
+	if(!isOK){
+		return isOK;
 	}
-	mCheatAddLine(m_cheatSet,chat_str, codeType);
-
-	m_cheatSet->refresh(m_cheatSet,m_device);
+	mCheatAddSet(m_device, m_cheatSet);
+    return true;
 }
+
 //获取当前行的cheat
 struct mCheatSet* getItemCheat(int index){
 	return *mCheatSetsGetPointer(&m_device->cheats, index);
 }
 //停用或者开启一个cheat
-void enableCheat(int index,bool enabled){
+void SDL_enableCheat(int index,bool enabled){
 	struct mCheatSet* set = *mCheatSetsGetPointer(&m_device->cheats, index);
 	set->enabled = enabled;
 }
 //移除一个cheat
-void removeCheat(int index){
+void SDL_removeCheat(int index){
 	struct mCheatSet* set = *mCheatSetsGetPointer(&m_device->cheats, index);
 	mCheatRemoveSet(m_device, set);
 	mCheatSetDeinit(set);
-	mCheatAutosave(m_device);
+	//mCheatAutosave(m_device);
 }
 JNIEnv *_env = NULL;
 //存储JNIEnv
@@ -185,9 +190,10 @@ int main(int argc, char** argv) {
 		}
 	}
 
-	if(device!=NULL){
-		m_device = device;
-	}
+//	if(device!=NULL){
+//		m_device = device;
+//	}
+    m_device = renderer.core->cheatDevice(renderer.core);
 
 	mInputMapInit(&renderer.core->inputMap, &GBAInputInfo);
 	mCoreInitConfig(renderer.core, PORT);
