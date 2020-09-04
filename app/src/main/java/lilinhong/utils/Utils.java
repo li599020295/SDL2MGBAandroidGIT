@@ -311,7 +311,8 @@ public class Utils {
     public static boolean isGameFile(File file){
         String name = file.getName();
         String suffix = name.substring(name.lastIndexOf(".")+1).toLowerCase();
-        if(suffix.equals(GlobalConfig.GBA_SUFFIX) || suffix.equals(GlobalConfig.GB_SUFFIX)){
+        if(suffix.equals(GlobalConfig.GBA_SUFFIX) || suffix.equals(GlobalConfig.GB_SUFFIX) || suffix.equals(GlobalConfig.SGB_SUFFIX)
+                || suffix.equals(GlobalConfig.GBC_SUFFIX)){
             return true;
         }
         return false;
