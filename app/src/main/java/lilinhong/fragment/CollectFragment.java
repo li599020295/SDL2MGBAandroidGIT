@@ -69,7 +69,7 @@ public class CollectFragment extends Fragment {
     }
 
     private void initData() {
-        preferencesData = PreferencesData.getInstance(getContext());
+        preferencesData = PreferencesData.getInstance();
         gameRomList = preferencesData.getCollectRoms();
         adapter = new CollectGameRomsAdapter(getActivity());
     }

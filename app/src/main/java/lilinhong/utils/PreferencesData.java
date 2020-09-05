@@ -1,60 +1,53 @@
 package lilinhong.utils;
 
 import android.content.Context;
-import android.content.SharedPreferences;
-
+import android.util.Log;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-
+import com.tencent.mmkv.MMKV;
 import org.libsdl.app.GamePadRelativeLayout;
 import org.libsdl.app.R;
-
-import java.io.Console;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import lilinhong.model.CheatData;
 import lilinhong.model.GamePad;
 import lilinhong.model.GameRom;
 
-import static android.content.Context.MODE_PRIVATE;
-
 public class PreferencesData {
     private static PreferencesData preferencesData = null;
-    private Context context;
-    private SharedPreferences sp;
+    private static MMKV kv = null;
 
+    public PreferencesData(Context context){
+        MMKV.initialize(context);
+        kv = MMKV.defaultMMKV();
+    }
     public static PreferencesData getInstance(Context context) {
-        if (preferencesData == null) {
+        //if (preferencesData == null) {
             preferencesData = new PreferencesData(context);
-        }
+        //}
         return preferencesData;
     }
 
-    public static PreferencesData getInstance() {
+    public static PreferencesData getInstance(){
         return preferencesData;
-    }
-
-    public PreferencesData(Context context) {
-        this.context = context;
-        sp = context.getSharedPreferences("datas", MODE_PRIVATE);
     }
 
     //是否第一次扫描
     public boolean getFirstScance(){
-        return sp.getBoolean("first_scance",false);
+        return kv.getBoolean("first_scance",false);
     }
     //
     public void setFirstScance(boolean value){
-        sp.edit().putBoolean("first_scance",value).commit();
+        kv.putBoolean("first_scance",value);
     }
 
     //获取map数据
-    public static Map<String,GameRom> getMapRoms(){
-        String roms = preferencesData.sp.getString("roms","");
+    public Map<String,GameRom> getMapRoms(){
+        String roms = preferencesData.kv.getString("roms","");
+        Log.e("getMapRoms",roms);
         Gson gson1=new Gson();
         Map<String,GameRom> map= gson1.fromJson(roms, new TypeToken<Map<String,GameRom>>() {}.getType());
         if(map == null){
@@ -86,6 +79,7 @@ public class PreferencesData {
         GameRom gameRom1 =  gameRomMap.get(rom.getMd5());
         gameRom1.setPlayTime(rom.getPlayTime());
         gameRom1.setLastPlayTime(rom.getLastPlayTime());
+        gameRom1.setImage(rom.getImage());
         addGameAllRomList(gameRomMap);
     }
 
@@ -116,7 +110,7 @@ public class PreferencesData {
     public void addGameAllRomList(Map<String,GameRom> mapRoms){
         Gson gson2=new Gson();
         String str=gson2.toJson(mapRoms);
-        sp.edit().putString("roms",str).commit();
+        kv.putString("roms",str);
         System.out.println(str);
     }
 
@@ -148,11 +142,14 @@ public class PreferencesData {
         }
         Gson gson2=new Gson();
         String str=gson2.toJson(gameRomList);
-        sp.edit().putString("roms",str).commit();
+        kv.putString("roms",str);
     }
 
     public List<GamePad> getGamePadList1(Context context){
-        String gamePadStr = sp.getString("game_pads1","");
+        String gamePadStr = kv.getString("game_pads1","");
+        if(gamePadStr!=null && !gamePadStr.equals("")){
+            gamePadStr = Utils.decodeBase64ToString(gamePadStr);
+        }
         Gson gson1=new Gson();
         List<GamePad> gamePads = gson1.fromJson(gamePadStr, new TypeToken<List<GamePad>>() {}.getType());
         if(gamePads == null){
@@ -181,16 +178,17 @@ public class PreferencesData {
     public void saveGamePadList1(List<GamePad> gamePads){
         Gson gson2=new Gson();
         String str=gson2.toJson(gamePads);
-        sp.edit().putString("game_pads1",str).commit();
+        str = Utils.encodeBase64ToString(str);
+        kv.putString("game_pads1",str);
     }
 
     private void saveCheatList(List<CheatData> cheatList,String name){
         Gson gson2=new Gson();
         String str=gson2.toJson(cheatList);
-        sp.edit().putString("cheat_"+name,str).commit();
+        kv.putString("cheat_"+name,str);
     }
     public List<CheatData> getCheatList(String name){
-        String cheatDataStr = sp.getString("cheat_"+name,"");
+        String cheatDataStr = kv.getString("cheat_"+name,"");
         Gson gson1=new Gson();
         List<CheatData> cheatDataList = gson1.fromJson(cheatDataStr, new TypeToken<List<CheatData>>() {}.getType());
         if(cheatDataList == null){
@@ -203,10 +201,10 @@ public class PreferencesData {
     }
 
     public void setVirtualButtonControl(boolean isShow){
-        sp.edit().putBoolean("virtual_button_control",isShow).commit();
+        kv.putBoolean("virtual_button_control",isShow);
     }
     //虚拟按钮控制
     public boolean getVirtualButtonControl(){
-        return sp.getBoolean("virtual_button_control",true);
+        return kv.getBoolean("virtual_button_control",true);
     }
 }

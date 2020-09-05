@@ -3,6 +3,7 @@ package lilinhong.fragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -25,13 +26,16 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import org.libsdl.app.R;
 import org.libsdl.app.SDLActivity;
 import java.io.File;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import lilinhong.activity.MainActivity;
 import lilinhong.dialog.GameInfoDialog;
 import lilinhong.dialog.SearchFileDialog;
 import lilinhong.dialog.TipsDialog;
 import lilinhong.model.GameRom;
+import lilinhong.model.IconData;
 import lilinhong.utils.PermissionSystem;
 import lilinhong.utils.PreferencesData;
 import lilinhong.utils.Utils;
@@ -55,14 +59,16 @@ public class RomsFragment extends Fragment {
     //存储权限返回标志
     private static final int REQUEST_EXTERNAL_STORAGE = 3;
     private View mainView = null;
+    //是否刷新
     private boolean isReFresh = false;
+    //保存icon数据防止重复加载
+    private Map<Integer, IconData> iconMap = null;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mainView = inflater.inflate(R.layout.roms_fragment, container, false);
         initData();
         initUI();
         initFinish();
-        Log.i(TAG,"onCreateView");
         return mainView;
     }
 
@@ -78,8 +84,9 @@ public class RomsFragment extends Fragment {
     }
 
     private void initData() {
+        iconMap = new HashMap<>();
         permissionSystem = new PermissionSystem(getActivity());
-        preferencesData = PreferencesData.getInstance(getActivity());
+        preferencesData = PreferencesData.getInstance();
         gameARomList = preferencesData.getRoms();
         gameRomsAdapter = new RomsFragment.GameRomsAdapter(getActivity());
     }
@@ -270,7 +277,24 @@ public class RomsFragment extends Fragment {
             if(!image.equals("")){
                 File file = new File(image);
                 if(file.exists()) {
-                    ImageLoader.getInstance().displayImage(image, holdView.roms_fragment_item_image);
+                    boolean isHaveIcon = iconMap.containsKey(position);
+                    Bitmap bitmap = null;
+                    if(isHaveIcon){
+                        IconData iconData = iconMap.get(position);
+                        if(iconData.getFilePath().equals(image)){
+                            bitmap = iconData.getBitmap();
+                        }else{
+                            if(bitmap!=null) {
+                                bitmap.recycle();
+                            }
+                            bitmap = Utils.getLoacalBitmap(image);
+                            iconMap.put(position,new IconData(bitmap,image,position));
+                        }
+                    }else{
+                        bitmap = Utils.getLoacalBitmap(image);
+                        iconMap.put(position,new IconData(bitmap,image,position));
+                    }
+                    holdView.roms_fragment_item_image.setImageBitmap(bitmap);
                 }else{
                     //drawable://
                     ImageLoader.getInstance().displayImage("drawable://" + R.mipmap.gba_item_icon, holdView.roms_fragment_item_image);

@@ -120,7 +120,7 @@ public class GamePadRelativeLayout extends RelativeLayout {
 
     private void initData(){
         this.gamepadMap1 = new HashMap<>();
-        this.preferencesData = PreferencesData.getInstance(context);
+        this.preferencesData = PreferencesData.getInstance();
         this.gameAllButton = new ArrayList<>();
         this.gamePadList = new ArrayList<>();
         this.audioSwitch = true;

@@ -100,4 +100,5 @@
     <string name="hide_button">Hide button</string>
     <string name="show_button">Show button</string>
     <string name="no_current_supperted">Sorry, not currently supported</string>
+    <string name="successful">Successful</string>
 </resources>

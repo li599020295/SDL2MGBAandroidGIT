@@ -12,6 +12,8 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.nostra13.universalimageloader.core.download.BaseImageDownloader;
+import com.tencent.mmkv.MMKV;
+
 import org.libsdl.app.R;
 import lilinhong.utils.PreferencesData;
 
@@ -20,19 +22,11 @@ public class BootActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //解压到内部存储
-//        File file= this.getFilesDir();
-//        String path=file.getAbsolutePath();
-//        Utils.copyAssetsData(this,path);
-//        File libcocos2dFile = new File(path+"/"+"gjzz2.gba");
-//
-//        Intent sdlActivityIntent = new Intent(BootActivity.this, SDLActivity.class);
-//        sdlActivityIntent.putExtra("path",libcocos2dFile.getAbsolutePath());
-//        startActivity(sdlActivityIntent);
         this.initData();
     }
 
     private void initData() {
+        preferencesData = PreferencesData.getInstance(BootActivity.this);
         {
             DisplayImageOptions options = new DisplayImageOptions.Builder()
                     .imageScaleType(ImageScaleType.IN_SAMPLE_POWER_OF_2)
@@ -61,7 +55,6 @@ public class BootActivity extends AppCompatActivity {
                     .build();
             com.nostra13.universalimageloader.core.ImageLoader.getInstance().init(config);//全局初始化此配置
         }
-        preferencesData = PreferencesData.getInstance(BootActivity.this);
         Intent intent = new Intent(BootActivity.this, MainActivity.class);
         startActivity(intent);
         finish();

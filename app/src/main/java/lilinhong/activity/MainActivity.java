@@ -11,6 +11,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 import com.google.android.material.tabs.TabLayout;
+import com.tencent.mmkv.MMKV;
+
 import org.libsdl.app.R;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,13 +40,13 @@ public class MainActivity extends AppCompatActivity {
     }
     private void initData(){
         mainActivity = this;
+        preferencesData = PreferencesData.getInstance(MainActivity.this);
         nameList = new ArrayList<>();
         nameList.add(getString(R.string.game_name));
         nameList.add(getString(R.string.game_collect));
         fragmentList = new ArrayList<>();
         fragmentList.add(new RomsFragment());
         fragmentList.add(new CollectFragment());
-        preferencesData = PreferencesData.getInstance(MainActivity.this);
         mainFragmentPagerAdapter = new MainFragmentPagerAdapter(getSupportFragmentManager(),fragmentList);
         GlobalConfig.VIRTUAL_BUTTON_CONTROL = preferencesData.getVirtualButtonControl();
     }

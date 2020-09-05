@@ -184,6 +184,10 @@ public class SDLActivity extends Activity implements View.OnSystemUiVisibilityCh
         return argData;
     }
 
+    public GameRom getGameRom(){
+        return gameRom;
+    }
+
     public static void initialize() {
         // The static nature of the singleton and Android quirkyness force us to initialize everything here
         // Otherwise, when exiting the app and returning to it, these variables *keep* their pre exit values
@@ -213,7 +217,7 @@ public class SDLActivity extends Activity implements View.OnSystemUiVisibilityCh
         //全屏
         getWindow().setFlags(WindowManager.LayoutParams. FLAG_FULLSCREEN , WindowManager.LayoutParams. FLAG_FULLSCREEN);
 
-        preferencesData = new PreferencesData(this);
+        preferencesData = PreferencesData.getInstance(this);
 
         Intent intent = getIntent();
         Bundle bundle =intent.getExtras();
@@ -373,6 +377,7 @@ public class SDLActivity extends Activity implements View.OnSystemUiVisibilityCh
         if (mHasMultiWindow) {
             pauseNativeThread();
         }
+
     }
 
     @Override
@@ -457,16 +462,18 @@ public class SDLActivity extends Activity implements View.OnSystemUiVisibilityCh
         //     HIDDeviceManager.release(mHIDDeviceManager);
         //     mHIDDeviceManager = null;
         //  }
+        //保存数据一次
+        long endTime = System.currentTimeMillis();
+        gameRom.setLastPlayTime(endTime);
+        gameRom.setPlayTime((endTime - gameRom.getStartPlayTime()) + gameRom.getPlayTime());
+        preferencesData.setSaveRomData(gameRom);
         //关闭弹窗
         if(SDLActivity.mSingleton.tipsDialog!=null){
             if(SDLActivity.mSingleton.tipsDialog.isShowing()){
                 SDLActivity.mSingleton.tipsDialog.dismiss();
             }
         }
-        long endTime = System.currentTimeMillis();
-        gameRom.setLastPlayTime(endTime);
-        gameRom.setPlayTime((endTime - gameRom.getStartPlayTime()) + gameRom.getPlayTime());
-        preferencesData.setSaveRomData(gameRom);
+
         SDLActivity.nativeSendQuit();
         SDLActivity.nativeQuit();
         android.os.Process.killProcess(android.os.Process.myPid());
@@ -1693,7 +1700,7 @@ public class SDLActivity extends Activity implements View.OnSystemUiVisibilityCh
             public void run() {
                 ShowScreenCaptureDialog dialog = new ShowScreenCaptureDialog(mSingleton);
                 dialog.show();
-                dialog.setImage(_path);
+                dialog.setImage(_path,SDLActivity.getmSingleton().getGameRom());
             }
         });
     }

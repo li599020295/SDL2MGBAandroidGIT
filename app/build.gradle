@@ -68,6 +68,8 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
+    //替代SharedPreferences，SharedPreferences不支持多进程访问
+    implementation 'com.tencent:mmkv-static:1.2.2'
     implementation 'androidx.appcompat:appcompat:1.0.2'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'com.google.android.gms:play-services-ads:18.1.0'

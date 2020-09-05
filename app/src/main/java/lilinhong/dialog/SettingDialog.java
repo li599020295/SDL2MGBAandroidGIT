@@ -64,7 +64,7 @@ public class SettingDialog extends BaseDialog {
     private void initData() {
         File file = new File(this.gamePath);
         gameName = file.getName();
-        preferencesData = PreferencesData.getInstance(context);
+        preferencesData = PreferencesData.getInstance();
         cheatDataList = preferencesData.getCheatList(gameName);
         if(!GlobalConfig.FIRST_RUN_GAME_CHEAT.equals(gameName)) {
             for (CheatData cheatData : cheatDataList) {

@@ -7,6 +7,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Environment;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 
@@ -17,6 +18,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -29,6 +31,28 @@ import lilinhong.dialog.TipsDialog;
 import lilinhong.model.GameRom;
 
 public class Utils {
+
+    public static String encodeBase64ToString(String str){
+        try {
+            return Base64.encodeToString(str.getBytes("UTF-8"), Base64.DEFAULT);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
+    /**
+     * 字符Base64解密
+     * @param str
+     * @return
+     */
+    public static String decodeBase64ToString(String str){
+        try {
+            return new String(Base64.decode(str.getBytes("UTF-8"), Base64.DEFAULT));
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
 
     public static Bitmap captureView(View view) {
         // 根据View的宽高创建一个空的Bitmap
@@ -211,7 +235,8 @@ public class Utils {
         if(fileList == null || fileList.size() == 0){
             return;
         }
-
+        PreferencesData preferencesData = PreferencesData.getInstance();
+        Map<String,GameRom> tempGameRomMap = preferencesData.getMapRoms();
         Map<String,GameRom> gameRomMap = new HashMap<>();
         for (File file : fileList) {
             Log.e("xxxxaddFile",file.getAbsolutePath());
@@ -220,18 +245,23 @@ public class Utils {
                 continue;
             }
             Log.e("addFile",file.getAbsolutePath());
-            GameRom gameRom = new GameRom();
-            gameRom.setName(file.getName());
-            gameRom.setMd5(md5);
-            gameRom.setPath(file.getAbsolutePath());
-            gameRom.setLastPlayTime(0);
-            gameRom.setDesc("");
-            gameRom.setImage("");
+            boolean isHaveData = tempGameRomMap.containsKey(md5);
+            GameRom gameRom = null;
+            if(isHaveData){
+                gameRom = tempGameRomMap.get(md5);
+            }else{
+                gameRom = new GameRom();
+                gameRom.setName(file.getName());
+                gameRom.setMd5(md5);
+                gameRom.setPath(file.getAbsolutePath());
+                gameRom.setLastPlayTime(0);
+                gameRom.setDesc("");
+                gameRom.setImage("");
+            }
             gameRomMap.put(md5,gameRom);
         }
 
         if(gameRomMap.size() > 0){
-            PreferencesData preferencesData = PreferencesData.getInstance();
             preferencesData.addGameAllRomList(gameRomMap);
         }
     }

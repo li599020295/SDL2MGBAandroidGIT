@@ -8,8 +8,6 @@ public class GameRom implements Serializable {
     private String image = "";
     private String path = "";
     private String md5 = "";
-    //游戏封面
-    private String cover = "";
     //上次使用时间
     private long lastPlayTime = 0;
     //收藏
@@ -57,14 +55,6 @@ public class GameRom implements Serializable {
 
     public void setDesc(String desc) {
         this.desc = desc;
-    }
-
-    public String getCover() {
-        return cover;
-    }
-
-    public void setCover(String cover) {
-        this.cover = cover;
     }
 
     public long getPlayTime() {

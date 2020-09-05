@@ -36,7 +36,7 @@ public class GamePadActivity extends AppCompatActivity {
         initUI();
     }
     private void initData() {
-        preferencesData = PreferencesData.getInstance(GamePadActivity.this);
+        preferencesData = PreferencesData.getInstance();
         gamePadList = preferencesData.getGamePadList1(this);
         bgSelectColor = Utils.getColor(this,R.color.colorPrimary);
         bgUnSelectColor = Utils.getColor(this,R.color.white);
