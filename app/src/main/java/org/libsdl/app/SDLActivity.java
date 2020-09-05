@@ -345,9 +345,6 @@ public class SDLActivity extends Activity implements View.OnSystemUiVisibilityCh
         Log.v(TAG, "onPause()");
         super.onPause();
 
-        //  if (mHIDDeviceManager != null) {
-        //      mHIDDeviceManager.setFrozen(true);
-        // }
         if (!mHasMultiWindow) {
             pauseNativeThread();
         }
@@ -357,9 +354,7 @@ public class SDLActivity extends Activity implements View.OnSystemUiVisibilityCh
     protected void onResume() {
         Log.v(TAG, "onResume()");
         super.onResume();
-        // if (mHIDDeviceManager != null) {
-        //     mHIDDeviceManager.setFrozen(false);
-        // }
+
         GamePadRelativeLayout gamePadRelativeLayout = this.getGamePadRelativeLayout();
         if(gamePadRelativeLayout!=null){
             gamePadRelativeLayout.onResume();
@@ -376,7 +371,6 @@ public class SDLActivity extends Activity implements View.OnSystemUiVisibilityCh
         if (mHasMultiWindow) {
             pauseNativeThread();
         }
-
     }
 
     @Override
@@ -391,7 +385,6 @@ public class SDLActivity extends Activity implements View.OnSystemUiVisibilityCh
     public static int getCurrentOrientation() {
         final Context context = SDLActivity.getContext();
         final Display display = ((WindowManager) context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
-
         int result = SDL_ORIENTATION_UNKNOWN;
 
         switch (display.getRotation()) {
@@ -427,7 +420,6 @@ public class SDLActivity extends Activity implements View.OnSystemUiVisibilityCh
         if (hasFocus) {
             mNextNativeState = NativeState.RESUMED;
             SDLActivity.getMotionListener().reclaimRelativeMouseModeIfNeeded();
-
             SDLActivity.handleNativeState();
             nativeFocusChanged(true);
 
@@ -457,15 +449,12 @@ public class SDLActivity extends Activity implements View.OnSystemUiVisibilityCh
         Log.v(TAG, "onDestroy()");
         super.onDestroy();
         GlobalConfig.FIRST_RUN_GAME_CHEAT = "";
-        //  if (mHIDDeviceManager != null) {
-        //     HIDDeviceManager.release(mHIDDeviceManager);
-        //     mHIDDeviceManager = null;
-        //  }
         //保存数据一次
         long endTime = System.currentTimeMillis();
         gameRom.setLastPlayTime(endTime);
         gameRom.setPlayTime((endTime - gameRom.getStartPlayTime()) + gameRom.getPlayTime());
         preferencesData.setSaveRomData(gameRom);
+        preferencesData.commint();
         //关闭弹窗
         if(SDLActivity.mSingleton.tipsDialog!=null){
             if(SDLActivity.mSingleton.tipsDialog.isShowing()){
@@ -1913,6 +1902,9 @@ class SDLSurface extends SurfaceView implements SurfaceHolder.Callback,
             if(mWidth - nDeviceWidth <= 50){
                 skip = false;
             }
+            if(mHeight - nDeviceHeight <= 50){
+                skip = false;
+            }
         }
 
         // Don't skip in MultiWindow.
@@ -1974,7 +1966,7 @@ class SDLSurface extends SurfaceView implements SurfaceHolder.Callback,
                     if(requestedOrientation == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT){
                         SDLActivity.mSingleton.tipsDialog.show((int) (0.95f*width),ViewGroup.LayoutParams.WRAP_CONTENT);
                     }else{
-                        SDLActivity.mSingleton.tipsDialog.show((int) (0.75f*width),(int) (0.75f*height));
+                        SDLActivity.mSingleton.tipsDialog.show((int) (0.75f*width),ViewGroup.LayoutParams.WRAP_CONTENT);
                     }
                 }
             });

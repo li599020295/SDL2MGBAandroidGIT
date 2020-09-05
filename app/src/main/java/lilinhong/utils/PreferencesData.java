@@ -24,6 +24,7 @@ public class PreferencesData {
         MMKV.initialize(context);
         kv = MMKV.defaultMMKV();
     }
+
     public static PreferencesData getInstance(Context context) {
         //if (preferencesData == null) {
             preferencesData = new PreferencesData(context);
@@ -56,6 +57,9 @@ public class PreferencesData {
         return map;
     }
 
+    public void commint(){
+        kv.commit();
+    }
     //移除一个游戏
     public void removeRomGame(GameRom rom){
         Map<String,GameRom> gameRomMap = getMapRoms();

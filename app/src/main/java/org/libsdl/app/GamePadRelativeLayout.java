@@ -3,7 +3,6 @@ package org.libsdl.app;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.ActivityInfo;
-import android.util.DisplayMetrics;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -31,8 +30,6 @@ import lilinhong.model.ViewSize;
 import lilinhong.utils.GlobalConfig;
 import lilinhong.utils.PreferencesData;
 import lilinhong.utils.Utils;
-
-import static android.content.pm.ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
 
 public class GamePadRelativeLayout extends RelativeLayout {
     //1=横向不全屏 ，2=横向全屏，3=不横向不全屏
@@ -204,32 +201,27 @@ public class GamePadRelativeLayout extends RelativeLayout {
             gamepad_btn_orien.setOnTouchListener(new OnTouchListener() {
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
-
                     FrameLayout frameLayout = SDLActivity.getContentView();
                     ViewGroup.LayoutParams lp = frameLayout.getLayoutParams();
-
                     if(event.getAction() == MotionEvent.ACTION_UP){
-                        SDLSurface sdlSurface = sdlActivity.getSDLSurfaceView();
                         SCREEN_MODE +=1;
-                        float GBA_VIDEO_HORIZONTAL_PIXELS = 240;
-                        float GBA_VIDEO_VERTICAL_PIXELS = 160;
                         //0.66666666
-                        DisplayMetrics outMetrics = new DisplayMetrics();
-                        sdlActivity.getWindowManager().getDefaultDisplay().getMetrics(outMetrics);
-                        float widthPixels = outMetrics.widthPixels;
-                        float heightPixels = outMetrics.heightPixels;
+                        float widthPixels = getWidth();
+                        float heightPixels = getHeight();
 
                         if(SCREEN_MODE == 3){
-                            float heightScale = ((heightPixels/GBA_VIDEO_VERTICAL_PIXELS));
-                            int height = (int)(heightScale * GBA_VIDEO_VERTICAL_PIXELS*0.66666f + 0.5f);
+                            //height=720 width=1280
+                            int height = (int)(heightPixels*0.66666f + 0.5f);
                             lp.width = (int) heightPixels;
                             lp.height = height;
                             SDLActivity.onScreenSize(false,lp.width,lp.height);
                             sdlActivity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
                         }else{
                             if(SCREEN_MODE == 1){
-                                float widthScale = ((widthPixels/GBA_VIDEO_VERTICAL_PIXELS));
-                                int width = (int)(widthScale * GBA_VIDEO_HORIZONTAL_PIXELS+0.5f);
+                                int width = (int)((widthPixels*0.6)+widthPixels+ 0.5f);
+                                if(width > heightPixels){
+                                    width = (int) heightPixels;
+                                }
                                 lp.width = width;
                                 lp.height = (int) widthPixels;
                             }else if(SCREEN_MODE == 2) {
@@ -282,11 +274,8 @@ public class GamePadRelativeLayout extends RelativeLayout {
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
                     if(event.getAction() == MotionEvent.ACTION_UP){
-
-                        DisplayMetrics dm = new DisplayMetrics();
-                        SDLActivity.getmSingleton().getWindowManager().getDefaultDisplay().getMetrics(dm);
-                        int width = dm.widthPixels;
-                        int height = dm.heightPixels;
+                        int width = getWidth();
+                        int height = getHeight();
                         final SettingDialog setDialog = new SettingDialog(context,SDLActivity.getmSingleton().getGamePath());
                         setDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                             @Override
@@ -305,13 +294,11 @@ public class GamePadRelativeLayout extends RelativeLayout {
                             }
                         });
                         int requestedOrientation = SDLActivity.mSingleton.getRequestedOrientation();
-                        if(requestedOrientation == SCREEN_ORIENTATION_PORTRAIT){
+                        if(requestedOrientation == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT){
                             setDialog.show((int) (width*0.9),(int)(height *0.60f));
                         }else{
                             setDialog.show((int) (width*0.75),(int)(height *0.75f));
                         }
-
-
                     }
                     return false;
                 }
