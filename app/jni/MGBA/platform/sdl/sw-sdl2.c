@@ -9,6 +9,8 @@
 #include <mgba/core/thread.h>
 #include <mgba/core/version.h>
 #include <mgba-util/arm-algo.h>
+#include <include/mgba/gba/interface.h>
+
 //默认全屏
 int fullScreen = 1;
 
@@ -53,6 +55,29 @@ void mSDLSWRunloop(struct mSDLRenderer* renderer, void* user) {
 	struct mCoreThread* context = user;
 	SDL_Event event;
 
+    float width = renderer->width;
+    float height = renderer->height;
+    if(renderer->width!=GBA_VIDEO_HORIZONTAL_PIXELS){
+		float SCREENT_X = 256.0f/width;
+		float SCREENT_Y = 224.0f/height;
+
+		int screent_w = (renderer->viewportWidth * SCREENT_X);
+		int screent_h = (renderer->viewportHeight * SCREENT_Y);
+
+		if(screent_w > SCREENT_RECT.w){
+			SCREENT_RECT.w = screent_w;
+		}
+
+		if(screent_h > SCREENT_RECT.h){
+			SCREENT_RECT.h = screent_h;
+		}
+    }else{
+		SCREENT_RECT.w = renderer->viewportWidth;
+		SCREENT_RECT.h = renderer->viewportHeight;
+    }
+
+
+    //SCREENT_RECT = {0, 0, vwidth * SCREENT_X, vheight * SCREENT_Y};
 	while (mCoreThreadIsActive(context)) {
 		while (SDL_PollEvent(&event)) {
 			mSDLHandleEvent(context, &renderer->player, &event);
@@ -60,7 +85,7 @@ void mSDLSWRunloop(struct mSDLRenderer* renderer, void* user) {
 
 		if (mCoreSyncWaitFrameStart(&context->impl->sync)) {
 			SDL_UnlockTexture(renderer->sdlTex);
-			SDL_RenderCopy(renderer->sdlRenderer, renderer->sdlTex, 0, 0);
+			SDL_RenderCopy(renderer->sdlRenderer, renderer->sdlTex, 0, &SCREENT_RECT);
 			SDL_RenderPresent(renderer->sdlRenderer);
 			int stride;
 			SDL_LockTexture(renderer->sdlTex, 0, (void**) &renderer->outputBuffer, &stride);

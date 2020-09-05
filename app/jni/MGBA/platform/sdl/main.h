@@ -36,6 +36,7 @@ CXX_GUARD_START
 #include <pixman.h>
 #endif
 
+SDL_Rect SCREENT_RECT;
 struct mCore;
 struct mSDLRenderer {
 	struct mCore* core;

@@ -38,8 +38,10 @@
 #include <signal.h>
 #include <jni.h>
 #include <include/mgba/internal/gba/cheats.h>
+#include <include/mgba/gba/interface.h>
 
 #define PORT "sdl"
+
 struct mCoreThread global_thread = {0};
 struct mSDLRenderer* global_renderer = NULL;
 static bool mSDLInit(struct mSDLRenderer* renderer);
@@ -97,9 +99,18 @@ void SDL_onSlotNum(int key, bool isSave){
 
 //设置是否全屏
 void SDL_onScreenSize(bool isFull,int width,int height){
-	SDL_SetWindowFullscreen(global_renderer->player.window, isFull ? SDL_WINDOW_FULLSCREEN_DESKTOP: 0 );
-	global_renderer->player.fullscreen = isFull;
-	global_renderer->player.windowUpdated = 1;
+    if(global_renderer->width!=GBA_VIDEO_HORIZONTAL_PIXELS) {
+        global_renderer->viewportWidth = width;
+        global_renderer->viewportHeight = height;
+        float SCREENT_X = 256.0f / global_renderer->width;
+        float SCREENT_Y = 224.0f / global_renderer->height;
+        SCREENT_RECT.w = (global_renderer->viewportWidth * SCREENT_X);
+        SCREENT_RECT.h = (global_renderer->viewportHeight * SCREENT_Y);
+    }else{
+        SCREENT_RECT.w = width;
+        SCREENT_RECT.h = height;
+    }
+   // SCREENT_RECT = {0, 0, (width * SCREENT_X), (height * SCREENT_Y)};
 }
 
 //由java回调保存响应按键

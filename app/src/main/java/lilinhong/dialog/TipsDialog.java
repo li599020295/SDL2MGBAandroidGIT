@@ -8,7 +8,7 @@ import android.widget.TextView;
 
 import org.libsdl.app.R;
 
-public class TipsDialog extends Dialog {
+public class TipsDialog extends BaseDialog {
     private TextView tips_dialog_text_title = null;
     private TextView tips_dialog_text_desc = null;
     private Button tips_dialog_button_ok1 = null;

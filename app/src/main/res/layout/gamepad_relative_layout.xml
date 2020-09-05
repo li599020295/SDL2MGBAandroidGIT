@@ -64,8 +64,8 @@
         android:layout_centerVertical="true"
         android:layout_alignParentBottom="true"
         android:layout_margin="15dp"
-        android:layout_width="150dp"
-        android:layout_height="150dp">
+        android:layout_width="@dimen/gamepad_size"
+        android:layout_height="@dimen/gamepad_size">
         <org.libsdl.app.GamePadView
             android:id="@+id/gamepad_view_joy"
             android:layout_width="match_parent"
@@ -97,8 +97,8 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
         android:layout_margin="15dp"
-        android:layout_width="180dp"
-        android:layout_height="180dp">
+        android:layout_width="@dimen/gamepad4_size"
+        android:layout_height="@dimen/gamepad4_size">
         <Button
             android:id="@+id/gamepad_btn_a"
             android:layout_width="60dp"

@@ -25,7 +25,6 @@ import android.util.Log;
 import android.util.SparseArray;
 import android.graphics.*;
 import android.graphics.drawable.Drawable;
-import android.hardware.*;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ApplicationInfo;
@@ -576,7 +575,6 @@ public class SDLActivity extends Activity implements View.OnSystemUiVisibilityCh
                     // FIXME: Why aren't we enabling sensor input at start?
 
                     mSDLThread = new Thread(new SDLMain(), "SDLThread");
-                    mSurface.enableSensor(Sensor.TYPE_ACCELEROMETER, true);
                     mSDLThread.start();
 
                     // No nativeResume(), don't signal Android_ResumeSem
@@ -1754,10 +1752,8 @@ class SDLMain implements Runnable {
  Because of this, that's where we set up the SDL thread
  */
 class SDLSurface extends SurfaceView implements SurfaceHolder.Callback,
-        View.OnKeyListener, View.OnTouchListener, SensorEventListener  {
+        View.OnKeyListener, View.OnTouchListener  {
 
-    // Sensors
-    protected SensorManager mSensorManager;
     protected Display mDisplay;
 
     // Keep track of the surface size to normalize touch events
@@ -1778,7 +1774,6 @@ class SDLSurface extends SurfaceView implements SurfaceHolder.Callback,
         setOnTouchListener(this);
 
         mDisplay = ((WindowManager)context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
-        mSensorManager = (SensorManager)context.getSystemService(Context.SENSOR_SERVICE);
 
         setOnGenericMotionListener(SDLActivity.getMotionListener());
 
@@ -1790,7 +1785,6 @@ class SDLSurface extends SurfaceView implements SurfaceHolder.Callback,
     }
 
     public void handlePause() {
-        enableSensor(Sensor.TYPE_ACCELEROMETER, false);
     }
 
     public void handleResume() {
@@ -1799,7 +1793,6 @@ class SDLSurface extends SurfaceView implements SurfaceHolder.Callback,
         requestFocus();
         setOnKeyListener(this);
         setOnTouchListener(this);
-        enableSensor(Sensor.TYPE_ACCELEROMETER, true);
     }
 
     public Surface getNativeSurface() {
@@ -1916,6 +1909,12 @@ class SDLSurface extends SurfaceView implements SurfaceHolder.Callback,
             }
         }
 
+        if(skip){
+            if(mWidth - nDeviceWidth <= 50){
+                skip = false;
+            }
+        }
+
         // Don't skip in MultiWindow.
         if (skip) {
             if (Build.VERSION.SDK_INT >= 24) {
@@ -1967,7 +1966,16 @@ class SDLSurface extends SurfaceView implements SurfaceHolder.Callback,
                             SDLActivity.mSingleton.tipsDialog.dismiss();
                         }
                     });
-                    SDLActivity.mSingleton.tipsDialog.show();
+                    DisplayMetrics dm = new DisplayMetrics();
+                    SDLActivity.getmSingleton().getWindowManager().getDefaultDisplay().getMetrics(dm);
+                    int width = dm.widthPixels;
+                    int height = dm.heightPixels;
+                    int requestedOrientation = SDLActivity.mSingleton.getRequestedOrientation();
+                    if(requestedOrientation == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT){
+                        SDLActivity.mSingleton.tipsDialog.show((int) (0.95f*width),ViewGroup.LayoutParams.WRAP_CONTENT);
+                    }else{
+                        SDLActivity.mSingleton.tipsDialog.show((int) (0.75f*width),(int) (0.75f*height));
+                    }
                 }
             });
         }
@@ -2137,69 +2145,6 @@ class SDLSurface extends SurfaceView implements SurfaceHolder.Callback,
         }
 
         return true;
-    }
-
-    // Sensor events
-    public void enableSensor(int sensortype, boolean enabled) {
-        // TODO: This uses getDefaultSensor - what if we have >1 accels?
-        if (enabled) {
-            mSensorManager.registerListener(this,
-                    mSensorManager.getDefaultSensor(sensortype),
-                    SensorManager.SENSOR_DELAY_GAME, null);
-        } else {
-            mSensorManager.unregisterListener(this,
-                    mSensorManager.getDefaultSensor(sensortype));
-        }
-    }
-
-    @Override
-    public void onAccuracyChanged(Sensor sensor, int accuracy) {
-        // TODO
-    }
-
-    @Override
-    public void onSensorChanged(SensorEvent event) {
-        if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
-
-            // Since we may have an orientation set, we won't receive onConfigurationChanged events.
-            // We thus should check here.
-            int newOrientation = SDLActivity.SDL_ORIENTATION_UNKNOWN;
-
-            float x, y;
-            switch (mDisplay.getRotation()) {
-                case Surface.ROTATION_90:
-                    x = -event.values[1];
-                    y = event.values[0];
-                    newOrientation = SDLActivity.SDL_ORIENTATION_LANDSCAPE;
-                    break;
-                case Surface.ROTATION_270:
-                    x = event.values[1];
-                    y = -event.values[0];
-                    newOrientation = SDLActivity.SDL_ORIENTATION_LANDSCAPE_FLIPPED;
-                    break;
-                case Surface.ROTATION_180:
-                    x = -event.values[0];
-                    y = -event.values[1];
-                    newOrientation = SDLActivity.SDL_ORIENTATION_PORTRAIT_FLIPPED;
-                    break;
-                default:
-                    x = event.values[0];
-                    y = event.values[1];
-                    newOrientation = SDLActivity.SDL_ORIENTATION_PORTRAIT;
-                    break;
-            }
-
-            if (newOrientation != SDLActivity.mCurrentOrientation) {
-                SDLActivity.mCurrentOrientation = newOrientation;
-                SDLActivity.onNativeOrientationChanged(newOrientation);
-            }
-
-            SDLActivity.onNativeAccel(-x / SensorManager.GRAVITY_EARTH,
-                    y / SensorManager.GRAVITY_EARTH,
-                    event.values[2] / SensorManager.GRAVITY_EARTH);
-
-
-        }
     }
 
     // Captured pointer events for API 26.

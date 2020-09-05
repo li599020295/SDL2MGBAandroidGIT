@@ -32,6 +32,8 @@ import lilinhong.utils.GlobalConfig;
 import lilinhong.utils.PreferencesData;
 import lilinhong.utils.Utils;
 
+import static android.content.pm.ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
+
 public class GamePadRelativeLayout extends RelativeLayout {
     //1=横向不全屏 ，2=横向全屏，3=不横向不全屏
     private static int SCREEN_MODE = 2;
@@ -222,6 +224,7 @@ public class GamePadRelativeLayout extends RelativeLayout {
                             int height = (int)(heightScale * GBA_VIDEO_VERTICAL_PIXELS*0.66666f + 0.5f);
                             lp.width = (int) heightPixels;
                             lp.height = height;
+                            SDLActivity.onScreenSize(false,lp.width,lp.height);
                             sdlActivity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
                         }else{
                             if(SCREEN_MODE == 1){
@@ -233,6 +236,7 @@ public class GamePadRelativeLayout extends RelativeLayout {
                                 lp.width = (int)widthPixels;
                                 lp.height = (int)heightPixels;
                             }
+                            SDLActivity.onScreenSize(false,lp.width,lp.height);
                             sdlActivity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
                         }
                         SDLActivity.getContentView().setLayoutParams(lp);
@@ -300,7 +304,13 @@ public class GamePadRelativeLayout extends RelativeLayout {
                                 setDialog.setAudioSwitch(audioSwitch);
                             }
                         });
-                        setDialog.show((int) (width*0.75),(int)(height*0.75));
+                        int requestedOrientation = SDLActivity.mSingleton.getRequestedOrientation();
+                        if(requestedOrientation == SCREEN_ORIENTATION_PORTRAIT){
+                            setDialog.show((int) (width*0.9),(int)(height *0.60f));
+                        }else{
+                            setDialog.show((int) (width*0.75),(int)(height *0.75f));
+                        }
+
 
                     }
                     return false;
