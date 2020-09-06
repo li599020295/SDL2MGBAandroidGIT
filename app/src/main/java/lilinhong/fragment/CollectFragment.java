@@ -3,6 +3,7 @@ package lilinhong.fragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -24,12 +25,16 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import org.libsdl.app.R;
 import org.libsdl.app.SDLActivity;
 import java.io.File;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import lilinhong.activity.MainActivity;
 import lilinhong.dialog.GameInfoDialog;
 import lilinhong.model.GameRom;
+import lilinhong.model.IconData;
 import lilinhong.utils.PreferencesData;
+import lilinhong.utils.Utils;
 
 public class CollectFragment extends Fragment {
     private Handler handler = new Handler(){
@@ -48,6 +53,8 @@ public class CollectFragment extends Fragment {
     private ListView collect_game_roms_listview = null;
     private PreferencesData preferencesData = null;
     private boolean isReFresh = false;
+    //保存icon数据防止重复加载
+    private Map<Integer, IconData> iconMap = null;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mainView = inflater.inflate(R.layout.collect_roms_fragment, container, false);
@@ -55,6 +62,21 @@ public class CollectFragment extends Fragment {
         initUI();
         Log.i(TAG,"onCreateView");
         return mainView;
+    }
+
+    public void onResume(){
+        super.onResume();
+
+        if(preferencesData == null){
+            preferencesData = PreferencesData.getInstance(getActivity());
+        }
+
+        if(preferencesData!=null && gameRomList!=null){
+            gameRomList = preferencesData.getCollectRoms();
+        }
+        if(adapter!=null){
+            adapter.notifyDataSetChanged();
+        }
     }
 
     public void reFreshData(){
@@ -69,6 +91,7 @@ public class CollectFragment extends Fragment {
     }
 
     private void initData() {
+        iconMap = new HashMap<>();
         preferencesData = PreferencesData.getInstance();
         gameRomList = preferencesData.getCollectRoms();
         adapter = new CollectGameRomsAdapter(getActivity());
@@ -163,9 +186,18 @@ public class CollectFragment extends Fragment {
                         }
 
                         GameRom gameRom1 = (GameRom)buttonView.getTag();
-                        gameRom1 = gameRomList.get(position).setCollect(isChecked);
+                        if(gameRom1.isCollect() == isChecked){
+                            return;
+                        }
+                        gameRom1.setCollect(isChecked);
+                        {
+                            GameRom gr = gameRomList.get(position);
+                            gr.setCollect(isChecked);
+                        }
+
                         preferencesData.setCollectRom(gameRom1);
                         gameRomList = preferencesData.getCollectRoms();
+
                         notifyDataSetChanged();
                         MainActivity.getMainActivity().setFragmentRefresh();
                     }
@@ -184,7 +216,24 @@ public class CollectFragment extends Fragment {
             if(!image.equals("")){
                 File file = new File(image);
                 if(file.exists()) {
-                    ImageLoader.getInstance().displayImage(image, holdView.collect_roms_fragment_item_image);
+                    boolean isHaveIcon = iconMap.containsKey(position);
+                    Bitmap bitmap = null;
+                    if(isHaveIcon){
+                        IconData iconData = iconMap.get(position);
+                        if(iconData.getFilePath().equals(image)){
+                            bitmap = iconData.getBitmap();
+                        }else{
+                            if(bitmap!=null) {
+                                bitmap.recycle();
+                            }
+                            bitmap = Utils.getLoacalBitmap(image);
+                            iconMap.put(position,new IconData(bitmap,image,position));
+                        }
+                    }else{
+                        bitmap = Utils.getLoacalBitmap(image);
+                        iconMap.put(position,new IconData(bitmap,image,position));
+                    }
+                    holdView.collect_roms_fragment_item_image.setImageBitmap(bitmap);
                 }else{
                     //drawable://
                     ImageLoader.getInstance().displayImage("drawable://" + R.mipmap.gba_item_icon, holdView.collect_roms_fragment_item_image);

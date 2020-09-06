@@ -69,9 +69,8 @@ public class GameRom implements Serializable {
         return collect;
     }
 
-    public GameRom setCollect(boolean collect) {
+    public void setCollect(boolean collect) {
         this.collect = collect;
-        return this;
     }
 
     public long getLastPlayTime() {

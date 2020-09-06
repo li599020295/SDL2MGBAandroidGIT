@@ -117,8 +117,10 @@ public class GamePadActivity extends AppCompatActivity {
                 holdView.gamepad_listview_item_text_keydesc = convertView.findViewById(R.id.gamepad_listview_item_text_keydesc);
                 holdView.gamepad_listview_item_text_mapkey = convertView.findViewById(R.id.gamepad_listview_item_text_mapkey);
                 convertView.setTag(holdView);
+            }else {
+                holdView = (HoldView)convertView.getTag();
             }
-            holdView = (HoldView)convertView.getTag();
+
             holdView.gamepad_listview_item_text_keydesc.setText(gamePad.getDesc());
             int mapKey = gamePad.getKeyMapCode();
             if(mapKey != -1){

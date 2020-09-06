@@ -21,14 +21,15 @@ public class PreferencesData {
     private static MMKV kv = null;
 
     public PreferencesData(Context context){
-        MMKV.initialize(context);
-        kv = MMKV.defaultMMKV();
+        //MMKV.initialize(context);
+        String cryptKey = "test123456789";
+        kv = MMKV.mmkvWithID("GAME_DATA",MMKV.MULTI_PROCESS_MODE,cryptKey);
     }
 
     public static PreferencesData getInstance(Context context) {
-        //if (preferencesData == null) {
+        if (preferencesData == null) {
             preferencesData = new PreferencesData(context);
-        //}
+        }
         return preferencesData;
     }
 
@@ -48,9 +49,14 @@ public class PreferencesData {
     //获取map数据
     public Map<String,GameRom> getMapRoms(){
         String roms = preferencesData.kv.getString("roms","");
+        Map<String,GameRom> map = null;
+        if(roms == null || roms.equals("")){
+            map = new HashMap<>();
+            return map;
+        }
         Log.e("getMapRoms",roms);
         Gson gson1=new Gson();
-        Map<String,GameRom> map= gson1.fromJson(roms, new TypeToken<Map<String,GameRom>>() {}.getType());
+        map = gson1.fromJson(roms, new TypeToken<Map<String,GameRom>>() {}.getType());
         if(map == null){
             map = new HashMap<>();
         }
@@ -58,7 +64,8 @@ public class PreferencesData {
     }
 
     public void commint(){
-        kv.commit();
+//        kv.tryLock();
+//        kv.commit();
     }
     //移除一个游戏
     public void removeRomGame(GameRom rom){
@@ -85,6 +92,7 @@ public class PreferencesData {
         gameRom1.setLastPlayTime(rom.getLastPlayTime());
         gameRom1.setImage(rom.getImage());
         addGameAllRomList(gameRomMap);
+
     }
 
     //添加一个收藏
@@ -127,36 +135,11 @@ public class PreferencesData {
         }
         return gameRomList;
     }
-    //添加一个文件
-    public void addGameRomList(List<GameRom> romList){
-        List<GameRom> gameRomList = getRoms();
-        if(gameRomList.size() == 0){
-            gameRomList = romList;
-        }else{
-            gameRomList = checkFileExits(gameRomList);
-            for (GameRom gameRom: romList) {
-                for (GameRom gameAllRom : gameRomList) {
-                    if (gameAllRom.getMd5().equals(gameRom.getMd5())) {
-                        continue;
-                    } else {
-                        gameRomList.add(gameRom);
-                    }
-                }
-            }
-        }
-        Gson gson2=new Gson();
-        String str=gson2.toJson(gameRomList);
-        kv.putString("roms",str);
-    }
 
     public List<GamePad> getGamePadList1(Context context){
         String gamePadStr = kv.getString("game_pads1","");
-        if(gamePadStr!=null && !gamePadStr.equals("")){
-            gamePadStr = Utils.decodeBase64ToString(gamePadStr);
-        }
-        Gson gson1=new Gson();
-        List<GamePad> gamePads = gson1.fromJson(gamePadStr, new TypeToken<List<GamePad>>() {}.getType());
-        if(gamePads == null){
+        List<GamePad> gamePads = null;
+        if(gamePadStr == null || gamePadStr.equals("")){
             gamePads = new ArrayList<>();
             gamePads.add(new GamePad(GamePadRelativeLayout.PAD1_UP,-1,context.getString(R.string.key_up)));
             gamePads.add(new GamePad(GamePadRelativeLayout.PAD1_DOWN,-1,context.getString(R.string.key_down)));
@@ -176,7 +159,17 @@ public class PreferencesData {
             gamePads.add(new GamePad(GamePadRelativeLayout.PAD1_SAVE_SLOT1,-1,context.getString(R.string.key_saveslot1)));
             gamePads.add(new GamePad(GamePadRelativeLayout.PAD1_LOAD_SLOT1,-1,context.getString(R.string.key_loadslot1)));
             saveGamePadList1(gamePads);
+            return gamePads;
         }
+
+        gamePadStr = Utils.decodeBase64ToString(gamePadStr);
+
+        Gson gson1=new Gson();
+        gamePads = gson1.fromJson(gamePadStr, new TypeToken<List<GamePad>>() {}.getType());
+        if(gamePads == null){
+            gamePads = new ArrayList<>();
+        }
+
         return gamePads;
     }
     public void saveGamePadList1(List<GamePad> gamePads){
@@ -192,9 +185,15 @@ public class PreferencesData {
         kv.putString("cheat_"+name,str);
     }
     public List<CheatData> getCheatList(String name){
+        List<CheatData> cheatDataList = null;
         String cheatDataStr = kv.getString("cheat_"+name,"");
+        if(cheatDataStr == null || cheatDataStr.equals("")){
+            cheatDataList = new ArrayList<>();
+            return cheatDataList;
+        }
+
         Gson gson1=new Gson();
-        List<CheatData> cheatDataList = gson1.fromJson(cheatDataStr, new TypeToken<List<CheatData>>() {}.getType());
+        cheatDataList = gson1.fromJson(cheatDataStr, new TypeToken<List<CheatData>>() {}.getType());
         if(cheatDataList == null){
             cheatDataList = new ArrayList<>();
         }

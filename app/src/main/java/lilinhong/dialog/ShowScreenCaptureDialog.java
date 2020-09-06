@@ -65,6 +65,7 @@ public class ShowScreenCaptureDialog extends Dialog {
             public void onClick(View v) {
                 gameRom.setImage(path);
                 preferencesData.setSaveRomData(gameRom);
+                preferencesData.commint();
                 GlobalConfig.GAME_COVER = path;
                 Toast.makeText(context,context.getString(R.string.successful),Toast.LENGTH_SHORT).show();
                 dismiss();
@@ -87,9 +88,9 @@ public class ShowScreenCaptureDialog extends Dialog {
     public void setImage(String path, GameRom gameRom){
         this.path = path;
         this.gameRom = gameRom;
-        String catImage = String.format(context.getString(R.string.screen_capture),path);
+        String catImage = String.format(context.getString(R.string.screen_capture),this.path);
         catImage = catImage.replaceAll(Environment.getExternalStorageDirectory().getAbsolutePath(),"");
         this.screen_capture_text_path.setText(catImage);
-        this.screen_capture_imageview.setImageURI(Uri.fromFile(new File(path)));
+        this.screen_capture_imageview.setImageURI(Uri.fromFile(new File(this.path)));
     }
 }

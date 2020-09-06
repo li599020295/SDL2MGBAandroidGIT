@@ -22,6 +22,8 @@ import android.widget.ToggleButton;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.tencent.mmkv.MMKV;
+
 import org.libsdl.app.R;
 import org.libsdl.app.SDLActivity;
 import java.io.File;
@@ -68,6 +70,21 @@ public class RomsFragment extends Fragment {
         initUI();
         initFinish();
         return mainView;
+    }
+
+    public void onResume(){
+        super.onResume();
+
+        if(preferencesData == null){
+            preferencesData = PreferencesData.getInstance(getActivity());
+        }
+
+        if(preferencesData!=null && gameARomList!=null){
+            gameARomList = preferencesData.getRoms();
+        }
+        if(gameRomsAdapter!=null){
+            gameRomsAdapter.notifyDataSetChanged();
+        }
     }
 
     public void reFreshData(){
@@ -255,7 +272,16 @@ public class RomsFragment extends Fragment {
                         }
 
                         GameRom gameRom1 = (GameRom)buttonView.getTag();
-                        gameRom1 = gameARomList.get(position).setCollect(isChecked);
+                        if(gameRom1.isCollect() == isChecked){
+                            return;
+                        }
+                        gameRom1.setCollect(isChecked);
+
+                        {
+                            GameRom gr = gameARomList.get(position);
+                            gr.setCollect(isChecked);
+                        }
+
                         preferencesData.setCollectRom(gameRom1);
                         notifyDataSetChanged();
                         MainActivity.getMainActivity().setFragmentRefresh();
