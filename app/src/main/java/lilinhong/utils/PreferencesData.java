@@ -211,4 +211,11 @@ public class PreferencesData {
     public boolean getVirtualButtonControl(){
         return kv.getBoolean("virtual_button_control",true);
     }
+    //获取缩放值
+    public int getVirtualButtonSize(){
+        return kv.getInt("virtual_button_size",500);
+    }
+    public void setVirtualButtonSize(int value){
+        kv.putInt("virtual_button_size",value);
+    }
 }

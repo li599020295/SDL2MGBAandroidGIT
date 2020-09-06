@@ -292,7 +292,7 @@ public class SDLActivity extends Activity implements View.OnSystemUiVisibilityCh
         mLayout.addView(mSurface,frameLayout);
 
         //加载游戏按键布局
-        gamepadLayout = new GamePadRelativeLayout(this,mSingleton);
+        gamepadLayout = new GamePadRelativeLayout(this);
         relativeLayout.addView(gamepadLayout,params);
 
         // Get our current screen orientation and pass it down.
@@ -508,6 +508,10 @@ public class SDLActivity extends Activity implements View.OnSystemUiVisibilityCh
         super.onBackPressed();
     }
 
+    public boolean onGenericMotionEvent(MotionEvent motionEvent){
+        int c = 0;
+       return super.onGenericMotionEvent(motionEvent);
+    }
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
 
@@ -1009,8 +1013,9 @@ public class SDLActivity extends Activity implements View.OnSystemUiVisibilityCh
         if (enabled && !supportsRelativeMouse()) {
             return false;
         }
-
-        return SDLActivity.getMotionListener().setRelativeMouseEnabled(enabled);
+        //不启用鼠标
+        return SDLActivity.getMotionListener().setRelativeMouseEnabled(false);
+        //return SDLActivity.getMotionListener().setRelativeMouseEnabled(enabled);
     }
 
     /**
@@ -1674,11 +1679,7 @@ public class SDLActivity extends Activity implements View.OnSystemUiVisibilityCh
             nativePermissionResult(requestCode, false);
         }
     }
-    //注意这是C++回调java不能修改他的方法
-    public static void gameLoadFinish(){
-        //游戏加载完成恢复上次记录
-        onSlotNum(0,false);
-    }
+
     //屏幕截图回调path是图片路径
     public static void gameScreenCapture(String path){
         final String _path = path;
@@ -1693,10 +1694,6 @@ public class SDLActivity extends Activity implements View.OnSystemUiVisibilityCh
     }
     public String getGamePath(){
         return gameRom.getPath();
-    }
-    //获取SurfaceView
-    public SDLSurface getSDLSurfaceView(){
-        return mSurface;
     }
 }
 
@@ -1764,7 +1761,7 @@ class SDLSurface extends SurfaceView implements SurfaceHolder.Callback,
 
         mDisplay = ((WindowManager)context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
 
-        setOnGenericMotionListener(SDLActivity.getMotionListener());
+        //setOnGenericMotionListener(SDLActivity.getMotionListener());
 
         // Some arbitrary defaults to avoid a potential division by zero
         mWidth = 1.0f;

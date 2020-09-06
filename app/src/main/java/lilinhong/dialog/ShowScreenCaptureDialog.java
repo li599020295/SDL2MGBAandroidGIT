@@ -3,10 +3,13 @@ package lilinhong.dialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.net.Uri;
+import android.os.Environment;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import org.libsdl.app.R;
@@ -69,10 +72,24 @@ public class ShowScreenCaptureDialog extends Dialog {
         });
         screen_capture_text_path = (TextView)findViewById(R.id.screen_capture_text_path);
     }
+
+//    public void onWindowFocusChanged(boolean focuse){
+//        super.onWindowFocusChanged(focuse);
+//        if(screen_capture_imageview == null){
+//            return;
+//        }
+//        int width = this.screen_capture_imageview.getWidth();
+//        int height = this.screen_capture_imageview.getHeight();
+//        height =(int)(width * 0.66666f);
+//        LinearLayout.LayoutParams params =new LinearLayout.LayoutParams(width,height);
+//        this.screen_capture_imageview.setLayoutParams(params);
+//    }
     public void setImage(String path, GameRom gameRom){
         this.path = path;
         this.gameRom = gameRom;
-        this.screen_capture_text_path.setText(String.format(context.getString(R.string.screen_capture),path));
+        String catImage = String.format(context.getString(R.string.screen_capture),path);
+        catImage = catImage.replaceAll(Environment.getExternalStorageDirectory().getAbsolutePath(),"");
+        this.screen_capture_text_path.setText(catImage);
         this.screen_capture_imageview.setImageURI(Uri.fromFile(new File(path)));
     }
 }

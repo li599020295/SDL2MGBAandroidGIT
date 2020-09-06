@@ -13,7 +13,7 @@
         <ImageView
             android:id="@+id/save_slot_dialog_imageview"
             android:layout_width="match_parent"
-            android:layout_height="255dp"
+            android:layout_height="150dp"
             android:scaleType="fitXY"
             android:background="@mipmap/ic_launcher"
             />

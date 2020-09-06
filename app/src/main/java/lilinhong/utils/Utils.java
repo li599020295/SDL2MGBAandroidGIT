@@ -247,12 +247,10 @@ public class Utils {
         Map<String,GameRom> tempGameRomMap = preferencesData.getMapRoms();
         Map<String,GameRom> gameRomMap = new HashMap<>();
         for (File file : fileList) {
-            Log.e("xxxxaddFile",file.getAbsolutePath());
             String md5 = getFileMD5(file);
             if (md5 == null) {
                 continue;
             }
-            Log.e("addFile",file.getAbsolutePath());
             boolean isHaveData = tempGameRomMap.containsKey(md5);
             GameRom gameRom = null;
             if(isHaveData){

@@ -3,6 +3,8 @@ package org.libsdl.app;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.ActivityInfo;
+import android.content.res.Resources;
+import android.util.DisplayMetrics;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -61,8 +63,6 @@ public class GamePadRelativeLayout extends RelativeLayout {
     public static final int PAD1_SAVE_SLOT1 = 1000001;
     //快速读取
     public static final int PAD1_LOAD_SLOT1 = 1000002;
-
-    private SDLActivity sdlActivity = null;
     private Context context;
     private GamePadView gamePadView = null;
     private  View viewGamePadUtil = null;
@@ -76,11 +76,17 @@ public class GamePadRelativeLayout extends RelativeLayout {
     private ArrayList<View> gameAllButton = null;
     //保存map gamepad1
     private Map<Integer,Integer> gamepadMap1 = null;
+    //数据保存
     private PreferencesData preferencesData = null;
-    public GamePadRelativeLayout(Context context,SDLActivity sdlActivity) {
+    //用于移动开始和选择按钮
+    private LinearLayout gamepad_relative_linear_startselect = null;
+    //
+    private SeekBar game_relative_util_linear_seeksize = null;
+    //在视图初始化完成需要加载的数据
+    private boolean firstLoadData = false;
+    public GamePadRelativeLayout(Context context) {
         super(context);
         this.context = context;
-        this.sdlActivity = sdlActivity;
         this.initData();
         this.initUI();
         this.initUIFinish();
@@ -107,14 +113,39 @@ public class GamePadRelativeLayout extends RelativeLayout {
     public void onWindowFocusChanged(boolean hasWindowFocus){
         super.onWindowFocusChanged(hasWindowFocus);
         //设置宽高
-        for(View view :gamePadList){
-            view.setTag(new ViewSize(view.getWidth(),view.getHeight()));
+        for(int i=0;i<gamePadList.size();i++){
+            View view = gamePadList.get(i);
+            Object obj = view.getTag();
+            if(obj!=null){
+                break;
+            }
+            view.setTag(new ViewSize(view.getWidth(),view.getHeight(),view.getTop(),view.getLeft(),view.getRight(),view.getBottom()));
         }
-        //设置buttonSize窗口大小
-        ViewGroup.LayoutParams layoutParams = this.viewGamePadUtil.getLayoutParams();
-        layoutParams.width = (int) (getWidth() * 0.75f);
-        layoutParams.height = LayoutParams.WRAP_CONTENT;
-        this.viewGamePadUtil.setLayoutParams(layoutParams);
+
+        if(!firstLoadData){
+            int svbs = preferencesData.getVirtualButtonSize();
+            game_relative_util_linear_seeksize.setProgress(svbs);
+
+            Resources resources = getResources();
+            //获取屏幕数据
+            DisplayMetrics displayMetrics = resources.getDisplayMetrics();
+            //获取屏幕宽高，单位是像素
+            int widthPixels = displayMetrics.widthPixels;
+            int heightPixels = displayMetrics.heightPixels;
+
+            int width = widthPixels;
+            int height = heightPixels;
+            SDLActivity.onScreenSize(false,width,height);
+            firstLoadData = true;
+        }
+        //设置虚拟按钮大小调整设置
+        if(this.viewGamePadUtil!=null) {
+            //设置buttonSize窗口大小
+            ViewGroup.LayoutParams layoutParams = this.viewGamePadUtil.getLayoutParams();
+            layoutParams.width = (int) (getWidth() * 0.75f);
+            layoutParams.height = LayoutParams.WRAP_CONTENT;
+            this.viewGamePadUtil.setLayoutParams(layoutParams);
+        }
     }
 
     private void initData(){
@@ -161,6 +192,7 @@ public class GamePadRelativeLayout extends RelativeLayout {
 
         gamePadList.add(gamePadView);
         {
+            gamepad_relative_linear_startselect = gamepadRelativeLayout.findViewById(R.id.gamepad_relative_linear_startselect);
             RelativeLayout gamepad_relative_4btn = gamepadRelativeLayout.findViewById(R.id.gamepad_relative_4btn);
             gamePadList.add(gamepad_relative_4btn);
             gameAllButton.add(gamepad_relative_4btn);
@@ -208,15 +240,19 @@ public class GamePadRelativeLayout extends RelativeLayout {
                         //0.66666666
                         float widthPixels = getWidth();
                         float heightPixels = getHeight();
-
+                        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams)gamepad_relative_linear_startselect.getLayoutParams();
                         if(SCREEN_MODE == 3){
                             //height=720 width=1280
                             int height = (int)(heightPixels*0.66666f + 0.5f);
                             lp.width = (int) heightPixels;
                             lp.height = height;
                             SDLActivity.onScreenSize(false,lp.width,lp.height);
-                            sdlActivity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+                            params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM,0);
+                            params.addRule(RelativeLayout.ALIGN_PARENT_TOP,1);
+                            SDLActivity.getmSingleton().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
                         }else{
+                            params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM,1);
+                            params.addRule(RelativeLayout.ALIGN_PARENT_TOP,0);
                             if(SCREEN_MODE == 1){
                                 int width = (int)((widthPixels*0.6)+widthPixels+ 0.5f);
                                 if(width > heightPixels){
@@ -229,7 +265,7 @@ public class GamePadRelativeLayout extends RelativeLayout {
                                 lp.height = (int)heightPixels;
                             }
                             SDLActivity.onScreenSize(false,lp.width,lp.height);
-                            sdlActivity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+                            SDLActivity.getmSingleton().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
                         }
                         SDLActivity.getContentView().setLayoutParams(lp);
                         if(SCREEN_MODE>=3){
@@ -309,10 +345,12 @@ public class GamePadRelativeLayout extends RelativeLayout {
                 public boolean onTouch(View view, MotionEvent event) {
                     switch (event.getAction()) {
                         case MotionEvent.ACTION_DOWN:
+                            view.getBackground().setAlpha(200);
                             SDLActivity.onDataKey(PAD1_S,true);
                             break;
                         case MotionEvent.ACTION_UP:
                         case MotionEvent.ACTION_CANCEL:
+                            view.getBackground().setAlpha(255);
                             SDLActivity.onDataKey(PAD1_S,false);
                             break;
                         case MotionEvent.ACTION_MOVE:
@@ -327,10 +365,12 @@ public class GamePadRelativeLayout extends RelativeLayout {
                 public boolean onTouch(View view, MotionEvent event) {
                     switch (event.getAction()) {
                         case MotionEvent.ACTION_DOWN:
+                            view.getBackground().setAlpha(200);
                             SDLActivity.onDataKey(PAD1_L,true);
                             break;
                         case MotionEvent.ACTION_UP:
                         case MotionEvent.ACTION_CANCEL:
+                            view.getBackground().setAlpha(255);
                             SDLActivity.onDataKey(PAD1_L,false);
                             break;
                         case MotionEvent.ACTION_MOVE:
@@ -345,10 +385,12 @@ public class GamePadRelativeLayout extends RelativeLayout {
                 public boolean onTouch(View view, MotionEvent event) {
                     switch (event.getAction()) {
                         case MotionEvent.ACTION_DOWN:
+                            view.getBackground().setAlpha(200);
                             SDLActivity.onDataKey(PAD1_START,true);
                             break;
                         case MotionEvent.ACTION_UP:
                         case MotionEvent.ACTION_CANCEL:
+                            view.getBackground().setAlpha(255);
                             SDLActivity.onDataKey(PAD1_START,false);
                             break;
                         case MotionEvent.ACTION_MOVE:
@@ -363,10 +405,12 @@ public class GamePadRelativeLayout extends RelativeLayout {
                 public boolean onTouch(View view, MotionEvent event) {
                     switch (event.getAction()) {
                         case MotionEvent.ACTION_DOWN:
+                            view.getBackground().setAlpha(200);
                             SDLActivity.onDataKey(PAD1_SELECT,true);
                             break;
                         case MotionEvent.ACTION_UP:
                         case MotionEvent.ACTION_CANCEL:
+                            view.getBackground().setAlpha(255);
                             SDLActivity.onDataKey(PAD1_SELECT,false);
                             break;
                         case MotionEvent.ACTION_MOVE:
@@ -381,10 +425,12 @@ public class GamePadRelativeLayout extends RelativeLayout {
                 public boolean onTouch(View view, MotionEvent event) {
                     switch (event.getAction()) {
                         case MotionEvent.ACTION_DOWN:
+                            view.getBackground().setAlpha(200);
                             SDLActivity.onDataKey(PAD1_A,true);
                             break;
                         case MotionEvent.ACTION_UP:
                         case MotionEvent.ACTION_CANCEL:
+                            view.getBackground().setAlpha(255);
                             SDLActivity.onDataKey(PAD1_A,false);
                             break;
                         case MotionEvent.ACTION_MOVE:
@@ -399,10 +445,12 @@ public class GamePadRelativeLayout extends RelativeLayout {
                 public boolean onTouch(View view, MotionEvent event) {
                     switch (event.getAction()) {
                         case MotionEvent.ACTION_DOWN:
+                            view.getBackground().setAlpha(200);
                             SDLActivity.onDataKey(PAD1_B,true);
                             break;
                         case MotionEvent.ACTION_UP:
                         case MotionEvent.ACTION_CANCEL:
+                            view.getBackground().setAlpha(255);
                             SDLActivity.onDataKey(PAD1_B,false);
                             break;
                         case MotionEvent.ACTION_MOVE:
@@ -460,7 +508,7 @@ public class GamePadRelativeLayout extends RelativeLayout {
 
     private void initUISetButtonSize(){
         game_relative_util_linear_buttonsize = (LinearLayout)viewGamePadUtil.findViewById(R.id.game_relative_util_linear_buttonsize);
-        final SeekBar game_relative_util_linear_seeksize = (SeekBar) viewGamePadUtil.findViewById(R.id.game_relative_util_linear_seeksize);
+        game_relative_util_linear_seeksize = (SeekBar) viewGamePadUtil.findViewById(R.id.game_relative_util_linear_seeksize);
         final TextView game_relative_util_linear_textsize = (TextView)viewGamePadUtil.findViewById(R.id.game_relative_util_linear_textsize);
         game_relative_util_linear_textsize.setText(String.format(context.getString(R.string.btn_size),0)+"%");
         game_relative_util_linear_seeksize.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -495,6 +543,7 @@ public class GamePadRelativeLayout extends RelativeLayout {
                     }
                     view.setLayoutParams(params);
                 }
+                preferencesData.setVirtualButtonSize(progress);
                 game_relative_util_linear_textsize.setText(String.format(context.getString(R.string.btn_size),(int)pro)+"%");
             }
             @Override
@@ -502,6 +551,7 @@ public class GamePadRelativeLayout extends RelativeLayout {
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) { }
         });
+
         Button game_relative_util_linear_btnok = (Button)findViewById(R.id.game_relative_util_linear_btnok);
         game_relative_util_linear_btnok.setOnClickListener(new OnClickListener() {
             @Override
@@ -610,12 +660,12 @@ public class GamePadRelativeLayout extends RelativeLayout {
         if(event.getAction() == KeyEvent.ACTION_UP){
             if(gameKeyCode == GamePadRelativeLayout.PAD1_SAVE_SLOT1){
                 SDLActivity.onSlotNum(0,true);
-                Toast.makeText(sdlActivity, String.format(sdlActivity.getString(R.string.slote_save_desc),1),Toast.LENGTH_SHORT).show();
+                Toast.makeText(SDLActivity.getmSingleton(), String.format(SDLActivity.getmSingleton().getString(R.string.slote_save_desc),1),Toast.LENGTH_SHORT).show();
             }
             else if(gameKeyCode == GamePadRelativeLayout.PAD1_LOAD_SLOT1)
             {
                 SDLActivity.onSlotNum(0,false);
-                Toast.makeText(sdlActivity, String.format(sdlActivity.getString(R.string.slote_load_desc),1),Toast.LENGTH_SHORT).show();
+                Toast.makeText(SDLActivity.getmSingleton(), String.format(SDLActivity.getmSingleton().getString(R.string.slote_load_desc),1),Toast.LENGTH_SHORT).show();
             }
             else
             {

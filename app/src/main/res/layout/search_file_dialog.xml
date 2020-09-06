@@ -26,6 +26,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="xxxxx"/>
+
+            <ProgressBar
+                android:layout_marginLeft="20dp"
+                android:layout_width="20dp"
+                android:layout_height="20dp" />
         </LinearLayout>
         <View
             android:layout_width="wrap_content"

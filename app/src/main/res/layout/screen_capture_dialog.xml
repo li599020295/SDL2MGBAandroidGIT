@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     android:background="@drawable/mdialog_bg">
     <LinearLayout
-        android:layout_margin="15dp"
+        android:layout_margin="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
@@ -12,7 +12,7 @@
             android:id="@+id/screen_capture_imageview"
             android:layout_width="match_parent"
             android:scaleType="fitXY"
-            android:layout_height="200dp" />
+            android:layout_height="145dp" />
         <TextView
             android:textColor="@color/black"
             android:id="@+id/screen_capture_text_path"

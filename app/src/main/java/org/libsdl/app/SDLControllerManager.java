@@ -545,40 +545,6 @@ class SDLGenericMotionListener_API12 implements View.OnGenericMotionListener {
     // Generic Motion (mouse hover, joystick...) events go here
     @Override
     public boolean onGenericMotion(View v, MotionEvent event) {
-        float x, y;
-        int action;
-
-        switch ( event.getSource() ) {
-            case InputDevice.SOURCE_JOYSTICK:
-            case InputDevice.SOURCE_GAMEPAD:
-            case InputDevice.SOURCE_DPAD:
-                return SDLControllerManager.handleJoystickMotionEvent(event);
-
-            case InputDevice.SOURCE_MOUSE:
-                action = event.getActionMasked();
-                switch (action) {
-                    case MotionEvent.ACTION_SCROLL:
-                        x = event.getAxisValue(MotionEvent.AXIS_HSCROLL, 0);
-                        y = event.getAxisValue(MotionEvent.AXIS_VSCROLL, 0);
-                        SDLActivity.onNativeMouse(0, action, x, y, false);
-                        return true;
-
-                    case MotionEvent.ACTION_HOVER_MOVE:
-                        x = event.getX(0);
-                        y = event.getY(0);
-
-                        SDLActivity.onNativeMouse(0, action, x, y, false);
-                        return true;
-
-                    default:
-                        break;
-                }
-                break;
-
-            default:
-                break;
-        }
-
         // Event was not managed
         return false;
     }
@@ -617,20 +583,6 @@ class SDLGenericMotionListener_API24 extends SDLGenericMotionListener_API12 {
 
     @Override
     public boolean onGenericMotion(View v, MotionEvent event) {
-
-        // Handle relative mouse mode
-        if (mRelativeModeEnabled) {
-            if (event.getSource() == InputDevice.SOURCE_MOUSE) {
-                int action = event.getActionMasked();
-                if (action == MotionEvent.ACTION_HOVER_MOVE) {
-                    float x = event.getAxisValue(MotionEvent.AXIS_RELATIVE_X);
-                    float y = event.getAxisValue(MotionEvent.AXIS_RELATIVE_Y);
-                    SDLActivity.onNativeMouse(0, action, x, y, true);
-                    return true;
-                }
-            }
-        }
-
         // Event was not managed, call SDLGenericMotionListener_API12 method
         return super.onGenericMotion(v, event);
     }
@@ -679,61 +631,6 @@ class SDLGenericMotionListener_API26 extends SDLGenericMotionListener_API24 {
 
     @Override
     public boolean onGenericMotion(View v, MotionEvent event) {
-        float x, y;
-        int action;
-
-        switch ( event.getSource() ) {
-            case InputDevice.SOURCE_JOYSTICK:
-            case InputDevice.SOURCE_GAMEPAD:
-            case InputDevice.SOURCE_DPAD:
-                return SDLControllerManager.handleJoystickMotionEvent(event);
-
-            case InputDevice.SOURCE_MOUSE:
-            // DeX desktop mouse cursor is a separate non-standard input type.
-            case InputDevice.SOURCE_MOUSE | InputDevice.SOURCE_TOUCHSCREEN:
-                action = event.getActionMasked();
-                switch (action) {
-                    case MotionEvent.ACTION_SCROLL:
-                        x = event.getAxisValue(MotionEvent.AXIS_HSCROLL, 0);
-                        y = event.getAxisValue(MotionEvent.AXIS_VSCROLL, 0);
-                        SDLActivity.onNativeMouse(0, action, x, y, false);
-                        return true;
-
-                    case MotionEvent.ACTION_HOVER_MOVE:
-                        x = event.getX(0);
-                        y = event.getY(0);
-                        SDLActivity.onNativeMouse(0, action, x, y, false);
-                        return true;
-
-                    default:
-                        break;
-                }
-                break;
-
-            case InputDevice.SOURCE_MOUSE_RELATIVE:
-                action = event.getActionMasked();
-                switch (action) {
-                    case MotionEvent.ACTION_SCROLL:
-                        x = event.getAxisValue(MotionEvent.AXIS_HSCROLL, 0);
-                        y = event.getAxisValue(MotionEvent.AXIS_VSCROLL, 0);
-                        SDLActivity.onNativeMouse(0, action, x, y, false);
-                        return true;
-
-                    case MotionEvent.ACTION_HOVER_MOVE:
-                        x = event.getX(0);
-                        y = event.getY(0);
-                        SDLActivity.onNativeMouse(0, action, x, y, true);
-                        return true;
-
-                    default:
-                        break;
-                }
-                break;
-
-            default:
-                break;
-        }
-
         // Event was not managed
         return false;
     }

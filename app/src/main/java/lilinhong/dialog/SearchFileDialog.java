@@ -177,7 +177,6 @@ public class SearchFileDialog extends Dialog {
         @Override
         protected void onProgressUpdate(ProgresData... values) {
             ProgresData vlaue = values[0];
-            Log.e("getDirName",vlaue.getDirName());
             search_file_text_path.setText(vlaue.getDirName());
             int progres = (int) (vlaue.getProgres()*100+0.5);
             search_file_progres.setProgress(progres);
