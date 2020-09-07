@@ -6,6 +6,7 @@ public class GlobalConfig {
     public static String GBC_SUFFIX = "gbc";
     public static String GB_SUFFIX = "gb";
     public static String SGB_SUFFIX ="sgb";
+    public static String ZIP_SUFFIX ="zip";
 
     //是否搜索.开头目录文件（这个文件夹一般是系统文件夹，所以不搜索）
     public static boolean SEARCH_DOT = false;

@@ -5,12 +5,10 @@ LOCAL_MODULE := main
 
 SDL_PATH := ../SDL
 PNG_PATH := ../libpng
-ZIP_PATH := ../zlib
 
 #Add include
 LOCAL_C_INCLUDES := $(LOCAL_PATH)/
 LOCAL_C_INCLUDES += $(LOCAL_PATH)/$(PNG_PATH)/
-LOCAL_C_INCLUDES += $(LOCAL_PATH)/$(ZIP_PATH)/
 LOCAL_C_INCLUDES += $(LOCAL_PATH)/$(SDL_PATH)/include
 LOCAL_C_INCLUDES += $(LOCAL_PATH)/core/
 LOCAL_C_INCLUDES += $(LOCAL_PATH)/gb/
@@ -27,6 +25,7 @@ LOCAL_C_INCLUDES += $(LOCAL_PATH)/include/mgba/feature/
 LOCAL_C_INCLUDES += $(LOCAL_PATH)/include/mgba/gb/
 LOCAL_C_INCLUDES += $(LOCAL_PATH)/include/mgba/gba/
 LOCAL_C_INCLUDES += $(LOCAL_PATH)/third-party/inih/
+LOCAL_C_INCLUDES += $(LOCAL_PATH)/third-party/zlib/
 
 LOCAL_EXPORT_C_INCLUDES += $(LOCAL_PATH)/include/
 LOCAL_EXPORT_C_INCLUDES += $(LOCAL_PATH)/core/
@@ -36,6 +35,7 @@ LOCAL_EXPORT_C_INCLUDES += $(LOCAL_PATH)/include/mgba/core/
 LOCAL_EXPORT_C_INCLUDES += $(LOCAL_PATH)/include/mgba-util/
 LOCAL_EXPORT_C_INCLUDES += $(LOCAL_PATH)/platform/
 LOCAL_EXPORT_C_INCLUDES += $(LOCAL_PATH)/platform/sdl/
+LOCAL_EXPORT_C_INCLUDES += $(LOCAL_PATH)/third-party/zlib/
 
 # Add your application source files here...
 LOCAL_SRC_FILES := \
@@ -59,15 +59,20 @@ LOCAL_SRC_FILES := \
     $(wildcard $(LOCAL_PATH)/platform/sdl/*.c) \
     $(wildcard $(LOCAL_PATH)/platform/posix/*.c) \
     $(wildcard $(LOCAL_PATH)/sm83/*.c) \
-    $(wildcard $(LOCAL_PATH)/gba/sio/*.c))
+    $(wildcard $(LOCAL_PATH)/gba/sio/*.c) \
+    $(wildcard $(LOCAL_PATH)/third-party/zlib/*.c) \
+    $(wildcard $(LOCAL_PATH)/third-party/zlib/contrib/minizip/ioapi.c) \
+    $(wildcard $(LOCAL_PATH)/third-party/zlib/contrib/minizip/mztools.c) \
+    $(wildcard $(LOCAL_PATH)/third-party/zlib/contrib/minizip/unzip.c) \
+    $(wildcard $(LOCAL_PATH)/third-party/zlib/contrib/minizip/zip.c))
 
-LOCAL_STATIC_LIBRARIES += zlib SDL2 png
+LOCAL_STATIC_LIBRARIES += SDL2 png
 
 LOCAL_LDLIBS := -lGLESv1_CM -llog -lGLESv2 -lOpenSLES -lEGL -landroid
 
 LOCAL_CPPFLAGS += -Wno-write-strings -Wno-overflow -std=c++11
 
-LOCAL_CFLAGS += -DSDL -DMGBA_STANDALONE -DHAVE_XLOCALE -DM_CORE_GBA -DM_CORE_GB -DUSE_PTHREADS -DCOLOR_16_BIT -DCOLOR_5_6_5 -DUSE_PNG
+LOCAL_CFLAGS += -DSDL -DMGBA_STANDALONE -DHAVE_XLOCALE -DM_CORE_GBA -DM_CORE_GB -DUSE_PTHREADS -DCOLOR_16_BIT -DCOLOR_5_6_5 -DUSE_PNG -DUSE_ZLIB -DUSE_FILE32API -DHAVE_CRC32
 
 #优化注意03会导致程序不可调试
 #LOCAL_CFLAGS += -DNDEBUG -O3 -fno-exceptions -fno-rtti

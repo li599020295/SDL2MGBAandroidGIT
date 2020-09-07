@@ -4,9 +4,8 @@ include $(CLEAR_VARS)
 
 LOCAL_MODULE := png
 
-LOCAL_STATIC_LIBRARIES += zlib
 
-ZIP_PATH := ../zlib
+ZIP_PATH := ../MGBA/third-party/zlib
 LOCAL_C_INCLUDES := $(LOCAL_PATH)/$(ZIP_PATH)/
 
 LOCAL_EXPORT_C_INCLUDES := $(LOCAL_PATH)/.

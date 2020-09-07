@@ -13,6 +13,10 @@ import android.util.Log;
 import android.view.View;
 
 import androidx.core.content.ContextCompat;
+
+import net.lingala.zip4j.core.ZipFile;
+import net.lingala.zip4j.model.FileHeader;
+
 import org.libsdl.app.R;
 import java.io.File;
 import java.io.FileInputStream;
@@ -344,12 +348,89 @@ public class Utils {
         }
     }
 
-    public static boolean isGameFile(File file){
-        String name = file.getName();
-        String suffix = name.substring(name.lastIndexOf(".")+1).toLowerCase();
+    public static boolean checkSUFFIX(String suffix){
         if(suffix.equals(GlobalConfig.GBA_SUFFIX) || suffix.equals(GlobalConfig.GB_SUFFIX) || suffix.equals(GlobalConfig.SGB_SUFFIX)
                 || suffix.equals(GlobalConfig.GBC_SUFFIX)){
             return true;
+        }
+        return false;
+    }
+
+    public static String getSuffix(String name){
+        String suffix = name.substring(name.lastIndexOf(".")+1).toLowerCase();
+        return suffix;
+    }
+
+    //检测zip文件是否合格
+    private static boolean accept(String filename) {
+        if (filename.charAt(0) == '.')
+            return false;
+
+        String suffix = getSuffix(filename);
+        if(checkSUFFIX(suffix)){
+            return true;
+        }
+        return false;
+    }
+
+    //检测zip文件
+    public static boolean checkZIPFile(File file){
+        int counterRoms = 0;
+        int counterEntry = 0;
+        try{
+            ZipFile zip = new ZipFile(file);
+            zip.setFileNameCharset("GBK");
+            //文件不合法
+            if(!zip.isValidZipFile()){
+                Log.e("ZIP_ERROR_FILE:",file.getAbsolutePath());
+                return false;
+            }
+
+            if(zip.isEncrypted()){
+                //额，无法输入密码
+                //zip.setPassword(Utils.getZIPPassworld());
+                return false;
+            }
+
+            List listFileHeaders  = zip.getFileHeaders();
+            for (int i=0;i<listFileHeaders.size();i++) {
+                FileHeader fileHeader = (FileHeader)listFileHeaders.get(i);
+                counterEntry++;
+                if ((!fileHeader.isDirectory())) {
+                    String filename = fileHeader.getFileName();
+                    if (accept(filename)) {
+                        counterRoms++;
+                        return true;
+                    }
+                }
+
+                if (counterEntry > 30 && counterRoms == 0) {
+                    //超过找的深度了
+                    break;
+                }
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    public static boolean isGameFile(File file){
+        String name = file.getName();
+        //获取文件后缀名字
+        String suffix = getSuffix(name);
+        boolean check = checkSUFFIX(suffix);
+        if(check){
+            return true;
+        }
+
+        //zip文件
+        if(suffix.equals(GlobalConfig.ZIP_SUFFIX)){
+            check = checkZIPFile(file);
+            if(check){
+                return true;
+            }
         }
         return false;
     }

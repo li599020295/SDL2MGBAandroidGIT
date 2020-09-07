@@ -6,7 +6,7 @@
 #include <mgba-util/vfs.h>
 
 #include <mgba-util/string.h>
-#if NO_NNED
+
 #ifdef USE_LIBZIP
 #include <zip.h>
 
@@ -673,5 +673,4 @@ static enum VFSType _vdezType(struct VDirEntry* vde) {
 	}
 	return VFS_FILE;
 }
-#endif
 #endif
