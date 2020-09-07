@@ -163,6 +163,7 @@ public class SearchFileDialog extends Dialog {
             //扫描完成
             searchFinish = true;
             search_file_btn.setText(this.context.getString(R.string.close));
+            dismiss();
         }
         //该方法运行在UI线程当中,并且运行在UI线程当中 可以对UI空间进行设置
         @Override
