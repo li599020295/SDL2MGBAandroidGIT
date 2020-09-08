@@ -45,6 +45,7 @@ void mCoreSyncForceFrame(struct mCoreSync* sync) {
 
 bool mCoreSyncWaitFrameStart(struct mCoreSync* sync) {
 	if (!sync || !sync->audioWait) {
+		sync->videoFramePending = 0;
 		return true;
 	}
 
