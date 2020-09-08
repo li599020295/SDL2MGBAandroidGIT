@@ -288,6 +288,7 @@ public class GamePadRelativeLayout extends RelativeLayout {
                 public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                     if(gamepad_togbtn_speed.isChecked()){
                         Toast.makeText(context,context.getString(R.string.speed_runing_stop),Toast.LENGTH_SHORT).show();
+                        compoundButton.setChecked(false);
                         return;
                     }
                     if(b){
@@ -460,6 +461,7 @@ public class GamePadRelativeLayout extends RelativeLayout {
                 public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                     if(gamepad_togbtn_rewind.isChecked()){
                         Toast.makeText(context,context.getString(R.string.rewind_runing_stop),Toast.LENGTH_SHORT).show();
+                        compoundButton.setChecked(false);
                         return;
                     }
                     if(b){
