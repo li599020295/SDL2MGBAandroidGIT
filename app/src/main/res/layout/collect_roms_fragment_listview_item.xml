@@ -28,8 +28,9 @@
                     android:id="@+id/collect_roms_fragment_item_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginRight="120dp"
                     android:textColor="@color/black"
-                    android:text="namexxx"/>
+                    android:text="namexxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"/>
                 <TextView
                     android:id="@+id/collect_roms_fragment_item_desc"
                     android:layout_marginTop="5dp"

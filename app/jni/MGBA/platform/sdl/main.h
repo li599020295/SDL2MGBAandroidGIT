@@ -68,6 +68,8 @@ struct mSDLRenderer {
 	bool interframeBlending;
 	bool filter;
 
+	JNIEnv *_env ;
+
 #ifdef BUILD_GL
 	struct mGLContext gl;
 #endif

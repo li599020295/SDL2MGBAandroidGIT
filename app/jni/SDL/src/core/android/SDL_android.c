@@ -1388,9 +1388,6 @@ JNIEXPORT void JNICALL SDL_JAVA_INTERFACE(onDataKey)(
     if(SDL_onDataKeyCall == NULL){
         return;
     }
-    if(SDL_onSetJNIEnvCall != NULL){
-        SDL_onSetJNIEnvCall(env);
-    }
     SDL_onDataKeyCall(key,isDown);
     // sdlUpdateKey(key,dowm);
 }

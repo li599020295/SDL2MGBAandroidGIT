@@ -90,6 +90,7 @@ JNIEnv *_env = NULL;
 //存储JNIEnv
 void SDL_onSetJNIEnv(JNIEnv *env){
 	_env = env;
+
 }
 
 //保存读取数据
@@ -129,7 +130,10 @@ void SDL_onDataKey(int key, bool down){
 }
 
 int main(int argc, char** argv) {
+
 	struct mSDLRenderer renderer = {0};
+	renderer._env = NULL;
+	global_renderer->_env = NULL;
 
 	struct mCoreOptions opts = {
 		.useBios = true,
@@ -169,6 +173,10 @@ int main(int argc, char** argv) {
 		return 1;
 	}
 	global_renderer = &renderer;
+
+	if(_env!=NULL){
+        global_renderer->_env = _env;
+	}
 
 	if (!renderer.core->init(renderer.core)) {
 		freeArguments(&args);

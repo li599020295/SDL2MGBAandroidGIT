@@ -76,6 +76,18 @@ void mSDLSWRunloop(struct mSDLRenderer* renderer, void* user) {
 		SCREENT_RECT.h = renderer->viewportHeight;
     }
 
+	//所有数据准备完成回调java,通知加载默认保存记录
+	{
+		if(renderer->_env!=NULL){
+			jclass sdlActivity = (*renderer->_env)->FindClass(renderer->_env,"org/libsdl/app/SDLActivity");
+			jmethodID mid = (*renderer->_env)->GetStaticMethodID(renderer->_env,sdlActivity,"gameLoadFinish","()V");
+			if(mid != NULL){
+				//回调
+				(*renderer->_env)->CallStaticVoidMethod(renderer->_env,sdlActivity,mid);
+				(*renderer->_env)->DeleteLocalRef(renderer->_env,sdlActivity);
+			}
+		}
+	}
 
     //SCREENT_RECT = {0, 0, vwidth * SCREENT_X, vheight * SCREENT_Y};
 	while (mCoreThreadIsActive(context)) {

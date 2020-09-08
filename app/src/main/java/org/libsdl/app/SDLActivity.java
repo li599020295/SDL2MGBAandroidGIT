@@ -1,5 +1,6 @@
 package org.libsdl.app;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Hashtable;
@@ -28,6 +29,8 @@ import android.graphics.drawable.Drawable;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ApplicationInfo;
+
+import lilinhong.dialog.LastSaveSlotDialog;
 import lilinhong.dialog.ShowScreenCaptureDialog;
 import lilinhong.dialog.TipsDialog;
 import lilinhong.model.GameRom;
@@ -315,6 +318,26 @@ public class SDLActivity extends Activity implements View.OnSystemUiVisibilityCh
                 SDLActivity.onNativeDropFile(filename);
             }
         }
+
+    }
+
+    //游戏加载完成
+    public static void gameLoadFinish(){
+        SDLActivity sdl = SDLActivity.getmSingleton();
+        if(sdl == null){
+            return;
+        }
+        final String slotPath = Utils.getSlotPath(SDLActivity.getmSingleton().getGamePath(),8);
+        File file = new File(slotPath);
+        if(file.exists()){
+            SDLActivity.getmSingleton().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    LastSaveSlotDialog lastSaveSlotDialog = new LastSaveSlotDialog(SDLActivity.getmSingleton(),slotPath,8);
+                    lastSaveSlotDialog.show();
+                }
+            });
+        }
     }
 
     protected void pauseNativeThread() {
@@ -344,7 +367,7 @@ public class SDLActivity extends Activity implements View.OnSystemUiVisibilityCh
     protected void onPause() {
         Log.v(TAG, "onPause()");
         super.onPause();
-
+        SDLActivity.onSlotNum(8,true);
         if (!mHasMultiWindow) {
             pauseNativeThread();
         }
@@ -461,7 +484,12 @@ public class SDLActivity extends Activity implements View.OnSystemUiVisibilityCh
                 SDLActivity.mSingleton.tipsDialog.dismiss();
             }
         }
-
+        //删除默认数据
+        String slotPath = Utils.getSlotPath(gameRom.getPath(),8);
+        File slotFile = new File(slotPath);
+        if(slotFile.exists()){
+            slotFile.delete();
+        }
         SDLActivity.nativeSendQuit();
         SDLActivity.nativeQuit();
         android.os.Process.killProcess(android.os.Process.myPid());
@@ -1716,16 +1744,32 @@ class SDLMain implements Runnable {
 
         Log.v("SDL", "Running main function " + function + " from library " + library);
 
-        SDLActivity.nativeRunMain(library, function, arguments);
+        int exitCode = SDLActivity.nativeRunMain(library, function, arguments);
 
-        Log.v("SDL", "Finished main function");
-
+        Log.v("SDL", "Finished main function exitCode:"+exitCode);
+        SDLActivity.nativeSendQuit();
+        SDLActivity.nativeQuit();
         if (SDLActivity.mSingleton == null || SDLActivity.mSingleton.isFinishing()) {
             // Activity is already being destroyed
+            Log.v("SDL", "killProcess myPid");
+            android.os.Process.killProcess(android.os.Process.myPid());
         } else {
             // Let's finish the Activity
+            Log.v("SDL", "Let's finish the Activity");
             SDLActivity.mSDLThread = null;
-            SDLActivity.mSingleton.finish();
+            if(SDLActivity.mSingleton!=null){
+                SDLActivity.mSingleton.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        SDLActivity.mSingleton.finish();
+                        Log.v("SDL", "killProcess myPid finish");
+                        android.os.Process.killProcess(android.os.Process.myPid());
+                    }
+                });
+            }else{
+                Log.v("SDL", "killProcess myPid mSingleton = null");
+                android.os.Process.killProcess(android.os.Process.myPid());
+            }
         }
     }
 }

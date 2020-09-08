@@ -445,6 +445,16 @@ static void _pauseAfterFrame(struct mCoreThread* context) {
 	context->frameCallback = 0;
 	mCoreThreadPauseFromThread(context);
 }
+//是否使用同步
+void setSync(struct mCoreThread* context,bool sync,bool m_audioSync,bool m_videoSync) {
+	if (sync) {
+		context->impl->sync.audioWait = m_audioSync;
+		context->impl->sync.videoFrameWait = m_videoSync;
+	} else {
+		context->impl->sync.audioWait = false;
+		context->impl->sync.videoFrameWait = false;
+	}
+}
 //按钮按下操作
 void  onKeyDown(struct mCoreThread* context,int key){
 	mCoreThreadInterrupt(context);
@@ -475,7 +485,19 @@ bool onKeySpecial(JNIEnv *_env,struct mCoreThread* context,int key,bool isDown) 
 		return true;
 	}
 	if (key == SDLK_TAB) {
-		context->impl->sync.audioWait = !isDown;
+        bool m_videoSync = context->core->opts.videoSync;
+        bool m_audioSync = context->core->opts.audioSync;
+	    if(!isDown){
+            int fakeBool = 0;
+            mCoreConfigGetIntValue(&context->core->config, "mute", &fakeBool);
+            context->core->opts.mute = fakeBool;
+            context->impl->sync.fpsTarget =  60.0f;
+            setSync(context,!isDown,m_audioSync,m_videoSync);
+	    }else{
+            setSync(context,!isDown,m_audioSync,m_videoSync);
+	    }
+        context->core->reloadConfigOption(context->core, NULL, NULL);
+		//context->impl->sync.audioWait = !isDown;
 		return true;
 	}
 	if (key == SDLK_BACKQUOTE) {

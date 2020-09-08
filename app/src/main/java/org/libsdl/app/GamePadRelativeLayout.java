@@ -291,6 +291,7 @@ public class GamePadRelativeLayout extends RelativeLayout {
                         return;
                     }
                     if(b){
+                        SDLActivity.onSlotNum(8,true);
                         gamepad_togbtn_rewind.setBackgroundResource(R.mipmap.reback_press);
                         SDLActivity.onDataKey(PAD1_REWIND,true);
                     }else{
