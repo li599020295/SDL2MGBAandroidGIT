@@ -133,7 +133,6 @@ int main(int argc, char** argv) {
 
 	struct mSDLRenderer renderer = {0};
 	renderer._env = NULL;
-	global_renderer->_env = NULL;
 
 	struct mCoreOptions opts = {
 		.useBios = true,
