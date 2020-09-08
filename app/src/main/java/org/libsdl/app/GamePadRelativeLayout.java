@@ -126,16 +126,6 @@ public class GamePadRelativeLayout extends RelativeLayout {
             int svbs = preferencesData.getVirtualButtonSize();
             game_relative_util_linear_seeksize.setProgress(svbs);
 
-            Resources resources = getResources();
-            //获取屏幕数据
-            DisplayMetrics displayMetrics = resources.getDisplayMetrics();
-            //获取屏幕宽高，单位是像素
-            int widthPixels = displayMetrics.widthPixels;
-            int heightPixels = displayMetrics.heightPixels;
-
-            int width = widthPixels;
-            int height = heightPixels;
-            SDLActivity.onScreenSize(false,width,height);
             firstLoadData = true;
         }
         //设置虚拟按钮大小调整设置
@@ -296,6 +286,10 @@ public class GamePadRelativeLayout extends RelativeLayout {
             gamepad_togbtn_rewind.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                    if(gamepad_togbtn_speed.isChecked()){
+                        Toast.makeText(context,context.getString(R.string.speed_runing_stop),Toast.LENGTH_SHORT).show();
+                        return;
+                    }
                     if(b){
                         gamepad_togbtn_rewind.setBackgroundResource(R.mipmap.reback_press);
                         SDLActivity.onDataKey(PAD1_REWIND,true);
@@ -463,6 +457,10 @@ public class GamePadRelativeLayout extends RelativeLayout {
             gamepad_togbtn_speed.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                    if(gamepad_togbtn_rewind.isChecked()){
+                        Toast.makeText(context,context.getString(R.string.rewind_runing_stop),Toast.LENGTH_SHORT).show();
+                        return;
+                    }
                     if(b){
                         gamepad_togbtn_speed.setBackgroundResource(R.mipmap.speed_press);
                         SDLActivity.onDataKey(PAD1_SPEED,true);
@@ -678,4 +676,5 @@ public class GamePadRelativeLayout extends RelativeLayout {
         }
         return false;
     }
+
 }

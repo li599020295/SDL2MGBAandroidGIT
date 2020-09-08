@@ -103,4 +103,6 @@
     <string name="successful">Successful</string>
     <string name="about_gba">About GBA emulator:
         \n Using the mGBA8.3 core, this simulator is still being improved. If you have any suggestions or questions, please email me and I will reply to you as soon as possible.</string>
+    <string name="speed_runing_stop">Please turn off the speed button</string>
+    <string name="rewind_runing_stop">Please turn off the rewind button</string>
 </resources>
