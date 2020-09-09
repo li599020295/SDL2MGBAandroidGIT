@@ -15,7 +15,7 @@
     <string name="search_folder">Search folder:</string>
     <string name="find_roms">Found %d ROMs</string>
     <string name="first_game_file_scanle">Scan game files</string>
-    <string name="first_game_file_sacnle_desc">\t Welcome to use GBA emulator, do you want to scan game files from memory card or SDcard ?\n \t Need file read and write permissions, we only use it to scan game files.</string>
+    <string name="first_game_file_sacnle_desc">\t Welcome to use GBA emulator, n \t GBA Emulator Box Need file read and write permissions, we only use it to scan game files，Please click to agree.</string>
     <string name="progres_num">%</string>
     <string name="notice">Notice</string>
     <string name="tips_exit_game">Do you want to quit the game?</string>

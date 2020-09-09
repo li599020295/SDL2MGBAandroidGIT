@@ -72,7 +72,7 @@ LOCAL_CFLAGS += \
 
 # Warnings we haven't fixed (yet)
 #优化注意03会导致程序不可调试
-#LOCAL_CFLAGS += -DNDEBUG -O3 -fno-exceptions -fno-rtti
+LOCAL_CFLAGS += -DNDEBUG -O3 -fno-exceptions -fno-rtti
 
 LOCAL_LDLIBS := -ldl -lGLESv1_CM -lGLESv2 -lOpenSLES -llog -landroid
 
