@@ -1,28 +1,33 @@
 package lilinhong.activity;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 import com.google.android.material.tabs.TabLayout;
-import com.tencent.mmkv.MMKV;
-
 import org.libsdl.app.R;
 import java.util.ArrayList;
 import java.util.List;
 import lilinhong.adapter.MainFragmentPagerAdapter;
+import lilinhong.dialog.SearchFileDialog;
 import lilinhong.fragment.CollectFragment;
 import lilinhong.fragment.RomsFragment;
 import lilinhong.utils.GlobalConfig;
+import lilinhong.utils.PermissionSystem;
 import lilinhong.utils.PreferencesData;
 
 public class MainActivity extends AppCompatActivity {
+    //存储权限返回标志
+    private static final int REQUEST_EXTERNAL_STORAGE = 3;
     private static MainActivity mainActivity = null;
     private TabLayout main_tablayout = null;
     private ViewPager main_viewpage = null;
@@ -103,5 +108,25 @@ public class MainActivity extends AppCompatActivity {
     }
     public static MainActivity getMainActivity(){
         return mainActivity;
+    }
+    //权限检测
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == REQUEST_EXTERNAL_STORAGE) {
+            boolean isHaveFilePermissions = false;
+            for (int i = 0; i < permissions.length; i++) {
+                if(permissions[i].equals("android.permission.WRITE_EXTERNAL_STORAGE")  && grantResults[i] >= 0){
+                    isHaveFilePermissions = true;
+                }
+                Log.i("MainActivity", "申请的权限为：" + permissions[i] + ",申请结果：" + grantResults[i]);
+            }
+            if(isHaveFilePermissions){
+                RomsFragment romsFragment = (RomsFragment)fragmentList.get(0);
+                if(romsFragment!=null) {
+                    romsFragment.fileScanDialog();
+                }
+            }
+        }
     }
 }

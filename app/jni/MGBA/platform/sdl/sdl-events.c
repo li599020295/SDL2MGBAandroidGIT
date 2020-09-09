@@ -488,10 +488,6 @@ bool onKeySpecial(JNIEnv *_env,struct mCoreThread* context,int key,bool isDown) 
         bool m_videoSync = context->core->opts.videoSync;
         bool m_audioSync = context->core->opts.audioSync;
 	    if(!isDown){
-            int fakeBool = 0;
-            mCoreConfigGetIntValue(&context->core->config, "mute", &fakeBool);
-            context->core->opts.mute = fakeBool;
-            context->impl->sync.fpsTarget =  60.0f;
             setSync(context,!isDown,m_audioSync,m_videoSync);
 	    }else{
             setSync(context,!isDown,m_audioSync,m_videoSync);

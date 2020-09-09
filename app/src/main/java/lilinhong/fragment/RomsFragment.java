@@ -182,23 +182,7 @@ public class RomsFragment extends Fragment {
             searchFileDialog.show();
         }
     }
-    //权限检测
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == REQUEST_EXTERNAL_STORAGE) {
-            boolean isHaveFilePermissions = false;
-            for (int i = 0; i < permissions.length; i++) {
-                if(permissions[i].equals("android.permission.WRITE_EXTERNAL_STORAGE")  && grantResults[i] >= 0){
-                    isHaveFilePermissions = true;
-                }
-                Log.i("MainActivity", "申请的权限为：" + permissions[i] + ",申请结果：" + grantResults[i]);
-            }
-            if(isHaveFilePermissions){
-                fileScanDialog();
-            }
-        }
-    }
+
 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {

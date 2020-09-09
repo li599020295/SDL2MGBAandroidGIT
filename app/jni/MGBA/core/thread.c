@@ -106,7 +106,8 @@ void _frameStarted(void* context) {
 			mCoreRewindAppend(&thread->impl->rewind, thread->core);
 		} else if (thread->impl->state == THREAD_REWINDING) {
 			if (!mCoreRewindRestore(&thread->impl->rewind, thread->core)) {
-				mCoreRewindAppend(&thread->impl->rewind, thread->core);
+                return;
+				//mCoreRewindAppend(&thread->impl->rewind, thread->core);
 			}
 		}
 	}
