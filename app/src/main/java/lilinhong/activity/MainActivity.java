@@ -26,6 +26,7 @@ import lilinhong.utils.AdmobHelper;
 import lilinhong.utils.GlobalConfig;
 import lilinhong.utils.PermissionSystem;
 import lilinhong.utils.PreferencesData;
+import lilinhong.utils.Utils;
 
 public class MainActivity extends AppCompatActivity {
     //没有网络延时窗口
@@ -90,8 +91,8 @@ public class MainActivity extends AppCompatActivity {
                 RomsFragment romsFragment = (RomsFragment)fragmentList.get(0);
                 romsFragment.fileScanDialog();
                 return true;
-            case R.id.game_roms_set:
-
+            case R.id.game_roms_wu_start:
+                Utils.goGooglePlay(MainActivity.this);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

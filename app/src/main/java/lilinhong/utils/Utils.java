@@ -1,16 +1,19 @@
 package lilinhong.utils;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.core.content.ContextCompat;
 
@@ -36,6 +39,25 @@ import lilinhong.dialog.TipsDialog;
 import lilinhong.model.GameRom;
 
 public class Utils {
+
+    public static void goGooglePlay(final Context context) {
+        String pkName = context.getPackageName();
+        //这里开始执行一个应用市场跳转逻辑，默认this为Context上下文对象
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(Uri.parse("market://details?id=" + pkName)); //跳转到应用市场，非Google Play市场一般情况也实现了这个接口
+        //存在手机里没安装应用市场的情况，跳转会包异常，做一个接收判断
+        if (intent.resolveActivity(context.getPackageManager()) != null) { //可以接收
+            context.startActivity(intent);
+        } else { //没有应用市场，我们通过浏览器跳转到Google Play
+            intent.setData(Uri.parse("https://play.google.com/store/apps/details?id=" + pkName));
+            //这里存在一个极端情况就是有些用户浏览器也没有，再判断一次
+            if (intent.resolveActivity(context.getPackageManager()) != null) { //有浏览器
+                context.startActivity(intent);
+            } else { //天哪，这还是智能手机吗？
+                Toast.makeText(context, "error", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
     //获取通知栏高度
     public static int getStatusBarHeight(Context context) {
         Resources resources = context.getResources();

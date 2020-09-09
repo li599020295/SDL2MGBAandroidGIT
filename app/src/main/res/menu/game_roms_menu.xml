@@ -5,7 +5,7 @@
         android:icon="@drawable/ic_reload"
         android:title="@string/add_game_roms" />
 
-    <item android:id="@+id/game_roms_set"
+    <item android:id="@+id/game_roms_wu_start"
         android:icon="@drawable/ic_game_settings"
-        android:title="@string/game_set" />
+        android:title="@string/wu_star_support" />
 </menu>
