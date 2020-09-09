@@ -1,5 +1,6 @@
 package lilinhong.activity;
 
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
@@ -21,11 +22,15 @@ import lilinhong.adapter.MainFragmentPagerAdapter;
 import lilinhong.dialog.SearchFileDialog;
 import lilinhong.fragment.CollectFragment;
 import lilinhong.fragment.RomsFragment;
+import lilinhong.utils.AdmobHelper;
 import lilinhong.utils.GlobalConfig;
 import lilinhong.utils.PermissionSystem;
 import lilinhong.utils.PreferencesData;
 
 public class MainActivity extends AppCompatActivity {
+    //没有网络延时窗口
+    private Dialog delayDialog = null;
+    private AdmobHelper admobHelper = null;
     //存储权限返回标志
     private static final int REQUEST_EXTERNAL_STORAGE = 3;
     private static MainActivity mainActivity = null;
@@ -44,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
         initFinish();
     }
     private void initData(){
+        admobHelper = new AdmobHelper(this);
         mainActivity = this;
         preferencesData = PreferencesData.getInstance(MainActivity.this);
         nameList = new ArrayList<>();
@@ -92,6 +98,10 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public AdmobHelper getAdmobHelper(){
+        return admobHelper;
+    }
+
     //是否刷新
     public void setFragmentRefresh(){
         if(fragmentList == null || fragmentList.size() == 0){
@@ -108,6 +118,33 @@ public class MainActivity extends AppCompatActivity {
     }
     public static MainActivity getMainActivity(){
         return mainActivity;
+    }
+    //延时进入游戏
+    public void delayGoGame(){
+        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this);
+        builder.setView(LayoutInflater.from(this).inflate(R.layout.dialog_loading,null));
+        builder.setCancelable(false);
+        delayDialog = builder.create();
+        delayDialog.show();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try{
+                    Thread.sleep(3500);
+                    MainActivity.this.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if(delayDialog!=null && delayDialog.isShowing()){
+                                delayDialog.dismiss();
+                            }
+                            if(admobHelper!=null){
+                                admobHelper.showInterstitial(true);
+                            }
+                        }
+                    });
+                }catch (Exception e){}
+            }
+        }).start();
     }
     //权限检测
     @Override

@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">GBA Emulator Box</string>
-    <string name="app_ads_main">ca-app-pub-3940256099942544~3347511713</string>
+    <string name="ap_ads_main">ca-app-pub-3928471692897353~6614013886</string>
+    <string name="ap_ads_chanye">ca-app-pub-3928471692897353/7116576763</string>
     <string name="slote_save_desc">Save game data to slot:%d</string>
     <string name="slote_load_desc">Load game data to slot:%d</string>
     <string name="screen_capture">Screen capture save to:%s</string>
@@ -107,4 +108,5 @@
     <string name="rewind_runing_stop">Please turn off the rewind button</string>
     <string name="gba_error_exit_desc">\t very sorry, we found that the gba emulator exited abnormally, you can restore the last game record!
         \n\t Click (OK) to restore the last game record.</string>
+    <string name="try_connect_net">Trying to connect to the server</string>
 </resources>

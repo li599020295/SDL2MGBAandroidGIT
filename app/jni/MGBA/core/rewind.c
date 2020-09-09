@@ -115,7 +115,7 @@ void _rewindDiff(struct mCoreRewindContext* context) {
 }
 
 bool mCoreRewindRestore(struct mCoreRewindContext* context, struct mCore* core) {
-	if (!context->size) {
+	if (context->size<2) {
 		return false;
 	}
 #ifndef DISABLE_THREADING

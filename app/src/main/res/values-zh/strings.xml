@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">GBA Emulator Box</string>
-    <string name="app_ads_main">ca-app-pub-3940256099942544~3347511713</string>
     <string name="slote_save_desc">將游戲數據保存到插槽:%d</string>
     <string name="slote_load_desc">將游戲數據加載到插槽:%d</string>
     <string name="screen_capture">屏幕截圖保存到:%s</string>

@@ -37,6 +37,7 @@ import lilinhong.dialog.SearchFileDialog;
 import lilinhong.dialog.TipsDialog;
 import lilinhong.model.GameRom;
 import lilinhong.model.IconData;
+import lilinhong.utils.AdmobHelper;
 import lilinhong.utils.PermissionSystem;
 import lilinhong.utils.PreferencesData;
 import lilinhong.utils.Utils;
@@ -114,6 +115,18 @@ public class RomsFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 GameRom gameRom = (GameRom)gameRomsAdapter.getItem(position);
+                MainActivity mainActivity = MainActivity.getMainActivity();
+                if(mainActivity!=null){
+                    AdmobHelper admobHelper = mainActivity.getAdmobHelper();
+                    if(admobHelper!=null){
+                        admobHelper.setGameDescription(gameRom);
+                        boolean isOK = admobHelper.showInterstitial(false);
+                        if(!isOK){
+                            mainActivity.delayGoGame();
+                        }
+                        return;
+                    }
+                }
                 Intent sdlActivityIntent = new Intent(getActivity(), SDLActivity.class);
                 Bundle bundle=new Bundle();
                 bundle.putSerializable("GAME_ROM",gameRom);

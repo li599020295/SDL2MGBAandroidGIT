@@ -21,6 +21,8 @@ import android.widget.TextView;
 import android.widget.ToggleButton;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+
+import com.google.ads.mediation.admob.AdMobAdapter;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import org.libsdl.app.R;
 import org.libsdl.app.SDLActivity;
@@ -33,6 +35,7 @@ import lilinhong.activity.MainActivity;
 import lilinhong.dialog.GameInfoDialog;
 import lilinhong.model.GameRom;
 import lilinhong.model.IconData;
+import lilinhong.utils.AdmobHelper;
 import lilinhong.utils.PreferencesData;
 import lilinhong.utils.Utils;
 
@@ -104,6 +107,19 @@ public class CollectFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 GameRom gameRom = (GameRom)adapter.getItem(position);
+                MainActivity mainActivity = MainActivity.getMainActivity();
+                if(mainActivity!=null){
+                    AdmobHelper admobHelper = mainActivity.getAdmobHelper();
+                    if(admobHelper!=null){
+                        admobHelper.setGameDescription(gameRom);
+                        boolean isOK = admobHelper.showInterstitial(false);
+                        if(!isOK){
+                            mainActivity.delayGoGame();
+                        }
+                        return;
+                    }
+                }
+
                 Intent sdlActivityIntent = new Intent(getActivity(), SDLActivity.class);
                 Bundle bundle=new Bundle();
                 bundle.putSerializable("GAME_ROM",gameRom);
