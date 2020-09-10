@@ -58,8 +58,8 @@ public class AdmobHelper {
 
     //加载一个广告
     public void loadRewardedVideoAd() {
-        AdRequest adRequest = new AdRequest.Builder().build();
-        mInterstitialAd.loadAd(adRequest);
+        AdRequest.Builder adRequest = new AdRequest.Builder();
+        mInterstitialAd.loadAd(adRequest.build());
     }
     //显示插页广告
     public boolean showInterstitial(boolean isOnlyAd){
