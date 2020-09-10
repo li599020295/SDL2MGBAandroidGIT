@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="gamepad_size">150dp</dimen>
-    <dimen name="gamepad4_size">155dp</dimen>
-    <dimen name="gamepad4_button_size">55dp</dimen>
+    <dimen name="gamepad_size">160dp</dimen>
+    <dimen name="gamepad4_size">170dp</dimen>
+    <dimen name="gamepad4_button_size">60dp</dimen>
 </resources>

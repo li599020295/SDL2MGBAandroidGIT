@@ -212,7 +212,7 @@ public class PreferencesData {
     }
     //获取缩放值
     public int getVirtualButtonSize(){
-        return kv.getInt("virtual_button_size",500);
+        return kv.getInt("virtual_button_size",520);
     }
     public void setVirtualButtonSize(int value){
         kv.putInt("virtual_button_size",value);

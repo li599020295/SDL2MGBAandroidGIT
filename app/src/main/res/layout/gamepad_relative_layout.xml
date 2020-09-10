@@ -63,11 +63,11 @@
             android:layout_height="50dp"
             android:background="@mipmap/change_ori"/>
     </LinearLayout>
-    <RelativeLayout
+    <FrameLayout
         android:id="@+id/gamepad_relative_gamepadview"
         android:layout_centerVertical="true"
         android:layout_alignParentBottom="true"
-        android:layout_margin="15dp"
+        android:layout_margin="10dp"
         android:layout_width="@dimen/gamepad_size"
         android:layout_height="@dimen/gamepad_size">
         <org.libsdl.app.GamePadView
@@ -76,14 +76,14 @@
             android:layout_height="match_parent"
             android:background="@mipmap/analog_0"/>
 
-    </RelativeLayout>
+    </FrameLayout>
 
 
     <RelativeLayout
         android:id="@+id/gamepad_relative_4btn"
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
-        android:layout_margin="15dp"
+        android:layout_margin="10dp"
         android:layout_width="@dimen/gamepad4_size"
         android:layout_height="@dimen/gamepad4_size">
         <Button

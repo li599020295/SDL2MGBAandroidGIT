@@ -75,6 +75,8 @@ public class GamePadView extends View{
         button = new Paint(Paint.ANTI_ALIAS_FLAG);
         button.setColor(Color.RED);
         button.setStyle(Paint.Style.FILL);
+
+        getBackground().setAlpha(150);
     }
 
     @Override

@@ -186,7 +186,7 @@ public class GamePadRelativeLayout extends RelativeLayout {
             RelativeLayout gamepad_relative_4btn = gamepadRelativeLayout.findViewById(R.id.gamepad_relative_4btn);
             gamePadList.add(gamepad_relative_4btn);
             gameAllButton.add(gamepad_relative_4btn);
-            RelativeLayout gamepad_relative_gamepadview = gamepadRelativeLayout.findViewById(R.id.gamepad_relative_gamepadview);
+            FrameLayout gamepad_relative_gamepadview = gamepadRelativeLayout.findViewById(R.id.gamepad_relative_gamepadview);
             gamePadList.add(gamepad_relative_gamepadview);
             gameAllButton.add(gamepad_relative_gamepadview);
 
@@ -219,6 +219,13 @@ public class GamePadRelativeLayout extends RelativeLayout {
             gamePadList.add(gamepad_btn_r);
             gamePadList.add(gamepad_btn_start);
             gamePadList.add(gamepad_btn_select);
+
+            //gamepad_btn_start.getBackground().setAlpha(200);
+            //gamepad_btn_select.getBackground().setAlpha(200);
+            gamepad_btn_a.getBackground().setAlpha(150);
+            gamepad_btn_b.getBackground().setAlpha(150);
+            gamepad_btn_l.getBackground().setAlpha(150);
+            gamepad_btn_r.getBackground().setAlpha(150);
 
             gamepad_btn_orien.setOnTouchListener(new OnTouchListener() {
                 @Override
@@ -346,7 +353,7 @@ public class GamePadRelativeLayout extends RelativeLayout {
                             break;
                         case MotionEvent.ACTION_UP:
                         case MotionEvent.ACTION_CANCEL:
-                            view.getBackground().setAlpha(255);
+                            view.getBackground().setAlpha(150);
                             SDLActivity.onDataKey(PAD1_S,false);
                             break;
                         case MotionEvent.ACTION_MOVE:
@@ -366,7 +373,7 @@ public class GamePadRelativeLayout extends RelativeLayout {
                             break;
                         case MotionEvent.ACTION_UP:
                         case MotionEvent.ACTION_CANCEL:
-                            view.getBackground().setAlpha(255);
+                            view.getBackground().setAlpha(150);
                             SDLActivity.onDataKey(PAD1_L,false);
                             break;
                         case MotionEvent.ACTION_MOVE:
@@ -386,7 +393,7 @@ public class GamePadRelativeLayout extends RelativeLayout {
                             break;
                         case MotionEvent.ACTION_UP:
                         case MotionEvent.ACTION_CANCEL:
-                            view.getBackground().setAlpha(255);
+                            view.getBackground().setAlpha(150);
                             SDLActivity.onDataKey(PAD1_START,false);
                             break;
                         case MotionEvent.ACTION_MOVE:
@@ -406,7 +413,7 @@ public class GamePadRelativeLayout extends RelativeLayout {
                             break;
                         case MotionEvent.ACTION_UP:
                         case MotionEvent.ACTION_CANCEL:
-                            view.getBackground().setAlpha(255);
+                            view.getBackground().setAlpha(150);
                             SDLActivity.onDataKey(PAD1_SELECT,false);
                             break;
                         case MotionEvent.ACTION_MOVE:
@@ -426,7 +433,7 @@ public class GamePadRelativeLayout extends RelativeLayout {
                             break;
                         case MotionEvent.ACTION_UP:
                         case MotionEvent.ACTION_CANCEL:
-                            view.getBackground().setAlpha(255);
+                            view.getBackground().setAlpha(150);
                             SDLActivity.onDataKey(PAD1_A,false);
                             break;
                         case MotionEvent.ACTION_MOVE:
@@ -446,7 +453,7 @@ public class GamePadRelativeLayout extends RelativeLayout {
                             break;
                         case MotionEvent.ACTION_UP:
                         case MotionEvent.ACTION_CANCEL:
-                            view.getBackground().setAlpha(255);
+                            view.getBackground().setAlpha(150);
                             SDLActivity.onDataKey(PAD1_B,false);
                             break;
                         case MotionEvent.ACTION_MOVE:

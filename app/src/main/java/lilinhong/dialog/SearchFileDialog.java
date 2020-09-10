@@ -67,6 +67,7 @@ public class SearchFileDialog extends Dialog {
                         dismiss();
                     }else{
                         isBreakSearch = true;
+                        dismiss();
                     }
                 }
                 return true;
