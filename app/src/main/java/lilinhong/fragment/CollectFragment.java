@@ -21,8 +21,6 @@ import android.widget.TextView;
 import android.widget.ToggleButton;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-
-import com.google.ads.mediation.admob.AdMobAdapter;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import org.libsdl.app.R;
 import org.libsdl.app.SDLActivity;
@@ -30,7 +28,6 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import lilinhong.activity.MainActivity;
 import lilinhong.dialog.GameInfoDialog;
 import lilinhong.model.GameRom;
@@ -63,7 +60,6 @@ public class CollectFragment extends Fragment {
         mainView = inflater.inflate(R.layout.collect_roms_fragment, container, false);
         initData();
         initUI();
-        Log.i(TAG,"onCreateView");
         return mainView;
     }
 

@@ -457,16 +457,16 @@ void setSync(struct mCoreThread* context,bool sync,bool m_audioSync,bool m_video
 }
 //按钮按下操作
 void  onKeyDown(struct mCoreThread* context,int key){
-	mCoreThreadInterrupt(context);
+	//mCoreThreadInterrupt(context);
 	context->core->addKeys(context->core, 1 << key);
-	mCoreThreadContinue(context);
+	//mCoreThreadContinue(context);
 	return;
 }
 //按钮弹起操作
 void onKeyUp(struct mCoreThread* context,int key){
-	mCoreThreadInterrupt(context);
+	//mCoreThreadInterrupt(context);
 	context->core->clearKeys(context->core, 1 << key);
-	mCoreThreadContinue(context);
+	//mCoreThreadContinue(context);
 	return;
 }
 //实现一些特殊操作

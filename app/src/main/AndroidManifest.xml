@@ -63,7 +63,8 @@
         android:allowBackup="true"
         android:theme="@style/AppTheme"
         android:hardwareAccelerated="true"
-        android:requestLegacyExternalStorage="true">
+        android:requestLegacyExternalStorage="true"
+        android:isGame="true">
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="@string/ap_ads_main"/>
