@@ -3,20 +3,15 @@ package lilinhong.dialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.AsyncTask;
-import android.os.Build;
-import android.os.Environment;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import org.libsdl.app.R;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-
 import lilinhong.utils.PreferencesData;
 import lilinhong.utils.Utils;
 
@@ -155,16 +150,22 @@ public class SearchFileDialog extends Dialog {
         }
         @Override
         protected void onPostExecute(List<File> result) {
-            Utils.addGameFileList(result);
-            //中断直接关闭
-            if(isBreakSearch){
-                dismiss();
-                return;
+            try{
+                Utils.addGameFileList(result);
+                //中断直接关闭
+                if(isBreakSearch){
+                    dismiss();
+                    return;
+                }
+                //扫描完成
+                searchFinish = true;
+                search_file_btn.setText(this.context.getString(R.string.close));
+                if(isShowing()) {
+                    dismiss();
+                }
+            }catch (Exception e){
+                e.printStackTrace();
             }
-            //扫描完成
-            searchFinish = true;
-            search_file_btn.setText(this.context.getString(R.string.close));
-            dismiss();
         }
         //该方法运行在UI线程当中,并且运行在UI线程当中 可以对UI空间进行设置
         @Override

@@ -135,8 +135,12 @@ public class MainActivity extends AppCompatActivity {
                     MainActivity.this.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            if(delayDialog!=null && delayDialog.isShowing()){
-                                delayDialog.dismiss();
+                            try{
+                                if(!isFinishing() && delayDialog!=null && delayDialog.isShowing()){
+                                    delayDialog.dismiss();
+                                }
+                            }catch (Exception e){
+                                e.printStackTrace();
                             }
                             if(admobHelper!=null){
                                 admobHelper.showInterstitial(true);

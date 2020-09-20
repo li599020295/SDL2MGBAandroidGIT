@@ -183,6 +183,9 @@ public class RomsFragment extends Fragment {
     }
 
     public void fileScanDialog(){
+        if(permissionSystem == null){
+            permissionSystem = new PermissionSystem(MainActivity.getMainActivity());
+        }
         if(permissionSystem.checkStoragePermissions()){
             SearchFileDialog searchFileDialog = new SearchFileDialog(getActivity());
             searchFileDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
@@ -319,7 +322,11 @@ public class RomsFragment extends Fragment {
                     holdView.roms_fragment_item_image.setImageBitmap(bitmap);
                 }else{
                     //drawable://
-                    ImageLoader.getInstance().displayImage("drawable://" + R.mipmap.gba_item_icon, holdView.roms_fragment_item_image);
+                    try{
+                        ImageLoader.getInstance().displayImage("drawable://" + R.mipmap.gba_item_icon, holdView.roms_fragment_item_image);
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
                 }
             }else{
                 ImageLoader.getInstance().displayImage("drawable://" + R.mipmap.gba_item_icon, holdView.roms_fragment_item_image);

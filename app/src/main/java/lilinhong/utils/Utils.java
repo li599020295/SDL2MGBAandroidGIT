@@ -158,9 +158,15 @@ public class Utils {
         List<String> tempList = new ArrayList<>();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             files = context.getExternalFilesDirs(Environment.MEDIA_MOUNTED);
-            for(File file:files){
-                Log.e("main:",file.getAbsolutePath());
-                tempList.add(file.getAbsolutePath());
+            try{
+                for(File file:files){
+                    if(file!=null){
+                        Log.e("main:",file.getAbsolutePath());
+                        tempList.add(file.getAbsolutePath());
+                    }
+                }
+            }catch (Exception e){
+                e.printStackTrace();
             }
         }
         //低于4.1版本
