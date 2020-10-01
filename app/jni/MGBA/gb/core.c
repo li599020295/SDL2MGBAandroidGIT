@@ -64,7 +64,9 @@ struct mVideoLogContext;
 struct GBCore {
 	struct mCore d;
 	struct GBVideoSoftwareRenderer renderer;
+#ifndef MINIMAL_CORE
 	struct GBVideoProxyRenderer proxyRenderer;
+#endif
 	struct mVideoLogContext* logContext;
 	struct mCoreCallbacks logCallbacks;
 	uint8_t keys;

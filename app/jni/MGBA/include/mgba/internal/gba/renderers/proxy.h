@@ -5,7 +5,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 #ifndef GBA_VIDEO_PROXY_H
 #define GBA_VIDEO_PROXY_H
-
+#ifndef MINIMAL_CORE
 #include <mgba-util/common.h>
 
 CXX_GUARD_START
@@ -25,4 +25,5 @@ void GBAVideoProxyRendererUnshim(struct GBAVideo* video, struct GBAVideoProxyRen
 
 CXX_GUARD_END
 
+#endif
 #endif

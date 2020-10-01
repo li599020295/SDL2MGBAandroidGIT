@@ -136,7 +136,7 @@ int main(int argc, char** argv) {
 
 	struct mCoreOptions opts = {
 		.useBios = true,
-		.rewindEnable = true,
+		.rewindEnable = false,
 		.rewindBufferCapacity = 600,
 		.audioBuffers = 1024,
 		.videoSync = false,

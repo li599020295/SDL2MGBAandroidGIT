@@ -115,9 +115,6 @@ void _rewindDiff(struct mCoreRewindContext* context) {
 }
 
 bool mCoreRewindRestore(struct mCoreRewindContext* context, struct mCore* core) {
-	if (context->size<2) {
-		return false;
-	}
 #ifndef DISABLE_THREADING
 	if (context->onThread) {
 		MutexLock(&context->mutex);
@@ -179,4 +176,3 @@ THREAD_ENTRY _rewindThread(void* context) {
 	return 0;
 }
 #endif
-

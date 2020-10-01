@@ -3,6 +3,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+#ifndef MINIMAL_CORE
 #include <mgba/internal/gb/renderers/proxy.h>
 
 #include <mgba/core/cache-set.h>
@@ -293,3 +294,5 @@ static void GBVideoProxyRendererPutPixels(struct GBVideoRenderer* renderer, size
 		proxyRenderer->logger->unlock(proxyRenderer->logger);
 	}
 }
+
+#endif

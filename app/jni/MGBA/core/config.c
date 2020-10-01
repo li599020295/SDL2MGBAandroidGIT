@@ -370,7 +370,7 @@ void mCoreConfigMap(const struct mCoreConfig* config, struct mCoreOptions* opts)
 		opts->skipBios = fakeBool;
 	}
 	if (_lookupIntValue(config, "rewindEnable", &fakeBool)) {
-		opts->rewindEnable = fakeBool;
+		opts->rewindEnable = false;
 	}
 
 	_lookupIntValue(config, "fullscreen", &opts->fullscreen);

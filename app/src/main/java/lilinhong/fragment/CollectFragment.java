@@ -225,34 +225,53 @@ public class CollectFragment extends Fragment {
             String name = gameRom.getName();
             String desc = gameRom.getDesc();
 
-            if(!image.equals("")){
-                File file = new File(image);
-                if(file.exists()) {
-                    boolean isHaveIcon = iconMap.containsKey(position);
-                    Bitmap bitmap = null;
-                    if(isHaveIcon){
-                        IconData iconData = iconMap.get(position);
-                        if(iconData.getFilePath().equals(image)){
-                            bitmap = iconData.getBitmap();
-                        }else{
-                            if(bitmap!=null) {
-                                bitmap.recycle();
-                            }
-                            bitmap = Utils.getLoacalBitmap(image);
-                            iconMap.put(position,new IconData(bitmap,image,position));
-                        }
+            try{
+                if(!image.equals("")){
+                    File file = new File(image);
+                    if(file.exists()) {
+                        ImageLoader.getInstance().displayImage("file://"+image, holdView.collect_roms_fragment_item_image);
                     }else{
-                        bitmap = Utils.getLoacalBitmap(image);
-                        iconMap.put(position,new IconData(bitmap,image,position));
+                        try{
+                            ImageLoader.getInstance().displayImage("drawable://" + R.mipmap.gba_item_icon, holdView.collect_roms_fragment_item_image);
+                        }catch (Exception e){
+                            e.printStackTrace();
+                        }
                     }
-                    holdView.collect_roms_fragment_item_image.setImageBitmap(bitmap);
                 }else{
-                    //drawable://
                     ImageLoader.getInstance().displayImage("drawable://" + R.mipmap.gba_item_icon, holdView.collect_roms_fragment_item_image);
                 }
-            }else{
-                ImageLoader.getInstance().displayImage("drawable://" + R.mipmap.gba_item_icon, holdView.collect_roms_fragment_item_image);
+            }catch (Exception e){
+                e.printStackTrace();
             }
+
+//            if(!image.equals("")){
+//                File file = new File(image);
+//                if(file.exists()) {
+//                    boolean isHaveIcon = iconMap.containsKey(position);
+//                    Bitmap bitmap = null;
+//                    if(isHaveIcon){
+//                        IconData iconData = iconMap.get(position);
+//                        if(iconData.getFilePath().equals(image)){
+//                            bitmap = iconData.getBitmap();
+//                        }else{
+//                            if(bitmap!=null) {
+//                                bitmap.recycle();
+//                            }
+//                            bitmap = Utils.getLoacalBitmap(image);
+//                            iconMap.put(position,new IconData(bitmap,image,position));
+//                        }
+//                    }else{
+//                        bitmap = Utils.getLoacalBitmap(image);
+//                        iconMap.put(position,new IconData(bitmap,image,position));
+//                    }
+//                    holdView.collect_roms_fragment_item_image.setImageBitmap(bitmap);
+//                }else{
+//                    //drawable://
+//                    ImageLoader.getInstance().displayImage("drawable://" + R.mipmap.gba_item_icon, holdView.collect_roms_fragment_item_image);
+//                }
+//            }else{
+//                ImageLoader.getInstance().displayImage("drawable://" + R.mipmap.gba_item_icon, holdView.collect_roms_fragment_item_image);
+//            }
 
             holdView.collect_roms_fragment_item_name.setText(name);
 

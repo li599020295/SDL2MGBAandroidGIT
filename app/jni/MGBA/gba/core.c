@@ -140,7 +140,9 @@ struct GBACore {
 #endif
 	struct mCoreCallbacks logCallbacks;
 #ifndef DISABLE_THREADING
+#ifndef MINIMAL_CORE
 	struct mVideoThreadProxy threadProxy;
+#endif
 #endif
 	int keys;
 	struct mCPUComponent* components[CPU_COMPONENT_MAX];
@@ -191,7 +193,9 @@ static bool _GBACoreInit(struct mCore* core) {
 #endif
 
 #ifndef DISABLE_THREADING
+#ifndef MINIMAL_CORE
 	mVideoThreadProxyCreate(&gbacore->threadProxy);
+#endif
 #endif
 #ifndef MINIMAL_CORE
 	gbacore->vlProxy.logger = NULL;
@@ -534,11 +538,13 @@ static void _GBACoreReset(struct mCore* core) {
 		}
 #endif
 #ifndef DISABLE_THREADING
+#ifndef MINIMAL_CORE
 		if (mCoreConfigGetIntValue(&core->config, "threadedVideo", &fakeBool) && fakeBool) {
 			if (!core->videoLogger) {
 				core->videoLogger = &gbacore->threadProxy.d;
 			}
 		}
+#endif
 #endif
 #ifndef MINIMAL_CORE
 		if (renderer && core->videoLogger) {

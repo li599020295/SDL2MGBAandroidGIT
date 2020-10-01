@@ -5,7 +5,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 #ifndef VIDEO_THREAD_PROXY_H
 #define VIDEO_THREAD_PROXY_H
-
+#ifndef MINIMAL_CORE
 #include <mgba-util/common.h>
 
 CXX_GUARD_START
@@ -37,5 +37,5 @@ struct mVideoThreadProxy {
 void mVideoThreadProxyCreate(struct mVideoThreadProxy* renderer);
 
 CXX_GUARD_END
-
+#endif
 #endif

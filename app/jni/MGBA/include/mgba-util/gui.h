@@ -5,7 +5,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 #ifndef GUI_H
 #define GUI_H
-
+#ifndef MINIMAL_CORE
 #include <mgba-util/common.h>
 
 CXX_GUARD_START
@@ -86,5 +86,5 @@ enum GUICursorState GUIPollCursor(struct GUIParams* params, unsigned* x, unsigne
 void GUIInvalidateKeys(struct GUIParams* params);
 
 CXX_GUARD_END
-
+#endif
 #endif

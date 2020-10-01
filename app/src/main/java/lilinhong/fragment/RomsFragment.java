@@ -301,20 +301,23 @@ public class RomsFragment extends Fragment {
             String image =  rom.getImage();
             String name = rom.getName();
             String desc = rom.getDesc();
-
-            if(!image.equals("")){
-                File file = new File(image);
-                if(file.exists()) {
-                    ImageLoader.getInstance().displayImage("file://"+image, holdView.roms_fragment_item_image);
-                }else{
-                    try{
-                        ImageLoader.getInstance().displayImage("drawable://" + R.mipmap.gba_item_icon, holdView.roms_fragment_item_image);
-                    }catch (Exception e){
-                        e.printStackTrace();
+            try{
+                if(!image.equals("")){
+                    File file = new File(image);
+                    if(file.exists()) {
+                        ImageLoader.getInstance().displayImage("file://"+image, holdView.roms_fragment_item_image);
+                    }else{
+                        try{
+                            ImageLoader.getInstance().displayImage("drawable://" + R.mipmap.gba_item_icon, holdView.roms_fragment_item_image);
+                        }catch (Exception e){
+                            e.printStackTrace();
+                        }
                     }
+                }else{
+                    ImageLoader.getInstance().displayImage("drawable://" + R.mipmap.gba_item_icon, holdView.roms_fragment_item_image);
                 }
-            }else{
-                ImageLoader.getInstance().displayImage("drawable://" + R.mipmap.gba_item_icon, holdView.roms_fragment_item_image);
+            }catch (Exception e){
+                e.printStackTrace();
             }
 
             holdView.roms_fragment_item_name.setText(name);

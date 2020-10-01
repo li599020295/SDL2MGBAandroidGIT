@@ -5,7 +5,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 #ifndef VIDEO_LOGGER_H
 #define VIDEO_LOGGER_H
-
+#ifndef MINIMAL_CORE
 #include <mgba-util/common.h>
 
 CXX_GUARD_START
@@ -131,5 +131,5 @@ void mVideoLoggerInjectOAM(struct mVideoLogger* logger, uint32_t address, uint16
 struct mCore* mVideoLogCoreFind(struct VFile*);
 
 CXX_GUARD_END
-
+#endif
 #endif

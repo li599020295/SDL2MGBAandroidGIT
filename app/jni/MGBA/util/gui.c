@@ -3,6 +3,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+#ifndef MINIMAL_CORE
 #include <mgba-util/gui.h>
 
 #define KEY_DELAY 45
@@ -72,3 +73,5 @@ void GUIInvalidateKeys(struct GUIParams* params) {
 		params->inputHistory[i] = 0;
 	}
 }
+
+#endif

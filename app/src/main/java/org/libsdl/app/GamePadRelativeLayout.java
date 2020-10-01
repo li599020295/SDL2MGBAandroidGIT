@@ -2,6 +2,7 @@ package org.libsdl.app;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
 import android.util.DisplayMetrics;
@@ -24,6 +25,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import lilinhong.activity.GamePadActivity;
 import lilinhong.dialog.LoadSlotDialog;
 import lilinhong.dialog.SaveSlotDialog;
 import lilinhong.dialog.SettingDialog;
@@ -293,19 +296,21 @@ public class GamePadRelativeLayout extends RelativeLayout {
             gamepad_togbtn_rewind.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                    if(gamepad_togbtn_speed.isChecked()){
-                        Toast.makeText(context,context.getString(R.string.speed_runing_stop),Toast.LENGTH_SHORT).show();
-                        compoundButton.setChecked(false);
-                        return;
-                    }
-                    if(b){
-                        SDLActivity.onSlotNum(8,true);
-                        gamepad_togbtn_rewind.setBackgroundResource(R.mipmap.reback_press);
-                        SDLActivity.onDataKey(PAD1_REWIND,true);
-                    }else{
-                        gamepad_togbtn_rewind.setBackgroundResource(R.mipmap.reback_normal);
-                        SDLActivity.onDataKey(PAD1_REWIND,false);
-                    }
+                    Intent intent = new Intent(context,GamePadActivity.class);
+                    context.startActivity(intent);
+//                    if(gamepad_togbtn_speed.isChecked()){
+//                        Toast.makeText(context,context.getString(R.string.speed_runing_stop),Toast.LENGTH_SHORT).show();
+//                        compoundButton.setChecked(false);
+//                        return;
+//                    }
+//                    if(b){
+//                        SDLActivity.onSlotNum(8,true);
+//                        gamepad_togbtn_rewind.setBackgroundResource(R.mipmap.reback_press);
+//                        SDLActivity.onDataKey(PAD1_REWIND,true);
+//                    }else{
+//                        gamepad_togbtn_rewind.setBackgroundResource(R.mipmap.reback_normal);
+//                        SDLActivity.onDataKey(PAD1_REWIND,false);
+//                    }
                 }
             });
             //暂时用于打开其他试用功能
