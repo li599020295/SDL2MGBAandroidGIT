@@ -19,14 +19,11 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
-
 import org.libsdl.app.GamePadRelativeLayout;
 import org.libsdl.app.R;
 import org.libsdl.app.SDLActivity;
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
-
 import lilinhong.activity.GamePadActivity;
 import lilinhong.model.CheatData;
 import lilinhong.utils.GlobalConfig;
@@ -64,6 +61,9 @@ public class SettingDialog extends BaseDialog {
     private void initData() {
         File file = new File(this.gamePath);
         gameName = file.getName();
+        if(preferencesData == null){
+            preferencesData = PreferencesData.getInstance(this.context);
+        }
         preferencesData = PreferencesData.getInstance();
         cheatDataList = preferencesData.getCheatList(gameName);
         if(!GlobalConfig.FIRST_RUN_GAME_CHEAT.equals(gameName)) {

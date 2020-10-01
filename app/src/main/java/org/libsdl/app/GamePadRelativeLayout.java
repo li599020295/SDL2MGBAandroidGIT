@@ -117,7 +117,7 @@ public class GamePadRelativeLayout extends RelativeLayout {
             View view = gamePadList.get(i);
             Object obj = view.getTag();
             if(obj!=null){
-                break;
+                continue;
             }
             view.setTag(new ViewSize(view.getWidth(),view.getHeight(),view.getTop(),view.getLeft(),view.getRight(),view.getBottom()));
         }
@@ -186,9 +186,9 @@ public class GamePadRelativeLayout extends RelativeLayout {
             RelativeLayout gamepad_relative_4btn = gamepadRelativeLayout.findViewById(R.id.gamepad_relative_4btn);
             gamePadList.add(gamepad_relative_4btn);
             gameAllButton.add(gamepad_relative_4btn);
-            FrameLayout gamepad_relative_gamepadview = gamepadRelativeLayout.findViewById(R.id.gamepad_relative_gamepadview);
-            gamePadList.add(gamepad_relative_gamepadview);
-            gameAllButton.add(gamepad_relative_gamepadview);
+            //FrameLayout gamepad_relative_gamepadview = gamepadRelativeLayout.findViewById(R.id.gamepad_relative_gamepadview);
+            //gamePadList.add(gamepad_relative_gamepadview);
+            //gameAllButton.add(gamepad_relative_gamepadview);
 
             Button gamepad_btn_orien = gamepadRelativeLayout.findViewById(R.id.gamepad_btn_orien);
             Button gamepad_btn_start = gamepadRelativeLayout.findViewById(R.id.gamepad_btn_start);
@@ -526,23 +526,24 @@ public class GamePadRelativeLayout extends RelativeLayout {
                 if(pro < 0){
                     pro = (pro/500.0f) * 100;
                 }
-                for (View view:gamePadList){
+                for (View view : gamePadList){
+                    ViewSize viewSize = (ViewSize)view.getTag();
+                    if(viewSize == null){
+                        continue;
+                    }
                     ViewGroup.LayoutParams params = view.getLayoutParams();
                     if(pro<0){
                         float scale = pro/100 + 1;
-                        ViewSize viewSize = (ViewSize)view.getTag();
                         params.height =(int) (viewSize.getHeight());
                         params.width =(int) (viewSize.getWidth());
 
                         view.setScaleX(scale);
                         view.setScaleY(scale);
                     }else if(pro>0){
-                        ViewSize viewSize = (ViewSize)view.getTag();
                         float scale = pro/100 + 1;
                         params.height =(int) (viewSize.getHeight() * scale);
                         params.width =(int) (viewSize.getWidth() * scale);
                     }else{
-                        ViewSize viewSize = (ViewSize)view.getTag();
                         params.height =(int) (viewSize.getHeight());
                         params.width =(int) (viewSize.getWidth());
 

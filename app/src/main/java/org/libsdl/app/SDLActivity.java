@@ -29,7 +29,6 @@ import android.graphics.drawable.Drawable;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ApplicationInfo;
-
 import lilinhong.dialog.LastSaveSlotDialog;
 import lilinhong.dialog.ShowScreenCaptureDialog;
 import lilinhong.dialog.TipsDialog;
@@ -42,6 +41,8 @@ import lilinhong.utils.Utils;
  SDL Activity
  */
 public class SDLActivity extends Activity implements View.OnSystemUiVisibilityChangeListener {
+    //sdl是否加载完成
+    public boolean loadLibFinish = false;
     private PreferencesData preferencesData = null;
     private GameRom gameRom = null;
     public TipsDialog tipsDialog = null;
@@ -327,6 +328,22 @@ public class SDLActivity extends Activity implements View.OnSystemUiVisibilityCh
         if(sdl == null){
             return;
         }
+        //设置屏幕大小
+        sdl.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                WindowManager manager = SDLActivity.getmSingleton().getWindowManager();
+                DisplayMetrics outMetrics = new DisplayMetrics();
+                manager.getDefaultDisplay().getMetrics(outMetrics);
+                int width = outMetrics.widthPixels;
+                int height = outMetrics.heightPixels;
+                //避免滥发数据修正错误
+                if(width != 0 && height!=0){
+                    SDLActivity.onScreenSize(false,width,height);
+                }
+                SDLActivity.getmSingleton().loadLibFinish = true;
+            }
+        });
         final String slotPath = Utils.getSlotPath(SDLActivity.getmSingleton().getGamePath(),8);
         File file = new File(slotPath);
         if(file.exists()){
@@ -1907,7 +1924,7 @@ class SDLSurface extends SurfaceView implements SurfaceHolder.Callback,
         Log.v("SDL", "Device size: " + nDeviceWidth + "x" + nDeviceHeight);
         SDLActivity.nativeSetScreenResolution(width, height, nDeviceWidth, nDeviceHeight, sdlFormat, mDisplay.getRefreshRate());
         SDLActivity.onNativeResize();
-        SDLActivity.onScreenSize(false,width,height);
+
         // Prevent a screen distortion glitch,
         // for instance when the device is in Landscape and a Portrait App is resumed.
         boolean skip = false;
@@ -2024,7 +2041,7 @@ class SDLSurface extends SurfaceView implements SurfaceHolder.Callback,
             onKeyUp(keyCode);
         }
 
-        if(SDLActivity.getmSingleton().getGamePadRelativeLayout().onKey(keyCode,event)){
+       if(SDLActivity.getmSingleton().getGamePadRelativeLayout().onKey(keyCode,event)){
             return true;
         }
 

@@ -108,6 +108,9 @@
     <string name="rewind_runing_stop">Please turn off the rewind button</string>
     <string name="gba_error_exit_desc">\t very sorry, we found that the gba emulator exited abnormally, you can restore the last game record!
         \n\t Click (OK) to restore the last game record.</string>
+    <string name="control_select">SELECT</string>
+    <string name="control_start">START</string>
+    <string name="control_menu">MENU</string>
     <string name="try_connect_net">Trying to connect to the server</string>
     <string name="wu_star_support">5 Star Support</string>
 

@@ -186,6 +186,7 @@ public class RomsFragment extends Fragment {
         if(permissionSystem == null){
             permissionSystem = new PermissionSystem(MainActivity.getMainActivity());
         }
+
         if(permissionSystem.checkStoragePermissions()){
             SearchFileDialog searchFileDialog = new SearchFileDialog(getActivity());
             searchFileDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
@@ -196,6 +197,8 @@ public class RomsFragment extends Fragment {
                 }
             });
             searchFileDialog.show();
+        }else{
+            permissionSystem.verifyStoragePermissions(REQUEST_EXTERNAL_STORAGE);
         }
     }
 
@@ -302,26 +305,8 @@ public class RomsFragment extends Fragment {
             if(!image.equals("")){
                 File file = new File(image);
                 if(file.exists()) {
-                    boolean isHaveIcon = iconMap.containsKey(position);
-                    Bitmap bitmap = null;
-                    if(isHaveIcon){
-                        IconData iconData = iconMap.get(position);
-                        if(iconData.getFilePath().equals(image)){
-                            bitmap = iconData.getBitmap();
-                        }else{
-                            if(bitmap!=null) {
-                                bitmap.recycle();
-                            }
-                            bitmap = Utils.getLoacalBitmap(image);
-                            iconMap.put(position,new IconData(bitmap,image,position));
-                        }
-                    }else{
-                        bitmap = Utils.getLoacalBitmap(image);
-                        iconMap.put(position,new IconData(bitmap,image,position));
-                    }
-                    holdView.roms_fragment_item_image.setImageBitmap(bitmap);
+                    ImageLoader.getInstance().displayImage("file://"+image, holdView.roms_fragment_item_image);
                 }else{
-                    //drawable://
                     try{
                         ImageLoader.getInstance().displayImage("drawable://" + R.mipmap.gba_item_icon, holdView.roms_fragment_item_image);
                     }catch (Exception e){

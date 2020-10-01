@@ -7,11 +7,13 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Point;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.util.Base64;
 import android.util.Log;
+import android.view.Display;
 import android.view.View;
 import android.widget.Toast;
 
@@ -39,7 +41,16 @@ import lilinhong.dialog.TipsDialog;
 import lilinhong.model.GameRom;
 
 public class Utils {
+    private static Point size = new Point();
+    public static int getDisplayWidth(Display display) {
+        display.getSize(size);
+        return size.x;
+    }
 
+    public static int getDisplayHeight(Display display) {
+        display.getSize(size);
+        return size.y;
+    }
     public static void goGooglePlay(final Context context) {
         String pkName = context.getPackageName();
         //这里开始执行一个应用市场跳转逻辑，默认this为Context上下文对象

@@ -63,10 +63,15 @@ public class GameInfoDialog extends Dialog {
 
         game_info_text_title.setText(gameRom.getName());
 
-        if(gameRom.getImage().equals("")){
+        String imagePath = gameRom.getImage();
+        if(imagePath.equals("")){
             game_info_image_cover.setImageResource(R.mipmap.ic_launcher);
         }else{
-            ImageLoader.getInstance().displayImage(gameRom.getImage(), game_info_image_cover);
+            ImageLoader.getInstance().displayImage("file://"+imagePath, game_info_image_cover);
+//            if(new File(imagePath).exists()){
+//                Bitmap bitmap = Utils.getLoacalBitmap(imagePath);
+//                game_info_image_cover.setImageBitmap(bitmap);
+//            }
         }
 
         if(listSlotFile.size()>0 && gameRom.getImage().equals("")){

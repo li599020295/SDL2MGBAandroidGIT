@@ -7,5 +7,5 @@
     <color name="grey">#ccc</color>
     <color name="black">#000</color>
     <color name="trans">#00FFFFFF</color>
-
+    <color name="main_color">#ff5a00</color>
 </resources>

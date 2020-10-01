@@ -1,19 +1,24 @@
 package org.libsdl.app;
-
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
-import android.view.View;
+import androidx.appcompat.widget.AppCompatImageButton;
 
-public class GamePadView extends View{
+import lilinhong.utils.Utils;
+
+public class GamePadView extends AppCompatImageButton {
+    private int directionId = 0;
+    private Bitmap[] direction = null;
+    private Paint paint = null;
     //存储获取上次使用的位置
     private int preUseKey = -1;
     // Constants
     private final double RAD = 57.2957795;
-    public final static long DEFAULT_LOOP_INTERVAL = 100; // 100 ms
     public final static int FRONT = 3;
     public final static int FRONT_RIGHT = 2;
     public final static int RIGHT = 1;
@@ -22,27 +27,20 @@ public class GamePadView extends View{
     public final static int BOTTOM_LEFT = 6;
     public final static int LEFT = 5;
     public final static int LEFT_FRONT = 4;
-    public final static int UPKEY_AND_CANCEL = -1;
+    public final static int UPKEY_AND_CANCEL = 0;
 
     // Variables
     private OnJoystickMoveListener onJoystickMoveListener; // Listener
-    private long loopInterval = DEFAULT_LOOP_INTERVAL;
     private int xPosition = 0; // Touch x position
     private int yPosition = 0; // Touch y position
     private double centerX = 0; // Center view x position
     private double centerY = 0; // Center view y position
-    private Paint mainCircle;
-    private Paint secondaryCircle;
-    private Paint button;
-    private Paint horizontalLine;
-    private Paint verticalLine;
     private int joystickRadius;
-    private int buttonRadius;
     private int lastAngle = 0;
-    private int lastPower = 0;
 
     public GamePadView(Context context) {
         super(context);
+        initJoystickView();
     }
 
     public GamePadView(Context context, AttributeSet attrs) {
@@ -56,27 +54,26 @@ public class GamePadView extends View{
     }
 
     protected void initJoystickView() {
-        mainCircle = new Paint(Paint.ANTI_ALIAS_FLAG);
-        mainCircle.setColor(Color.WHITE);
-        mainCircle.setStyle(Paint.Style.FILL_AND_STROKE);
-
-        secondaryCircle = new Paint();
-        secondaryCircle.setColor(Color.GREEN);
-        secondaryCircle.setStyle(Paint.Style.STROKE);
-
-        verticalLine = new Paint();
-        verticalLine.setStrokeWidth(5);
-        verticalLine.setColor(Color.RED);
-
-        horizontalLine = new Paint();
-        horizontalLine.setStrokeWidth(2);
-        horizontalLine.setColor(Color.BLACK);
-
-        button = new Paint(Paint.ANTI_ALIAS_FLAG);
-        button.setColor(Color.RED);
-        button.setStyle(Paint.Style.FILL);
-
-        getBackground().setAlpha(150);
+       // getBackground().setAlpha(150);
+        setBackgroundColor(Utils.getColor(this.getContext(),R.color.trans));
+        setFocusable(true);
+        setFocusableInTouchMode(true);
+        requestFocus();
+        setScaleType(ScaleType.FIT_XY);
+        paint = new Paint();
+        paint.setColor(Color.WHITE);
+        paint.setStrokeWidth(3);
+        direction = new Bitmap[9];
+        direction[0] = BitmapFactory.decodeResource(getResources(), R.mipmap.analog_0);
+        direction[1] = BitmapFactory.decodeResource(getResources(), R.mipmap.analog_u);
+        direction[2] = BitmapFactory.decodeResource(getResources(), R.mipmap.analog_d);
+        direction[3] = BitmapFactory.decodeResource(getResources(), R.mipmap.analog_l);
+        direction[4] = BitmapFactory.decodeResource(getResources(), R.mipmap.analog_r);
+        direction[5] = BitmapFactory.decodeResource(getResources(), R.mipmap.analog_ul);
+        direction[6] = BitmapFactory.decodeResource(getResources(), R.mipmap.analog_ur);
+        direction[7] = BitmapFactory.decodeResource(getResources(), R.mipmap.analog_dr);
+        direction[8] = BitmapFactory.decodeResource(getResources(), R.mipmap.analog_dl);
+        setImageBitmap(direction[0]);
     }
 
     @Override
@@ -91,42 +88,15 @@ public class GamePadView extends View{
         xPosition = (int) getWidth() / 2;
         yPosition = (int) getWidth() / 2;
         int d = Math.min(xNew, yNew);
-        buttonRadius = (int) (d / 2 * 0.25);
-        joystickRadius = (int) (d / 2 * 0.75);
-
-    }
-
-    @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        // setting the measured values to resize the view to a certain width and
-        // height
-        int d = Math.min(measure(widthMeasureSpec), measure(heightMeasureSpec));
-        setMeasuredDimension(d, d);
-    }
-
-    private int measure(int measureSpec) {
-        int result = 0;
-
-        // Decode the measurement specifications.
-        int specMode = MeasureSpec.getMode(measureSpec);
-        int specSize = MeasureSpec.getSize(measureSpec);
-
-        if (specMode == MeasureSpec.UNSPECIFIED) {
-            // Return a default size of 200 if no bounds are specified.
-            result = 200;
-        } else {
-            // As you want to fill the available space
-            // always return the full available bounds.
-            result = specSize;
-        }
-        return result;
+        joystickRadius = (int) (d / 2 );
+        centerX = (getWidth()) / 2;
+        centerY = (getHeight()) / 2;
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
-        // super.onDraw(canvas);
-        centerX = (getWidth()) / 2;
-        centerY = (getHeight()) / 2;
+        super.onDraw(canvas);
+//        canvas.drawBitmap(direction[directionId], 0, 0, paint);
     }
 
     @Override
@@ -147,12 +117,8 @@ public class GamePadView extends View{
 
         int getAngle = getAngle();
         int direction = getDirection();
-        invalidate();
-
-        if(event.getAction() == MotionEvent.ACTION_MOVE){
-            //触摸点移动
-            onJoystickMoveListener.onValueChanged(getAngle, getPower(), direction);
-        }else if (event.getAction() == MotionEvent.ACTION_DOWN) {
+        directionId = direction;
+        if (event.getAction() == MotionEvent.ACTION_DOWN) {
             //按钮按下
             onJoystickMoveListener.onValueChanged(getAngle, getPower(), direction);
         }else if(event.getAction() == MotionEvent.ACTION_UP || event.getAction() == MotionEvent.ACTION_CANCEL){
@@ -160,7 +126,11 @@ public class GamePadView extends View{
             xPosition = (int) centerX;
             yPosition = (int) centerY;
             onJoystickMoveListener.onValueChanged(getAngle, getPower(), UPKEY_AND_CANCEL);
+        }else{
+            //触摸点移动
+            onJoystickMoveListener.onValueChanged(getAngle, getPower(), direction);
         }
+        //invalidate();
         //多点触控
 //        if(event.getAction() == MotionEvent.ACTION_MASK){
 //
@@ -247,25 +217,25 @@ public class GamePadView extends View{
     //设置方向的背景图片
     public void setGamePadOriBG(int ori){
         if(ori == UPKEY_AND_CANCEL){
-            setBackgroundResource(R.mipmap.analog_0);
+            setImageBitmap(direction[0]);
             return;
         }
         if(ori == FRONT){
-            setBackgroundResource(R.mipmap.analog_u);
+            setImageBitmap(direction[1]);
         }else if(ori == BOTTOM){
-            setBackgroundResource(R.mipmap.analog_d);
+            setImageBitmap(direction[2]);
         }else if(ori == LEFT){
-            setBackgroundResource(R.mipmap.analog_l);
+            setImageBitmap(direction[3]);
         }else if(ori == RIGHT){
-            setBackgroundResource(R.mipmap.analog_r);
+            setImageBitmap(direction[4]);
         }else if(ori == LEFT_FRONT){
-            setBackgroundResource(R.mipmap.analog_ul);
+            setImageBitmap(direction[5]);
         }else if(ori == FRONT_RIGHT){
-            setBackgroundResource(R.mipmap.analog_ur);
+            setImageBitmap(direction[6]);
         }else if(ori == BOTTOM_LEFT){
-            setBackgroundResource(R.mipmap.analog_dl);
+            setImageBitmap(direction[7]);
         }else if(ori == RIGHT_BOTTOM){
-            setBackgroundResource(R.mipmap.analog_dr);
+            setImageBitmap(direction[8]);
         }
     }
 }
