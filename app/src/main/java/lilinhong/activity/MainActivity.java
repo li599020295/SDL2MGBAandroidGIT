@@ -1,7 +1,6 @@
 package lilinhong.activity;
 
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -19,12 +18,10 @@ import org.libsdl.app.R;
 import java.util.ArrayList;
 import java.util.List;
 import lilinhong.adapter.MainFragmentPagerAdapter;
-import lilinhong.dialog.SearchFileDialog;
 import lilinhong.fragment.CollectFragment;
 import lilinhong.fragment.RomsFragment;
 import lilinhong.utils.AdmobHelper;
 import lilinhong.utils.GlobalConfig;
-import lilinhong.utils.PermissionSystem;
 import lilinhong.utils.PreferencesData;
 import lilinhong.utils.Utils;
 

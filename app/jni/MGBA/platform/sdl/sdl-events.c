@@ -472,19 +472,24 @@ void onKeyUp(struct mCoreThread* context,int key){
 //实现一些特殊操作
 bool onKeySpecial(JNIEnv *_env,struct mCoreThread* context,int key,bool isDown) {
 	if(key == SDLK_v){
+		mCoreThreadInterrupt(context);
 		if(isDown){
             ConfigurationSetIntValue(&context->core->config.defaultsTable, 0, "volume", 0x100);
 		}else{
             ConfigurationSetIntValue(&context->core->config.defaultsTable, 0, "volume", 0);
 		}
-
 		context->core->reloadConfigOption(context->core,"volume",NULL);
+		mCoreThreadContinue(context);
+		return true;
 	}
 	if(key == SDLK_r){
+		mCoreThreadInterrupt(context);
 		mCoreThreadReset(context);
+		mCoreThreadContinue(context);
 		return true;
 	}
 	if (key == SDLK_TAB) {
+		mCoreThreadInterrupt(context);
         bool m_videoSync = context->core->opts.videoSync;
         bool m_audioSync = context->core->opts.audioSync;
 	    if(!isDown){
@@ -494,13 +499,17 @@ bool onKeySpecial(JNIEnv *_env,struct mCoreThread* context,int key,bool isDown) 
 	    }
         context->core->reloadConfigOption(context->core, NULL, NULL);
 		//context->impl->sync.audioWait = !isDown;
+		mCoreThreadContinue(context);
 		return true;
 	}
 	if (key == SDLK_BACKQUOTE) {
+		mCoreThreadInterrupt(context);
 		mCoreThreadSetRewinding(context, isDown);
+		mCoreThreadContinue(context);
 		return true;
 	}
 	if (key == SDLK_F12) {
+		mCoreThreadInterrupt(context);
 		if(!isDown){
 			//注意screenshotPath是指针必须删除
 			char*screenshotPath =  mCoreTakeScreenshot(context->core);
@@ -521,6 +530,7 @@ bool onKeySpecial(JNIEnv *_env,struct mCoreThread* context,int key,bool isDown) 
 				screenshotPath = NULL;
 			}
 		}
+		mCoreThreadContinue(context);
 		return true;
 	}
 	return false;

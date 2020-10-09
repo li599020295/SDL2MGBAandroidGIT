@@ -55,7 +55,7 @@
     <string name="cheat">作弊</string>
     <string name="restart">重啟</string>
     <string name="audio">音訊</string>
-    <string name="button_control">按鈕</string>
+    <string name="button_control">按鈕縮放</string>
     <string name="gamepad_settings">遊戲手柄</string>
     <string name="cheat_name">作弊名稱</string>
     <string name="add_cheat_code">添加作弊代碼</string>
@@ -81,7 +81,7 @@
     <string name="key_r">KEY RESET</string>
     <string name="key_v">KEY SOUND: ON/OFF</string>
     <string name="key_speed">KEY SPEED</string>
-    <string name="key_rewind">KEY REWIND</string>
+    <string name="key_rewind">KEY NONE</string>
     <string name="key_capture">KEY CAPTURE</string>
     <string name="key_saveslot1">KEY SAVE SLOT1</string>
     <string name="key_loadslot1">KEY LOAD SLOT1</string>

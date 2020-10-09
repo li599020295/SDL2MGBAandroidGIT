@@ -33,9 +33,9 @@ public class PreferencesData {
         return preferencesData;
     }
 
-    public static PreferencesData getInstance(){
-        return preferencesData;
-    }
+//    public static PreferencesData getInstance(){
+//        return preferencesData;
+//    }
 
     //是否第一次扫描
     public boolean getFirstScance(){
@@ -154,7 +154,7 @@ public class PreferencesData {
             gamePads.add(new GamePad(GamePadRelativeLayout.PAD1_R,-1,context.getString(R.string.key_r)));
             gamePads.add(new GamePad(GamePadRelativeLayout.PAD1_V,-1,context.getString(R.string.key_v)));
             gamePads.add(new GamePad(GamePadRelativeLayout.PAD1_SPEED,-1,context.getString(R.string.key_speed)));
-            gamePads.add(new GamePad(GamePadRelativeLayout.PAD1_REWIND,-1,context.getString(R.string.key_rewind)));
+          //  gamePads.add(new GamePad(GamePadRelativeLayout.PAD1_REWIND,-1,context.getString(R.string.key_rewind)));
             gamePads.add(new GamePad(GamePadRelativeLayout.PAD1_CAPTURE,-1,context.getString(R.string.key_capture)));
             gamePads.add(new GamePad(GamePadRelativeLayout.PAD1_SAVE_SLOT1,-1,context.getString(R.string.key_saveslot1)));
             gamePads.add(new GamePad(GamePadRelativeLayout.PAD1_LOAD_SLOT1,-1,context.getString(R.string.key_loadslot1)));
@@ -199,6 +199,7 @@ public class PreferencesData {
         }
         return cheatDataList;
     }
+
     public void setCheatList(List<CheatData> cheatList,String name){
         saveCheatList(cheatList,name);
     }
@@ -212,7 +213,7 @@ public class PreferencesData {
     }
     //获取缩放值
     public int getVirtualButtonSize(){
-        return kv.getInt("virtual_button_size",520);
+        return kv.getInt("virtual_button_size",515);
     }
     public void setVirtualButtonSize(int value){
         kv.putInt("virtual_button_size",value);

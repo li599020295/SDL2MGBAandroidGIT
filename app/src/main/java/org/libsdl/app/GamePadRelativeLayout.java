@@ -143,7 +143,7 @@ public class GamePadRelativeLayout extends RelativeLayout {
 
     private void initData(){
         this.gamepadMap1 = new HashMap<>();
-        this.preferencesData = PreferencesData.getInstance();
+        this.preferencesData = PreferencesData.getInstance(context);
         this.gameAllButton = new ArrayList<>();
         this.gamePadList = new ArrayList<>();
         this.audioSwitch = true;
@@ -191,7 +191,7 @@ public class GamePadRelativeLayout extends RelativeLayout {
             gameAllButton.add(gamepad_relative_4btn);
             //FrameLayout gamepad_relative_gamepadview = gamepadRelativeLayout.findViewById(R.id.gamepad_relative_gamepadview);
             //gamePadList.add(gamepad_relative_gamepadview);
-            //gameAllButton.add(gamepad_relative_gamepadview);
+            gameAllButton.add(this.gamePadView);
 
             Button gamepad_btn_orien = gamepadRelativeLayout.findViewById(R.id.gamepad_btn_orien);
             Button gamepad_btn_start = gamepadRelativeLayout.findViewById(R.id.gamepad_btn_start);
@@ -471,11 +471,11 @@ public class GamePadRelativeLayout extends RelativeLayout {
             gamepad_togbtn_speed.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                    if(gamepad_togbtn_rewind.isChecked()){
-                        Toast.makeText(context,context.getString(R.string.rewind_runing_stop),Toast.LENGTH_SHORT).show();
-                        compoundButton.setChecked(false);
-                        return;
-                    }
+//                    if(gamepad_togbtn_rewind.isChecked()){
+//                        Toast.makeText(context,context.getString(R.string.rewind_runing_stop),Toast.LENGTH_SHORT).show();
+//                        compoundButton.setChecked(false);
+//                        return;
+//                    }
                     if(b){
                         gamepad_togbtn_speed.setBackgroundResource(R.mipmap.speed_press);
                         SDLActivity.onDataKey(PAD1_SPEED,true);
@@ -539,11 +539,8 @@ public class GamePadRelativeLayout extends RelativeLayout {
                     ViewGroup.LayoutParams params = view.getLayoutParams();
                     if(pro<0){
                         float scale = pro/100 + 1;
-                        params.height =(int) (viewSize.getHeight());
-                        params.width =(int) (viewSize.getWidth());
-
-                        view.setScaleX(scale);
-                        view.setScaleY(scale);
+                        params.height =(int) (viewSize.getHeight()* scale);
+                        params.width =(int) (viewSize.getWidth()* scale);
                     }else if(pro>0){
                         float scale = pro/100 + 1;
                         params.height =(int) (viewSize.getHeight() * scale);

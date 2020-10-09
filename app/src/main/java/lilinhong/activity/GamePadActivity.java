@@ -36,7 +36,7 @@ public class GamePadActivity extends AppCompatActivity {
         initUI();
     }
     private void initData() {
-        preferencesData = PreferencesData.getInstance();
+        preferencesData = PreferencesData.getInstance(GamePadActivity.this);
         if(preferencesData==null){
             preferencesData = PreferencesData.getInstance(GamePadActivity.this);
         }

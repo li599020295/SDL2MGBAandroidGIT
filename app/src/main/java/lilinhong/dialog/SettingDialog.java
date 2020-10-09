@@ -64,7 +64,7 @@ public class SettingDialog extends BaseDialog {
         if(preferencesData == null){
             preferencesData = PreferencesData.getInstance(this.context);
         }
-        preferencesData = PreferencesData.getInstance();
+        preferencesData = PreferencesData.getInstance(context);
         cheatDataList = preferencesData.getCheatList(gameName);
         if(!GlobalConfig.FIRST_RUN_GAME_CHEAT.equals(gameName)) {
             for (CheatData cheatData : cheatDataList) {
@@ -310,6 +310,7 @@ public class SettingDialog extends BaseDialog {
                 convertView.setTag(holdView);
             }
             holdView = (HoldView) convertView.getTag();
+            holdView.set_cheat_include_listview_item_imagebtn_delete.setTag(position);
             holdView.set_cheat_include_listview_item_toggle_switch.setTag(position);
             holdView.set_cheat_include_listview_item_toggle_switch.setChecked(cheatData.isEnable());
             holdView.set_cheat_include_listview_item_text_name.setText(cheatData.getName());

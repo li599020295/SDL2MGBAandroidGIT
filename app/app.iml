@@ -74,7 +74,6 @@
       <sourceFolder url="file://$MODULE_DIR$/jni/SDL/src/video" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/jni/SDL/src/video/android" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/jni/SDL/src/video/yuv2rgb" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/jni/zlib" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/jni/MGBA/arm" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/jni/MGBA/core" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/jni/MGBA/feature" isTestSource="false" />
@@ -93,6 +92,8 @@
       <sourceFolder url="file://$MODULE_DIR$/jni/MGBA/sm83" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/jni/MGBA/third-party/blip_buf" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/jni/MGBA/third-party/inih" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/jni/MGBA/third-party/zlib" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/jni/MGBA/third-party/zlib/contrib/minizip" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/jni/MGBA/util" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/jni/MGBA/util/vfs" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/jni/libpng" isTestSource="false" />
@@ -167,6 +168,7 @@
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/check-libraries" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/check-manifest" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/checkDebugClasspath" />
+      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/checkReleaseClasspath" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/compatible_screen_manifest" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/incremental" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/instant_run_merged_manifests" />
@@ -185,6 +187,7 @@
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/symbols" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/transforms" />
       <excludeFolder url="file://$MODULE_DIR$/build/outputs" />
+      <excludeFolder url="file://$MODULE_DIR$/build/reports" />
       <excludeFolder url="file://$MODULE_DIR$/build/tmp" />
     </content>
     <orderEntry type="jdk" jdkName="Android API 29 Platform" jdkType="Android SDK" />
@@ -209,9 +212,11 @@
     <orderEntry type="library" name="Gradle: __local_aars__:E.\AndroidProject\SDL2MGBAandroidGIT\app\src\main\libs\gson-2.8.5.jar:unspecified@jar" level="project" />
     <orderEntry type="library" name="Gradle: androidx.coordinatorlayout:coordinatorlayout:1.0.0@aar" level="project" />
     <orderEntry type="library" name="Gradle: androidx.legacy:legacy-support-v4:1.0.0@aar" level="project" />
+    <orderEntry type="library" name="Gradle: com.tencent:mmkv-static:1.2.2@aar" level="project" />
     <orderEntry type="library" name="Gradle: androidx.arch.core:core-runtime:2.0.0@aar" level="project" />
     <orderEntry type="library" name="Gradle: com.google.android.gms:play-services-measurement-sdk:17.0.0@aar" level="project" />
     <orderEntry type="library" name="Gradle: com.google.android.gms:play-services-stats:17.0.0@aar" level="project" />
+    <orderEntry type="library" name="Gradle: androidx.annotation:annotation:1.1.0@jar" level="project" />
     <orderEntry type="library" name="Gradle: androidx.swiperefreshlayout:swiperefreshlayout:1.0.0@aar" level="project" />
     <orderEntry type="library" name="Gradle: androidx.viewpager:viewpager:1.0.0@aar" level="project" />
     <orderEntry type="library" name="Gradle: androidx.legacy:legacy-support-core-ui:1.0.0@aar" level="project" />
@@ -234,7 +239,6 @@
     <orderEntry type="library" name="Gradle: androidx.arch.core:core-common:2.0.0@jar" level="project" />
     <orderEntry type="library" name="Gradle: androidx.transition:transition:1.0.0@aar" level="project" />
     <orderEntry type="library" name="Gradle: com.google.android.gms:play-services-measurement:17.0.0@aar" level="project" />
-    <orderEntry type="library" name="Gradle: androidx.annotation:annotation:1.0.0@jar" level="project" />
     <orderEntry type="library" name="Gradle: com.google.android.gms:play-services-measurement-base:17.0.0@aar" level="project" />
     <orderEntry type="library" name="Gradle: com.google.android.gms:play-services-measurement-impl:17.0.0@aar" level="project" />
     <orderEntry type="library" name="Gradle: androidx.core:core:1.0.1@aar" level="project" />

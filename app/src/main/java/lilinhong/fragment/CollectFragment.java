@@ -91,7 +91,7 @@ public class CollectFragment extends Fragment {
 
     private void initData() {
         iconMap = new HashMap<>();
-        preferencesData = PreferencesData.getInstance();
+        preferencesData = PreferencesData.getInstance(getActivity());
         gameRomList = preferencesData.getCollectRoms();
         adapter = new CollectGameRomsAdapter(getActivity());
     }

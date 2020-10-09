@@ -36,7 +36,7 @@ public class SearchFileDialog extends Dialog {
     }
 
     private void initData() {
-        preferencesData = PreferencesData.getInstance();
+        preferencesData = PreferencesData.getInstance(context);
     }
 
     private void iniDataFinish() {
@@ -151,7 +151,7 @@ public class SearchFileDialog extends Dialog {
         @Override
         protected void onPostExecute(List<File> result) {
             try{
-                Utils.addGameFileList(result);
+                Utils.addGameFileList(result,preferencesData);
                 //中断直接关闭
                 if(isBreakSearch){
                     dismiss();

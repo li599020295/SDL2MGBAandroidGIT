@@ -71,8 +71,8 @@
         android:layout_alignParentBottom="true"
         android:id="@+id/gamepad_view_joy"
         android:layout_width="@dimen/gamepad_size"
-        android:layout_height="@dimen/gamepad_size" />
-
+        android:layout_height="@dimen/gamepad_size"
+        android:background="@color/grey"/>
 
     <RelativeLayout
         android:id="@+id/gamepad_relative_4btn"

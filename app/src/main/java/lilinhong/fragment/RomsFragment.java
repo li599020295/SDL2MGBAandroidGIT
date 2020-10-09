@@ -103,7 +103,7 @@ public class RomsFragment extends Fragment {
     private void initData() {
         iconMap = new HashMap<>();
         permissionSystem = new PermissionSystem(getActivity());
-        preferencesData = PreferencesData.getInstance();
+        preferencesData = PreferencesData.getInstance(getActivity());
         gameARomList = preferencesData.getRoms();
         gameRomsAdapter = new RomsFragment.GameRomsAdapter(getActivity());
     }

@@ -57,7 +57,7 @@
     <string name="cheat">Cheat</string>
     <string name="restart">Restart</string>
     <string name="audio">Audio</string>
-    <string name="button_control">Button</string>
+    <string name="button_control">Button Scale</string>
     <string name="gamepad_settings">Gamepad</string>
     <string name="cheat_name">Cheat Name</string>
     <string name="add_cheat_code">Add Cheat Code</string>
@@ -83,7 +83,7 @@
     <string name="key_r">KEY RESET</string>
     <string name="key_v">KEY SOUND: ON/OFF</string>
     <string name="key_speed">KEY SPEED</string>
-    <string name="key_rewind">KEY REWIND</string>
+    <string name="key_rewind">KEY NONE</string>
     <string name="key_capture">KEY CAPTURE</string>
     <string name="key_saveslot1">KEY SAVE SLOT1</string>
     <string name="key_loadslot1">KEY LOAD SLOT1</string>

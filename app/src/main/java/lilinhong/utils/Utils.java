@@ -282,11 +282,11 @@ public class Utils {
     }
 
     //添加文件列表
-    public static void addGameFileList(List<File> fileList) {
+    public static void addGameFileList(List<File> fileList,PreferencesData preferencesData) {
         if(fileList == null || fileList.size() == 0){
             return;
         }
-        PreferencesData preferencesData = PreferencesData.getInstance();
+
         Map<String,GameRom> tempGameRomMap = preferencesData.getMapRoms();
         Map<String,GameRom> gameRomMap = new HashMap<>();
         for (File file : fileList) {
