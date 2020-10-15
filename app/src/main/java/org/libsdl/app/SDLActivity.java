@@ -457,19 +457,25 @@ public class SDLActivity extends Activity implements View.OnSystemUiVisibilityCh
         }
 
         mHasFocus = hasFocus;
-        if (hasFocus) {
-            mNextNativeState = NativeState.RESUMED;
-            SDLActivity.getMotionListener().reclaimRelativeMouseModeIfNeeded();
-            SDLActivity.handleNativeState();
-            nativeFocusChanged(true);
-
-        } else {
-            nativeFocusChanged(false);
-            if (!mHasMultiWindow) {
-                mNextNativeState = NativeState.PAUSED;
-                SDLActivity.handleNativeState();
-            }
+        if(hasFocus){
+            resumeNativeThread();
+        }else {
+            pauseNativeThread();
         }
+
+
+//        if (hasFocus) {
+//            mNextNativeState = NativeState.RESUMED;
+//            SDLActivity.getMotionListener().reclaimRelativeMouseModeIfNeeded();
+//            SDLActivity.handleNativeState();
+//            nativeFocusChanged(true);
+//        } else {
+//            nativeFocusChanged(false);
+//            if (!mHasMultiWindow) {
+//                mNextNativeState = NativeState.PAUSED;
+//                SDLActivity.handleNativeState();
+//            }
+//        }
     }
 
     @Override
