@@ -549,166 +549,166 @@ void onSlotKey(struct mCoreThread* context,int key ,bool isSave){
 }
 
 static void _mSDLHandleKeypress(struct mCoreThread* context, struct mSDLPlayer* sdlContext, const struct SDL_KeyboardEvent* event) {
-	int key = -1;
-	if (!(event->keysym.mod & ~(KMOD_NUM | KMOD_CAPS))) {
-		key = mInputMapKey(sdlContext->bindings, SDL_BINDING_KEY, event->keysym.sym);
-	}
-	if (key != -1) {
-		mCoreThreadInterrupt(context);
-		if (event->type == SDL_KEYDOWN) {
-			context->core->addKeys(context->core, 1 << key);
-		} else {
-			context->core->clearKeys(context->core, 1 << key);
-		}
-		mCoreThreadContinue(context);
-		return;
-	}
-	if (event->keysym.sym == SDLK_TAB) {
-		context->impl->sync.audioWait = event->type != SDL_KEYDOWN;
-		return;
-	}
-	if (event->keysym.sym == SDLK_BACKQUOTE) {
-		mCoreThreadSetRewinding(context, event->type == SDL_KEYDOWN);
-	}
-	if (event->type == SDL_KEYDOWN) {
-		switch (event->keysym.sym) {
-#ifdef USE_DEBUGGERS
-		case SDLK_F11:
-			if (context->core->debugger) {
-				mDebuggerEnter(context->core->debugger, DEBUGGER_ENTER_MANUAL, NULL);
-			}
-			return;
-#endif
-#ifdef USE_PNG
-			case SDLK_F12:
-        {
-            char *screenshotPath = mCoreTakeScreenshot(context->core);
-            if(screenshotPath!=NULL){
-                free(screenshotPath);
-                screenshotPath = NULL;
-            }
-            return;
-        }
-#endif
-		case SDLK_BACKSLASH:
-			mCoreThreadPause(context);
-			context->frameCallback = _pauseAfterFrame;
-			mCoreThreadUnpause(context);
-			return;
-#ifdef BUILD_PANDORA
-		case SDLK_ESCAPE:
-			mCoreThreadEnd(context);
-			return;
-#endif
-		default:
-			if ((event->keysym.mod & GUI_MOD) && (event->keysym.mod & GUI_MOD) == event->keysym.mod) {
-				switch (event->keysym.sym) {
-#if SDL_VERSION_ATLEAST(2, 0, 0)
-				case SDLK_f:
-					SDL_SetWindowFullscreen(sdlContext->window, sdlContext->fullscreen ? 0 : SDL_WINDOW_FULLSCREEN_DESKTOP);
-					sdlContext->fullscreen = !sdlContext->fullscreen;
-					sdlContext->windowUpdated = 1;
-					break;
-#endif
-				case SDLK_p:
-					mCoreThreadTogglePause(context);
-					break;
-				case SDLK_n:
-					mCoreThreadPause(context);
-					context->frameCallback = _pauseAfterFrame;
-					mCoreThreadUnpause(context);
-					break;
-				case SDLK_r:
-					mCoreThreadReset(context);
-					break;
-				default:
-					break;
-				}
-			}
-			if (event->keysym.mod & KMOD_SHIFT) {
-				switch (event->keysym.sym) {
-				case SDLK_F1:
-				case SDLK_F2:
-				case SDLK_F3:
-				case SDLK_F4:
-				case SDLK_F5:
-				case SDLK_F6:
-				case SDLK_F7:
-				case SDLK_F8:
-				case SDLK_F9:
-					mCoreThreadInterrupt(context);
-					mCoreSaveState(context->core, event->keysym.sym - SDLK_F1 + 1, SAVESTATE_SAVEDATA | SAVESTATE_SCREENSHOT | SAVESTATE_RTC);
-					mCoreThreadContinue(context);
-					break;
-				default:
-					break;
-				}
-			} else {
-				switch (event->keysym.sym) {
-				case SDLK_F1:
-				case SDLK_F2:
-				case SDLK_F3:
-				case SDLK_F4:
-				case SDLK_F5:
-				case SDLK_F6:
-				case SDLK_F7:
-				case SDLK_F8:
-				case SDLK_F9:
-					mCoreThreadInterrupt(context);
-					mCoreLoadState(context->core, event->keysym.sym - SDLK_F1 + 1, SAVESTATE_SCREENSHOT | SAVESTATE_RTC);
-					mCoreThreadContinue(context);
-					break;
-				default:
-					break;
-				}
-			}
-			return;
-		}
-	}
+//	int key = -1;
+//	if (!(event->keysym.mod & ~(KMOD_NUM | KMOD_CAPS))) {
+//		key = mInputMapKey(sdlContext->bindings, SDL_BINDING_KEY, event->keysym.sym);
+//	}
+//	if (key != -1) {
+//		mCoreThreadInterrupt(context);
+//		if (event->type == SDL_KEYDOWN) {
+//			context->core->addKeys(context->core, 1 << key);
+//		} else {
+//			context->core->clearKeys(context->core, 1 << key);
+//		}
+//		mCoreThreadContinue(context);
+//		return;
+//	}
+//	if (event->keysym.sym == SDLK_TAB) {
+//		context->impl->sync.audioWait = event->type != SDL_KEYDOWN;
+//		return;
+//	}
+//	if (event->keysym.sym == SDLK_BACKQUOTE) {
+//		mCoreThreadSetRewinding(context, event->type == SDL_KEYDOWN);
+//	}
+//	if (event->type == SDL_KEYDOWN) {
+//		switch (event->keysym.sym) {
+//#ifdef USE_DEBUGGERS
+//		case SDLK_F11:
+//			if (context->core->debugger) {
+//				mDebuggerEnter(context->core->debugger, DEBUGGER_ENTER_MANUAL, NULL);
+//			}
+//			return;
+//#endif
+//#ifdef USE_PNG
+//			case SDLK_F12:
+//        {
+//            char *screenshotPath = mCoreTakeScreenshot(context->core);
+//            if(screenshotPath!=NULL){
+//                free(screenshotPath);
+//                screenshotPath = NULL;
+//            }
+//            return;
+//        }
+//#endif
+//		case SDLK_BACKSLASH:
+//			mCoreThreadPause(context);
+//			context->frameCallback = _pauseAfterFrame;
+//			mCoreThreadUnpause(context);
+//			return;
+//#ifdef BUILD_PANDORA
+//		case SDLK_ESCAPE:
+//			mCoreThreadEnd(context);
+//			return;
+//#endif
+//		default:
+//			if ((event->keysym.mod & GUI_MOD) && (event->keysym.mod & GUI_MOD) == event->keysym.mod) {
+//				switch (event->keysym.sym) {
+//#if SDL_VERSION_ATLEAST(2, 0, 0)
+//				case SDLK_f:
+//					SDL_SetWindowFullscreen(sdlContext->window, sdlContext->fullscreen ? 0 : SDL_WINDOW_FULLSCREEN_DESKTOP);
+//					sdlContext->fullscreen = !sdlContext->fullscreen;
+//					sdlContext->windowUpdated = 1;
+//					break;
+//#endif
+//				case SDLK_p:
+//					mCoreThreadTogglePause(context);
+//					break;
+//				case SDLK_n:
+//					mCoreThreadPause(context);
+//					context->frameCallback = _pauseAfterFrame;
+//					mCoreThreadUnpause(context);
+//					break;
+//				case SDLK_r:
+//					mCoreThreadReset(context);
+//					break;
+//				default:
+//					break;
+//				}
+//			}
+//			if (event->keysym.mod & KMOD_SHIFT) {
+//				switch (event->keysym.sym) {
+//				case SDLK_F1:
+//				case SDLK_F2:
+//				case SDLK_F3:
+//				case SDLK_F4:
+//				case SDLK_F5:
+//				case SDLK_F6:
+//				case SDLK_F7:
+//				case SDLK_F8:
+//				case SDLK_F9:
+//					mCoreThreadInterrupt(context);
+//					mCoreSaveState(context->core, event->keysym.sym - SDLK_F1 + 1, SAVESTATE_SAVEDATA | SAVESTATE_SCREENSHOT | SAVESTATE_RTC);
+//					mCoreThreadContinue(context);
+//					break;
+//				default:
+//					break;
+//				}
+//			} else {
+//				switch (event->keysym.sym) {
+//				case SDLK_F1:
+//				case SDLK_F2:
+//				case SDLK_F3:
+//				case SDLK_F4:
+//				case SDLK_F5:
+//				case SDLK_F6:
+//				case SDLK_F7:
+//				case SDLK_F8:
+//				case SDLK_F9:
+//					mCoreThreadInterrupt(context);
+//					mCoreLoadState(context->core, event->keysym.sym - SDLK_F1 + 1, SAVESTATE_SCREENSHOT | SAVESTATE_RTC);
+//					mCoreThreadContinue(context);
+//					break;
+//				default:
+//					break;
+//				}
+//			}
+//			return;
+//		}
+//	}
 }
 
 static void _mSDLHandleJoyButton(struct mCoreThread* context, struct mSDLPlayer* sdlContext, const struct SDL_JoyButtonEvent* event) {
-	int key = 0;
-	key = mInputMapKey(sdlContext->bindings, SDL_BINDING_BUTTON, event->button);
-	if (key == -1) {
-		return;
-	}
-
-	mCoreThreadInterrupt(context);
-	if (event->type == SDL_JOYBUTTONDOWN) {
-		context->core->addKeys(context->core, 1 << key);
-	} else {
-		context->core->clearKeys(context->core, 1 << key);
-	}
-	mCoreThreadContinue(context);
+//	int key = 0;
+//	key = mInputMapKey(sdlContext->bindings, SDL_BINDING_BUTTON, event->button);
+//	if (key == -1) {
+//		return;
+//	}
+//
+//	mCoreThreadInterrupt(context);
+//	if (event->type == SDL_JOYBUTTONDOWN) {
+//		context->core->addKeys(context->core, 1 << key);
+//	} else {
+//		context->core->clearKeys(context->core, 1 << key);
+//	}
+//	mCoreThreadContinue(context);
 }
 
 static void _mSDLHandleJoyHat(struct mCoreThread* context, struct mSDLPlayer* sdlContext, const struct SDL_JoyHatEvent* event) {
-	int allKeys = mInputMapHat(sdlContext->bindings, SDL_BINDING_BUTTON, event->hat, -1);
-	if (allKeys == 0) {
-		return;
-	}
-
-	int keys = mInputMapHat(sdlContext->bindings, SDL_BINDING_BUTTON, event->hat, event->value);
-
-	mCoreThreadInterrupt(context);
-	context->core->clearKeys(context->core, allKeys ^ keys);
-	context->core->addKeys(context->core, keys);
-	mCoreThreadContinue(context);
+//	int allKeys = mInputMapHat(sdlContext->bindings, SDL_BINDING_BUTTON, event->hat, -1);
+//	if (allKeys == 0) {
+//		return;
+//	}
+//
+//	int keys = mInputMapHat(sdlContext->bindings, SDL_BINDING_BUTTON, event->hat, event->value);
+//
+//	mCoreThreadInterrupt(context);
+//	context->core->clearKeys(context->core, allKeys ^ keys);
+//	context->core->addKeys(context->core, keys);
+//	mCoreThreadContinue(context);
 }
 
 static void _mSDLHandleJoyAxis(struct mCoreThread* context, struct mSDLPlayer* sdlContext, const struct SDL_JoyAxisEvent* event) {
-	int clearKeys = ~mInputClearAxis(sdlContext->bindings, SDL_BINDING_BUTTON, event->axis, -1);
-	int newKeys = 0;
-	int key = mInputMapAxis(sdlContext->bindings, SDL_BINDING_BUTTON, event->axis, event->value);
-	if (key != -1) {
-		newKeys |= 1 << key;
-	}
-	clearKeys &= ~newKeys;
-	mCoreThreadInterrupt(context);
-	context->core->clearKeys(context->core, clearKeys);
-	context->core->addKeys(context->core, newKeys);
-	mCoreThreadContinue(context);
+//	int clearKeys = ~mInputClearAxis(sdlContext->bindings, SDL_BINDING_BUTTON, event->axis, -1);
+//	int newKeys = 0;
+//	int key = mInputMapAxis(sdlContext->bindings, SDL_BINDING_BUTTON, event->axis, event->value);
+//	if (key != -1) {
+//		newKeys |= 1 << key;
+//	}
+//	clearKeys &= ~newKeys;
+//	mCoreThreadInterrupt(context);
+//	context->core->clearKeys(context->core, clearKeys);
+//	context->core->addKeys(context->core, newKeys);
+//	mCoreThreadContinue(context);
 
 }
 
@@ -723,36 +723,36 @@ static void _mSDLHandleWindowEvent(struct mSDLPlayer* sdlContext, const struct S
 #endif
 
 void mSDLHandleEvent(struct mCoreThread* context, struct mSDLPlayer* sdlContext, const union SDL_Event* event) {
-	switch (event->type) {
-	case SDL_QUIT:
-		mCoreThreadEnd(context);
-		break;
-#if SDL_VERSION_ATLEAST(2, 0, 0)
-	case SDL_WINDOWEVENT:
-		_mSDLHandleWindowEvent(sdlContext, &event->window);
-		break;
-#else
-	case SDL_VIDEORESIZE:
-		sdlContext->newWidth = event->resize.w;
-		sdlContext->newHeight = event->resize.h;
-		sdlContext->windowUpdated = 1;
-		break;
-#endif
-	case SDL_KEYDOWN:
-	case SDL_KEYUP:
-		_mSDLHandleKeypress(context, sdlContext, &event->key);
-		break;
-	case SDL_JOYBUTTONDOWN:
-	case SDL_JOYBUTTONUP:
-		_mSDLHandleJoyButton(context, sdlContext, &event->jbutton);
-		break;
-	case SDL_JOYHATMOTION:
-		_mSDLHandleJoyHat(context, sdlContext, &event->jhat);
-		break;
-	case SDL_JOYAXISMOTION:
-		_mSDLHandleJoyAxis(context, sdlContext, &event->jaxis);
-		break;
-	}
+//	switch (event->type) {
+//	case SDL_QUIT:
+//		mCoreThreadEnd(context);
+//		break;
+//#if SDL_VERSION_ATLEAST(2, 0, 0)
+//	case SDL_WINDOWEVENT:
+//		_mSDLHandleWindowEvent(sdlContext, &event->window);
+//		break;
+//#else
+//	case SDL_VIDEORESIZE:
+//		sdlContext->newWidth = event->resize.w;
+//		sdlContext->newHeight = event->resize.h;
+//		sdlContext->windowUpdated = 1;
+//		break;
+//#endif
+//	case SDL_KEYDOWN:
+//	case SDL_KEYUP:
+//		_mSDLHandleKeypress(context, sdlContext, &event->key);
+//		break;
+//	case SDL_JOYBUTTONDOWN:
+//	case SDL_JOYBUTTONUP:
+//		_mSDLHandleJoyButton(context, sdlContext, &event->jbutton);
+//		break;
+//	case SDL_JOYHATMOTION:
+//		_mSDLHandleJoyHat(context, sdlContext, &event->jhat);
+//		break;
+//	case SDL_JOYAXISMOTION:
+//		_mSDLHandleJoyAxis(context, sdlContext, &event->jaxis);
+//		break;
+//	}
 }
 
 #if SDL_VERSION_ATLEAST(2, 0, 0)

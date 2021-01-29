@@ -3,11 +3,9 @@ package lilinhong.fragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,7 +19,10 @@ import android.widget.TextView;
 import android.widget.ToggleButton;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import com.nostra13.universalimageloader.core.ImageLoader;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+
 import org.libsdl.app.R;
 import org.libsdl.app.SDLActivity;
 import java.io.File;
@@ -37,15 +38,6 @@ import lilinhong.utils.PreferencesData;
 import lilinhong.utils.Utils;
 
 public class CollectFragment extends Fragment {
-    private Handler handler = new Handler(){
-        @Override
-        public void handleMessage(@NonNull Message msg) {
-            super.handleMessage(msg);
-            if(msg.what == 1){
-                adapter.notifyDataSetChanged();
-            }
-        }
-    };
     private String TAG = CollectFragment.class.getName();
     private CollectGameRomsAdapter adapter;
     private List<GameRom>gameRomList = null;
@@ -80,9 +72,12 @@ public class CollectFragment extends Fragment {
 
     public void reFreshData(){
         gameRomList = preferencesData.getCollectRoms();
-        Message msg = handler.obtainMessage();
-        msg.what = 1;
-        handler.sendMessage(msg);
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                adapter.notifyDataSetChanged();
+            }
+        });
     }
 
     public void setReFresh(boolean isReFresh){
@@ -229,49 +224,16 @@ public class CollectFragment extends Fragment {
                 if(!image.equals("")){
                     File file = new File(image);
                     if(file.exists()) {
-                        ImageLoader.getInstance().displayImage("file://"+image, holdView.collect_roms_fragment_item_image);
+                        Utils.loadIntoUseFitWidth(context,image,R.mipmap.loadfail,holdView.collect_roms_fragment_item_image);
                     }else{
-                        try{
-                            ImageLoader.getInstance().displayImage("drawable://" + R.mipmap.gba_item_icon, holdView.collect_roms_fragment_item_image);
-                        }catch (Exception e){
-                            e.printStackTrace();
-                        }
+                        holdView.collect_roms_fragment_item_image.setImageResource(R.mipmap.gba_item_icon);
                     }
                 }else{
-                    ImageLoader.getInstance().displayImage("drawable://" + R.mipmap.gba_item_icon, holdView.collect_roms_fragment_item_image);
+                    holdView.collect_roms_fragment_item_image.setImageResource(R.mipmap.gba_item_icon);
                 }
             }catch (Exception e){
                 e.printStackTrace();
             }
-
-//            if(!image.equals("")){
-//                File file = new File(image);
-//                if(file.exists()) {
-//                    boolean isHaveIcon = iconMap.containsKey(position);
-//                    Bitmap bitmap = null;
-//                    if(isHaveIcon){
-//                        IconData iconData = iconMap.get(position);
-//                        if(iconData.getFilePath().equals(image)){
-//                            bitmap = iconData.getBitmap();
-//                        }else{
-//                            if(bitmap!=null) {
-//                                bitmap.recycle();
-//                            }
-//                            bitmap = Utils.getLoacalBitmap(image);
-//                            iconMap.put(position,new IconData(bitmap,image,position));
-//                        }
-//                    }else{
-//                        bitmap = Utils.getLoacalBitmap(image);
-//                        iconMap.put(position,new IconData(bitmap,image,position));
-//                    }
-//                    holdView.collect_roms_fragment_item_image.setImageBitmap(bitmap);
-//                }else{
-//                    //drawable://
-//                    ImageLoader.getInstance().displayImage("drawable://" + R.mipmap.gba_item_icon, holdView.collect_roms_fragment_item_image);
-//                }
-//            }else{
-//                ImageLoader.getInstance().displayImage("drawable://" + R.mipmap.gba_item_icon, holdView.collect_roms_fragment_item_image);
-//            }
 
             holdView.collect_roms_fragment_item_name.setText(name);
 

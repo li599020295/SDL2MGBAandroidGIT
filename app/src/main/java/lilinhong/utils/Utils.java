@@ -8,6 +8,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Point;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
@@ -15,9 +16,19 @@ import android.util.Base64;
 import android.util.Log;
 import android.view.Display;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 
 import net.lingala.zip4j.core.ZipFile;
 import net.lingala.zip4j.model.FileHeader;
@@ -37,6 +48,8 @@ import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+
+import lilinhong.dialog.SearchFileDialog;
 import lilinhong.dialog.TipsDialog;
 import lilinhong.model.GameRom;
 
@@ -290,24 +303,29 @@ public class Utils {
         Map<String,GameRom> tempGameRomMap = preferencesData.getMapRoms();
         Map<String,GameRom> gameRomMap = new HashMap<>();
         for (File file : fileList) {
+            if(SearchFileDialog.isBreakSearch){
+                break;
+            }
             String md5 = getFileMD5(file);
             if (md5 == null) {
                 continue;
             }
-            boolean isHaveData = tempGameRomMap.containsKey(md5);
-            GameRom gameRom = null;
-            if(isHaveData){
-                gameRom = tempGameRomMap.get(md5);
-            }else{
+            String md5Key = md5 + file.getName();
+            //修复文件存在的时候无法添加游戏文件
+            GameRom gameRom = tempGameRomMap.get(md5Key);
+            //以前没有的数据
+            if(gameRom == null){
                 gameRom = new GameRom();
                 gameRom.setName(file.getName());
-                gameRom.setMd5(md5);
+                gameRom.setMd5(md5Key);
                 gameRom.setPath(file.getAbsolutePath());
                 gameRom.setLastPlayTime(0);
                 gameRom.setDesc("");
                 gameRom.setImage("");
+            }else if(gameRom != null && new File(gameRom.getPath()).exists()){
+                gameRom = tempGameRomMap.get(md5Key);
             }
-            gameRomMap.put(md5,gameRom);
+            gameRomMap.put(md5Key,gameRom);
         }
 
         if(gameRomMap.size() > 0){
@@ -514,5 +532,41 @@ public class Utils {
                 }
             }catch (Exception e){}
         }
+    }
+
+    /**
+     * 自适应宽度加载图片。保持图片的长宽比例不变，通过修改imageView的高度来完全显示图片。
+     */
+    public static void loadIntoUseFitWidth(Context context, final String imageUrl, int errorImageId, final ImageView imageView) {
+        Glide.with(context)
+                .load(imageUrl)
+                .centerCrop()
+                .skipMemoryCache(true) // 不使用内存缓存
+                .diskCacheStrategy(DiskCacheStrategy.NONE) // 不使用磁盘缓存
+                .listener(new RequestListener<Drawable>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                        return false;
+                    }
+                    @Override
+                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                        if (imageView == null) {
+                            return false;
+                        }
+                        if (imageView.getScaleType() != ImageView.ScaleType.FIT_XY) {
+                            imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+                        }
+                        ViewGroup.LayoutParams params = imageView.getLayoutParams();
+                        int vw = imageView.getWidth() - imageView.getPaddingLeft() - imageView.getPaddingRight();
+                        float scale = (float) vw / (float) resource.getIntrinsicWidth();
+                        int vh = Math.round(resource.getIntrinsicHeight() * scale);
+                        params.height = vh + imageView.getPaddingTop() + imageView.getPaddingBottom();
+                        imageView.setLayoutParams(params);
+                        return false;
+                    }
+                })
+                .placeholder(errorImageId)
+                .error(errorImageId)
+                .into(imageView);
     }
 }

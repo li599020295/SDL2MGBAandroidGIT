@@ -25,11 +25,12 @@ public class SearchFileDialog extends Dialog {
     private SearchFileAsyncTask searchFileAsyncTask = null;
     private Button search_file_btn = null;
     //是否中断搜索
-    private boolean isBreakSearch = false;
+    public static boolean isBreakSearch = false;
     private boolean searchFinish = false;
     public SearchFileDialog(Context context) {
         super(context, R.style.mdialog);
         this.context = context;
+        this.isBreakSearch = false;
         this.initData();
         this.initUI();
         this.iniDataFinish();

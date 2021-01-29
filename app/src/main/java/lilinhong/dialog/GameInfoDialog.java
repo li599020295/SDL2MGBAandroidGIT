@@ -11,13 +11,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.nostra13.universalimageloader.core.ImageLoader;
+import com.bumptech.glide.Glide;
 
 import org.libsdl.app.R;
-
 import java.io.File;
 import java.util.List;
-
 import lilinhong.model.GameRom;
 import lilinhong.utils.Utils;
 
@@ -67,11 +65,11 @@ public class GameInfoDialog extends Dialog {
         if(imagePath.equals("")){
             game_info_image_cover.setImageResource(R.mipmap.ic_launcher);
         }else{
-            ImageLoader.getInstance().displayImage("file://"+imagePath, game_info_image_cover);
-//            if(new File(imagePath).exists()){
-//                Bitmap bitmap = Utils.getLoacalBitmap(imagePath);
-//                game_info_image_cover.setImageBitmap(bitmap);
-//            }
+            Glide.with(context)
+                    .load(imagePath)
+                    .centerCrop()
+                    .placeholder(R.mipmap.loadfail)
+                    .into(game_info_image_cover);
         }
 
         if(listSlotFile.size()>0 && gameRom.getImage().equals("")){
