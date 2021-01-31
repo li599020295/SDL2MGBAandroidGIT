@@ -313,7 +313,7 @@ public class Utils {
             String md5Key = md5 + file.getName();
             //修复文件存在的时候无法添加游戏文件
             GameRom gameRom = tempGameRomMap.get(md5Key);
-            //以前没有的数据
+            //以前没有就直接新建
             if(gameRom == null){
                 gameRom = new GameRom();
                 gameRom.setName(file.getName());
@@ -322,9 +322,15 @@ public class Utils {
                 gameRom.setLastPlayTime(0);
                 gameRom.setDesc("");
                 gameRom.setImage("");
-            }else if(gameRom != null && new File(gameRom.getPath()).exists()){
-                gameRom = tempGameRomMap.get(md5Key);
+            }else if(gameRom != null &&  !new File(gameRom.getPath()).exists()){
+                //如果以前的文件信息存在，但是文件不存在就直接置空
+                gameRom = null;
             }
+
+            if(gameRom == null){
+                continue;
+            }
+
             gameRomMap.put(md5Key,gameRom);
         }
 
@@ -335,6 +341,9 @@ public class Utils {
 
     public static String getFileMD5(File file) {
         if (!file.isFile()) {
+            return null;
+        }
+        if(!file.exists()){
             return null;
         }
         MessageDigest digest = null;
