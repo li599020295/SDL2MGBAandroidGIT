@@ -205,9 +205,8 @@ public class GamePadRelativeLayout extends RelativeLayout {
             Button gamepad_btn_screenshot = (Button)gamepadRelativeLayout.findViewById(R.id.gamepad_btn_screenshot);
             Button gamepad_btn_save = (Button)gamepadRelativeLayout.findViewById(R.id.gamepad_btn_save);
             final ToggleButton gamepad_togbtn_speed = (ToggleButton)gamepadRelativeLayout.findViewById(R.id.gamepad_togbtn_speed);
-            final ToggleButton gamepad_togbtn_rewind = (ToggleButton)gamepadRelativeLayout.findViewById(R.id.gamepad_togbtn_rewind);
+            ToggleButton pad_layout_set_toggle_btn = gamepadRelativeLayout.findViewById(R.id.pad_layout_set_toggle_btn);
 
-            gameAllButton.add(gamepad_togbtn_rewind);
             gameAllButton.add(gamepad_btn_orien);
             gameAllButton.add(gamepad_btn_start);
             gameAllButton.add(gamepad_btn_select);
@@ -230,6 +229,18 @@ public class GamePadRelativeLayout extends RelativeLayout {
             gamepad_btn_l.getBackground().setAlpha(150);
             gamepad_btn_r.getBackground().setAlpha(150);
 
+            ///设置是否显示菜单
+            final LinearLayout pad_layout_set_ui = gamepadRelativeLayout.findViewById(R.id.pad_layout_set_ui);
+            pad_layout_set_toggle_btn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    if(isChecked){
+                        pad_layout_set_ui.setVisibility(View.VISIBLE);
+                    }else{
+                        pad_layout_set_ui.setVisibility(View.GONE);
+                    }
+                }
+            });
             gamepad_btn_orien.setOnTouchListener(new OnTouchListener() {
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
@@ -293,26 +304,6 @@ public class GamePadRelativeLayout extends RelativeLayout {
                 }
             });
 
-            gamepad_togbtn_rewind.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                    Intent intent = new Intent(context,GamePadActivity.class);
-                    context.startActivity(intent);
-//                    if(gamepad_togbtn_speed.isChecked()){
-//                        Toast.makeText(context,context.getString(R.string.speed_runing_stop),Toast.LENGTH_SHORT).show();
-//                        compoundButton.setChecked(false);
-//                        return;
-//                    }
-//                    if(b){
-//                        SDLActivity.onSlotNum(8,true);
-//                        gamepad_togbtn_rewind.setBackgroundResource(R.mipmap.reback_press);
-//                        SDLActivity.onDataKey(PAD1_REWIND,true);
-//                    }else{
-//                        gamepad_togbtn_rewind.setBackgroundResource(R.mipmap.reback_normal);
-//                        SDLActivity.onDataKey(PAD1_REWIND,false);
-//                    }
-                }
-            });
             //暂时用于打开其他试用功能
             gamepad_btn_menu.setOnTouchListener(new OnTouchListener() {
                 @Override
@@ -339,9 +330,9 @@ public class GamePadRelativeLayout extends RelativeLayout {
                         });
                         int requestedOrientation = SDLActivity.mSingleton.getRequestedOrientation();
                         if(requestedOrientation == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT){
-                            setDialog.show((int) (width*0.9),(int)(height *0.60f));
+                            setDialog.show((int) (width*0.9f),(int)(height *0.60f));
                         }else{
-                            setDialog.show((int) (width*0.75),(int)(height *0.75f));
+                            setDialog.show((int) (width*0.9f),(int)(height *0.9f));
                         }
                     }
                     return false;
@@ -471,11 +462,6 @@ public class GamePadRelativeLayout extends RelativeLayout {
             gamepad_togbtn_speed.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-//                    if(gamepad_togbtn_rewind.isChecked()){
-//                        Toast.makeText(context,context.getString(R.string.rewind_runing_stop),Toast.LENGTH_SHORT).show();
-//                        compoundButton.setChecked(false);
-//                        return;
-//                    }
                     if(b){
                         gamepad_togbtn_speed.setBackgroundResource(R.mipmap.speed_press);
                         SDLActivity.onDataKey(PAD1_SPEED,true);

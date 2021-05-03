@@ -10,12 +10,9 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import org.libsdl.app.R;
 import org.libsdl.app.SDLActivity;
-
 import java.io.File;
-
 import lilinhong.utils.Utils;
 
 public class LoadSlotDialog extends Dialog {

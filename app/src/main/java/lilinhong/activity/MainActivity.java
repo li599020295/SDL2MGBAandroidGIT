@@ -1,6 +1,7 @@
 package lilinhong.activity;
 
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,6 +19,7 @@ import org.libsdl.app.R;
 import java.util.ArrayList;
 import java.util.List;
 import lilinhong.adapter.MainFragmentPagerAdapter;
+import lilinhong.dialog.SearchFileDialog;
 import lilinhong.fragment.CollectFragment;
 import lilinhong.fragment.RomsFragment;
 import lilinhong.utils.AdmobHelper;
@@ -85,8 +87,15 @@ public class MainActivity extends AppCompatActivity {
         // Handle item selection
         switch (item.getItemId()) {
             case R.id.game_roms_add_game:
-                RomsFragment romsFragment = (RomsFragment)fragmentList.get(0);
-                romsFragment.fileScanDialog();
+                SearchFileDialog searchFileDialog = new SearchFileDialog(MainActivity.this);
+                searchFileDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        RomsFragment romsFragment = (RomsFragment)fragmentList.get(0);
+                        romsFragment.reFreshData();
+                    }
+                });
+                searchFileDialog.show();
                 return true;
             case R.id.game_roms_wu_start:
                 Utils.goGooglePlay(MainActivity.this);
@@ -140,7 +149,10 @@ public class MainActivity extends AppCompatActivity {
                                 e.printStackTrace();
                             }
                             if(admobHelper!=null){
-                                admobHelper.showInterstitial(true);
+                                boolean isOK = admobHelper.showInterstitial();
+                                if(!isOK){
+                                    admobHelper.loadGame();
+                                }
                             }
                         }
                     });
@@ -161,10 +173,15 @@ public class MainActivity extends AppCompatActivity {
                 Log.i("MainActivity", "申请的权限为：" + permissions[i] + ",申请结果：" + grantResults[i]);
             }
             if(isHaveFilePermissions){
-                RomsFragment romsFragment = (RomsFragment)fragmentList.get(0);
-                if(romsFragment!=null) {
-                    romsFragment.fileScanDialog();
-                }
+                SearchFileDialog searchFileDialog = new SearchFileDialog(MainActivity.this);
+                searchFileDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        RomsFragment romsFragment = (RomsFragment)fragmentList.get(0);
+                        romsFragment.reFreshData();
+                    }
+                });
+                searchFileDialog.show();
             }
         }
     }

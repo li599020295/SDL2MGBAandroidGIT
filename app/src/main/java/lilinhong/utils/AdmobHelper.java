@@ -9,7 +9,6 @@ import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.ads.MobileAds;
 import org.libsdl.app.R;
 import org.libsdl.app.SDLActivity;
-
 import lilinhong.activity.MainActivity;
 import lilinhong.model.GameRom;
 
@@ -62,18 +61,7 @@ public class AdmobHelper {
         mInterstitialAd.loadAd(adRequest.build());
     }
     //显示插页广告
-    public boolean showInterstitial(boolean isOnlyAd){
-
-        if(isOnlyAd){
-            if (mInterstitialAd.isLoaded()) {
-                mInterstitialAd.show();
-                return true;
-            } else {
-                loadGame();
-                return true;
-            }
-        }
-
+    public boolean showInterstitial(){
         if(adViewCount<=0){
             adViewCount = 5;
         }
@@ -87,7 +75,7 @@ public class AdmobHelper {
         }
     }
 
-    private void loadGame() {
+    public void loadGame() {
         Intent sdlActivityIntent = new Intent(mActivity, SDLActivity.class);
         Bundle bundle=new Bundle();
         bundle.putSerializable("GAME_ROM",gameRom);

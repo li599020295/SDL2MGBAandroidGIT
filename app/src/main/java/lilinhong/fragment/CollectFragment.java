@@ -2,10 +2,7 @@ package lilinhong.fragment;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,37 +13,26 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ToggleButton;
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-
 import org.libsdl.app.R;
-import org.libsdl.app.SDLActivity;
 import java.io.File;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import lilinhong.activity.MainActivity;
 import lilinhong.dialog.GameInfoDialog;
 import lilinhong.model.GameRom;
-import lilinhong.model.IconData;
 import lilinhong.utils.AdmobHelper;
 import lilinhong.utils.PreferencesData;
 import lilinhong.utils.Utils;
 
 public class CollectFragment extends Fragment {
-    private String TAG = CollectFragment.class.getName();
     private CollectGameRomsAdapter adapter;
     private List<GameRom>gameRomList = null;
     private View mainView = null;
     private ListView collect_game_roms_listview = null;
     private PreferencesData preferencesData = null;
     private boolean isReFresh = false;
-    //保存icon数据防止重复加载
-    private Map<Integer, IconData> iconMap = null;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mainView = inflater.inflate(R.layout.collect_roms_fragment, container, false);
@@ -85,7 +71,6 @@ public class CollectFragment extends Fragment {
     }
 
     private void initData() {
-        iconMap = new HashMap<>();
         preferencesData = PreferencesData.getInstance(getActivity());
         gameRomList = preferencesData.getCollectRoms();
         adapter = new CollectGameRomsAdapter(getActivity());
@@ -97,25 +82,23 @@ public class CollectFragment extends Fragment {
         collect_game_roms_listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                GameRom gameRom = (GameRom)adapter.getItem(position);
-                MainActivity mainActivity = MainActivity.getMainActivity();
+                final GameRom gameRom = (GameRom)adapter.getItem(position);
+                final MainActivity mainActivity = MainActivity.getMainActivity();
                 if(mainActivity!=null){
-                    AdmobHelper admobHelper = mainActivity.getAdmobHelper();
+                    File romFile = new File(gameRom.getPath());
+                    if(!romFile.exists()){
+                        Toast.makeText(mainActivity,getString(R.string.file_not_exits),Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    final AdmobHelper admobHelper = mainActivity.getAdmobHelper();
                     if(admobHelper!=null){
                         admobHelper.setGameDescription(gameRom);
-                        boolean isOK = admobHelper.showInterstitial(false);
+                        boolean isOK = admobHelper.showInterstitial();
                         if(!isOK){
                             mainActivity.delayGoGame();
                         }
-                        return;
                     }
                 }
-
-                Intent sdlActivityIntent = new Intent(getActivity(), SDLActivity.class);
-                Bundle bundle=new Bundle();
-                bundle.putSerializable("GAME_ROM",gameRom);
-                sdlActivityIntent.putExtras(bundle);
-                startActivity(sdlActivityIntent);
             }
         });
     }
@@ -191,20 +174,13 @@ public class CollectFragment extends Fragment {
                         }else {
                             buttonView.setBackgroundResource(R.mipmap.un_collect_btn);
                         }
-
                         GameRom gameRom1 = (GameRom)buttonView.getTag();
                         if(gameRom1.isCollect() == isChecked){
                             return;
                         }
                         gameRom1.setCollect(isChecked);
-                        {
-                            GameRom gr = gameRomList.get(position);
-                            gr.setCollect(isChecked);
-                        }
-
                         preferencesData.setCollectRom(gameRom1);
                         gameRomList = preferencesData.getCollectRoms();
-
                         notifyDataSetChanged();
                         MainActivity.getMainActivity().setFragmentRefresh();
                     }

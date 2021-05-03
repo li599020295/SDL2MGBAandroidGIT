@@ -337,10 +337,17 @@ uint8_t GBASavedataReadFlash(struct GBASavedata* savedata, uint16_t address) {
 	if (mTimingIsScheduled(savedata->timing, &savedata->dust) && (address >> 12) == savedata->settling) {
 		return 0x5F;
 	}
+	if(savedata->currentBank == 0xffffffff){
+		return 0xFF;
+	}
 	return savedata->currentBank[address];
 }
 
 void GBASavedataWriteFlash(struct GBASavedata* savedata, uint16_t address, uint8_t value) {
+    if(savedata->currentBank == 0xffffffff){
+        return ;
+    }
+
 	switch (savedata->flashState) {
 	case FLASH_STATE_RAW:
 		switch (savedata->command) {

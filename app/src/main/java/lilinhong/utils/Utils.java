@@ -311,29 +311,27 @@ public class Utils {
                 continue;
             }
             String md5Key = md5 + file.getName();
+            GameRom tempGameRom = tempGameRomMap.get(md5Key);
             //修复文件存在的时候无法添加游戏文件
-            GameRom gameRom = tempGameRomMap.get(md5Key);
-            //以前没有就直接新建
-            if(gameRom == null){
-                gameRom = new GameRom();
+            GameRom gameRom = new GameRom();
+            if(tempGameRom != null){
                 gameRom.setName(file.getName());
                 gameRom.setMd5(md5Key);
                 gameRom.setPath(file.getAbsolutePath());
                 gameRom.setLastPlayTime(0);
                 gameRom.setDesc("");
                 gameRom.setImage("");
-            }else if(gameRom != null &&  !new File(gameRom.getPath()).exists()){
-                //如果以前的文件信息存在，但是文件不存在就直接置空
-                gameRom = null;
+                gameRom.setCollect(tempGameRom.isCollect());
+            }else{
+                gameRom.setName(file.getName());
+                gameRom.setMd5(md5Key);
+                gameRom.setPath(file.getAbsolutePath());
+                gameRom.setLastPlayTime(0);
+                gameRom.setDesc("");
+                gameRom.setImage("");
             }
-
-            if(gameRom == null){
-                continue;
-            }
-
             gameRomMap.put(md5Key,gameRom);
         }
-
         if(gameRomMap.size() > 0){
             preferencesData.addGameAllRomList(gameRomMap);
         }

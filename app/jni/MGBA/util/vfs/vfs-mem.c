@@ -234,7 +234,9 @@ ssize_t _vfmRead(struct VFile* vf, void* buffer, size_t size) {
 
 ssize_t _vfmWrite(struct VFile* vf, const void* buffer, size_t size) {
 	struct VFileMem* vfm = (struct VFileMem*) vf;
-
+	if(vfm == NULL){
+		return 0;
+	}
 	if (size + vfm->offset >= vfm->size) {
 		size = vfm->size - vfm->offset;
 	}

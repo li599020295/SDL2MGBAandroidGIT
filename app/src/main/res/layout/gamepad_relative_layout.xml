@@ -3,65 +3,68 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:keepScreenOn="true">
-
     <LinearLayout
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="5dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical">
         <ToggleButton
-            android:id="@+id/gamepad_togbtn_speed"
-            android:layout_marginLeft="15dp"
-            android:layout_marginTop="10dp"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:background="@mipmap/speed_normal"
+            android:id="@+id/pad_layout_set_toggle_btn"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:background="@drawable/pad_layout_set_toggle_btn"
             android:checked="false"
-            android:textOn="@null"
-            android:textOff="@null"/>
-        <Button
-            android:layout_marginTop="10dp"
-            android:id="@+id/gamepad_btn_save"
-            android:layout_marginLeft="15dp"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:background="@mipmap/save_state"/>
-        <Button
-            android:id="@+id/gamepad_btn_screenshot"
-            android:layout_marginTop="10dp"
-            android:layout_marginLeft="15dp"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:background="@mipmap/screenshot_normal"/>
-    </LinearLayout>
-    <LinearLayout
-        android:layout_alignParentRight="true"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-        <ToggleButton
-            android:id="@+id/gamepad_togbtn_rewind"
-            android:layout_marginTop="10dp"
-            android:layout_marginRight="15dp"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:background="@mipmap/ganepad_player"
-            android:checked="false"
-            android:textOn="@null"
-            android:textOff="@null"/>
-        <Button
-            android:layout_marginTop="10dp"
-            android:id="@+id/gamepad_btn_read"
-            android:layout_marginRight="15dp"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:background="@mipmap/load_state"/>
-        <Button
-            android:id="@+id/gamepad_btn_orien"
-            android:layout_marginTop="10dp"
-            android:layout_marginRight="15dp"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:background="@mipmap/change_ori"/>
+            android:textOn=""
+            android:textOff=""/>
+        <LinearLayout
+            android:id="@+id/pad_layout_set_ui"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:visibility="gone"
+            android:background="@drawable/mdialog_bg">
+            <ToggleButton
+                android:id="@+id/gamepad_togbtn_speed"
+                android:layout_marginLeft="5dp"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:background="@mipmap/speed_normal"
+                android:checked="false"
+                android:textOn="@null"
+                android:textOff="@null"/>
+            <Button
+                android:id="@+id/gamepad_btn_save"
+                android:layout_marginLeft="5dp"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:background="@mipmap/save_state"/>
+            <Button
+                android:id="@+id/gamepad_btn_screenshot"
+                android:layout_marginLeft="5dp"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:background="@mipmap/screenshot_normal"/>
+            <Button
+                android:id="@+id/gamepad_btn_read"
+                android:layout_marginLeft="5dp"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:background="@mipmap/load_state"/>
+            <Button
+                android:id="@+id/gamepad_btn_orien"
+                android:layout_marginLeft="5dp"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:background="@mipmap/change_ori"/>
+            <Button
+                android:layout_marginLeft="5dp"
+                android:id="@+id/gamepad_btn_menu"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:background="@mipmap/setting_game"
+                />
+        </LinearLayout>
     </LinearLayout>
 
     <org.libsdl.app.GamePadView
@@ -109,18 +112,7 @@
             android:layout_height="@dimen/gamepad4_button_size"
             android:background="@mipmap/emu_r"/>
     </RelativeLayout>
-    <RelativeLayout
-        android:layout_centerHorizontal="true"
-        android:layout_alignParentTop="true"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-        <Button
-            android:id="@+id/gamepad_btn_menu"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:background="@mipmap/setting_game"
-            />
-    </RelativeLayout>
+
     <include
         android:id="@+id/gamepad_relative_util_layout"
         layout="@layout/gamepad_relative_util_layout"

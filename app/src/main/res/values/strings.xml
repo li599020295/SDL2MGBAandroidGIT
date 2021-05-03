@@ -16,7 +16,8 @@
     <string name="search_folder">Search folder:</string>
     <string name="find_roms">Found %d ROMs</string>
     <string name="first_game_file_scanle">Scan game files</string>
-    <string name="first_game_file_sacnle_desc">\t Welcome to use GBA emulator, n \t GBA Emulator Box Need file read and write permissions, we only use it to scan game files，Please click to agree.</string>
+    <string name="first_game_file_sacnle_desc">\t Welcome to use GBA emulator,
+        \n\t GBA Emulator Box Need file read and write permissions, we only use it to scan game files，Please click to agree.</string>
     <string name="progres_num">%</string>
     <string name="notice">Notice</string>
     <string name="tips_exit_game">Do you want to quit the game?</string>
@@ -104,14 +105,14 @@
     <string name="successful">Successful</string>
     <string name="about_gba">About GBA emulator:
         \n Using the mGBA8.3 core, this simulator is still being improved. If you have any suggestions or questions, please email me and I will reply to you as soon as possible.</string>
-    <string name="speed_runing_stop">Please turn off the speed button</string>
-    <string name="rewind_runing_stop">Please turn off the rewind button</string>
     <string name="gba_error_exit_desc">\t very sorry, we found that the gba emulator exited abnormally, you can restore the last game record!
         \n\t Click (OK) to restore the last game record.</string>
     <string name="control_select">SELECT</string>
     <string name="control_start">START</string>
     <string name="control_menu">MENU</string>
-    <string name="try_connect_net">Trying to connect to the server</string>
+    <string name="try_connect_net">Trying to Loading Data</string>
     <string name="wu_star_support">5 Star Support</string>
-
+    <string name="file_not_exits">file does not exist.</string>
+    <string name="quick_save">Quick Save Game</string>
+    <string name="quick_read">Load Game Save</string>
 </resources>

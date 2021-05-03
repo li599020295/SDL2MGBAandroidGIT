@@ -123,6 +123,22 @@ public class SettingDialog extends BaseDialog {
         Button set_normal_include_btn_button = viewSetNormal.findViewById(R.id.set_normal_include_btn_button);
         Button set_normal_include_btn_gamepad = viewSetNormal.findViewById(R.id.set_normal_include_btn_gamepad);
         final Button set_normal_include_btn_shbutton = viewSetNormal.findViewById(R.id.set_normal_include_btn_shbutton);
+        Button set_normal_include_btn_quick_save = viewSetNormal.findViewById(R.id.set_normal_include_btn_quick_save);
+        Button set_normal_include_btn_quick_read = viewSetNormal.findViewById(R.id.set_normal_include_btn_quick_read);
+        set_normal_include_btn_quick_read.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SDLActivity.onSlotNum(0,false);
+                dismiss();
+            }
+        });
+        set_normal_include_btn_quick_save.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SDLActivity.onSlotNum(0,true);
+                dismiss();
+            }
+        });
         set_normal_include_btn_shbutton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -134,6 +150,7 @@ public class SettingDialog extends BaseDialog {
                     set_normal_include_btn_shbutton.setText(context.getString(R.string.show_button));
                 }
                 GlobalConfig.VIRTUAL_BUTTON_CONTROL = vbc;
+                dismiss();
             }
         });
         boolean vbc = !preferencesData.getVirtualButtonControl();

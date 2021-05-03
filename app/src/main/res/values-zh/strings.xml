@@ -102,8 +102,14 @@
     <string name="successful">Successful</string>
     <string name="about_gba">關於GBA模擬器:
         \n 使用mGBA8.3內核，此模擬器仍在改進中。 如果您有任何建議或問題，請給我發電子郵件，我會盡快給您答复。</string>
-    <string name="speed_runing_stop">請關閉速度按鈕</string>
-    <string name="rewind_runing_stop">請關閉快退按鈕</string>
     <string name="gba_error_exit_desc">\t 非常抱歉，我們發現gba仿真器異常退出，可以恢復上一次的遊戲記錄！
         \n\t單擊（確定）恢復最近的遊戲記錄。</string>
+    <string name="control_select">SELECT</string>
+    <string name="control_start">START</string>
+    <string name="control_menu">MENU</string>
+    <string name="try_connect_net">嘗試加載數據</string>
+    <string name="wu_star_support">5星支持</string>
+    <string name="file_not_exits">文件不存在。</string>
+    <string name="quick_save">快速保存遊戲</string>
+    <string name="quick_read">讀取遊戲存檔</string>
 </resources>
